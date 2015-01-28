@@ -8,10 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import app.android.desafiofutbol.clases.Equipo;
-import app.android.desafiofutbol.clases.Jugador;
 
 public class EquiposAdapter extends ArrayAdapter<Equipo> {
 	
@@ -38,8 +36,9 @@ public class EquiposAdapter extends ArrayAdapter<Equipo> {
 		((TextView)convertView.findViewById(R.id.textViewNombreEq)).setText(equipo.getNombre());
 	    ((TextView)convertView.findViewById(R.id.textViewValorEq)).setText(formatter.format(valor));
 	    ((TextView)convertView.findViewById(R.id.textViewPuntosEq)).setText(String.valueOf(equipo.getPuntos()));
+	    ((TextView)convertView.findViewById(R.id.textViewLigaEq)).setText(equipo.getLigaNombre());
 	    
-	    if (equipo.getJugadores() != null){
+	    /*if (equipo.getJugadores() != null){
 	    	int size = equipo.getJugadores().size();
 			((TextView)convertView.findViewById(R.id.TextViewJugadoresEq)).setText(String.valueOf(size));
 	    	
@@ -57,9 +56,8 @@ public class EquiposAdapter extends ArrayAdapter<Equipo> {
 					jug.setText(jugador.getApodo());
 		    		layoutJugadores.addView(jug);
 	    		}
-	    	}
-	    	
-	    }
+	    	}	    	
+	    }*/
 	    
 	    return convertView;
 	}

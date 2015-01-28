@@ -77,8 +77,7 @@ public class PostDesafioFutbol extends AsyncTask<String, Context, String> {
         dialog.show();
     }
 
-    protected void onPostExecute(String result) {
-        System.out.println(result);        
+    protected void onPostExecute(String result) {        
         if (log != null){
         	dialog.cancel();
         	log.gestionaWS(result);        	

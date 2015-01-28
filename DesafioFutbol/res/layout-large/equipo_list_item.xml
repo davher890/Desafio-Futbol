@@ -70,17 +70,25 @@
                 android:layout_below="@id/textViewPuntosEq"
                 android:layout_toRightOf="@id/textViewEq03"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
+            
+                        <TextView
+                android:id="@+id/textViewEq04"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textViewEq03"
+                android:text="Liga: "
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <TextView
+                android:id="@+id/textViewLigaEq"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/TextViewJugadoresEq"
+                android:layout_toRightOf="@+id/textViewEq04"
+                android:textAppearance="?android:attr/textAppearanceLarge"/>
 
         </RelativeLayout>
 
-        <LinearLayout
-            android:id="@+id/layoutJugadoresEq"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical" >
-
-        </LinearLayout>
 
     </LinearLayout>
 

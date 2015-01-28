@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import app.android.desafiofutbol.clases.Usuario;
+import app.android.desafiofutbol.ddbb.SQLiteDesafioFutbol;
 
 /**
  * Created by david on 8/06/13.
@@ -35,6 +36,9 @@ public class LogInActivity extends Activity {
         email   = (EditText)findViewById(R.id.editTextUsuario);
         pwd     = (EditText)findViewById(R.id.editTextPwd);
 
+        SQLiteDesafioFutbol admin = new SQLiteDesafioFutbol(this);
+        admin.deleteTableJugador();
+        
         bsign.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {

@@ -26,7 +26,8 @@ public class GetDesafioFutbol extends AsyncTask<String, Context, String> {
     private String url = HTTP_WWW_DESAFIOFUTBOL_COM;
     private HashMap<String, String> mapParams = null;
     private Fragment fragment = null;
-    private String methodCallback = null;
+    
+    private String methodCallback = null;    
 
     public GetDesafioFutbol(String url, Context c, HashMap<String, String> mapParams, Fragment fragment, String methodCallback){
     	this.url = new StringBuffer(HTTP_WWW_DESAFIOFUTBOL_COM).
@@ -83,10 +84,8 @@ public class GetDesafioFutbol extends AsyncTask<String, Context, String> {
         dialog.show();
     }
 
-    protected void onPostExecute(String result) {
-    	
-    	if (mapParams != null){
-    		
+    protected void onPostExecute(String result) {    	
+    	if (mapParams != null){    		
     		for(String key: mapParams.keySet()){
     			result = mapParams.get(key)+result;
     		}

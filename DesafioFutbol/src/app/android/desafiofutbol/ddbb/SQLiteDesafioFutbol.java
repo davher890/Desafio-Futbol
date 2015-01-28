@@ -45,7 +45,7 @@ public class SQLiteDesafioFutbol extends SQLiteOpenHelper {
     	onCreate(db);
     }
     
-    public void deleteJugador(){
+    public void deleteTableJugador(){
     	SQLiteDatabase db = getWritableDatabase();
     	db.delete("jugador", null, null);
     }
@@ -80,24 +80,33 @@ public class SQLiteDesafioFutbol extends SQLiteOpenHelper {
     	db.execSQL(SQL_DROP);
     }
    
-    public ArrayList<Jugador> getTitulares(int equipoId) {
-    	return getJugadores(equipoId, 1);
+    public ArrayList<Jugador> getTitulares(int equipoId, String posicion) {
+    	return getJugadores(equipoId, 1, posicion);
     }
     
-    public ArrayList<Jugador> getSuplentes(int equipoId) {
-    	return getJugadores(equipoId, 0);
+    public ArrayList<Jugador> getSuplentes(int equipoId, String posicion) {
+    	return getJugadores(equipoId, 0, posicion);
     }
 
-	private ArrayList<Jugador> getJugadores(int equipoId, int titular) {
+	private ArrayList<Jugador> getJugadores(int equipoId, int titular, String posicion) {
 		ArrayList<Jugador> result = new ArrayList<Jugador>();
     	SQLiteDatabase db = getReadableDatabase();
-    	Cursor cursor = db.rawQuery("SELECT apodo, posicion, equipo_nombre FROM jugador WHERE titular="+titular+" and id_liga="+equipoId, null);
+    	String query = null;
+    	if (posicion == null){
+    		query = "SELECT apodo, posicion, equipo_nombre, puntos FROM jugador WHERE titular="+titular+" and id_liga="+equipoId;
+    	}
+    	else{
+    		query = "SELECT apodo, posicion, equipo_nombre, puntos FROM jugador WHERE titular="+titular+" and id_liga="+equipoId+" and posicion='"+posicion+"'";
+    	}
+    	
+    	Cursor cursor = db.rawQuery(query, null);
     	Jugador j = null;
     	while (cursor.moveToNext()){
     		j = new Jugador();
     		j.setApodo(cursor.getString(0));
     		j.setPosicion(cursor.getString(1));
     		j.setEquipo(cursor.getString(2));
+    		j.setPuntos(cursor.getInt(3));
     		result.add(j);
     	}
     	cursor.close();

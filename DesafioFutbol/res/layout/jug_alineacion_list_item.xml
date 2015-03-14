@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/imageViewEquipoAli"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_gravity="start"/>
 
     <TextView
@@ -15,8 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="start"
-        android:text="Medium Text"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:text="Medium Text" />
 
     <TextView
         android:id="@+id/textViewPuntosAli"
@@ -24,7 +23,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="end"
         android:gravity="end"
-        android:text="Medium Text"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:text="Medium Text" />
 
 </LinearLayout>

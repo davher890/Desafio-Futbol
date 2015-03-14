@@ -1,15 +1,16 @@
 package app.android.desafiofutbol.clases;
 
-public class Usuario {
+public class DatosUsuario {
 	
 	private static String token = null;
 	private static String userName = null;
+	private static String nombreEquipo = null;
 	private static int userId = -1;
 	private static String avatar = null;
 	private static int p_rank = -1;
 	private static int idEquipoSeleccionado = -1;
 	
-	public Usuario(){
+	public DatosUsuario(){
 	}
 
 	/**
@@ -23,7 +24,7 @@ public class Usuario {
 	 * @param token the token to set
 	 */
 	public static void setToken(String token) {
-		Usuario.token = token;
+		DatosUsuario.token = token;
 	}
 
 	/**
@@ -37,7 +38,7 @@ public class Usuario {
 	 * @param userName the userName to set
 	 */
 	public static void setUserName(String userName) {
-		Usuario.userName = userName;
+		DatosUsuario.userName = userName;
 	}
 
 	/**
@@ -51,7 +52,7 @@ public class Usuario {
 	 * @param userId the userId to set
 	 */
 	public static void setUserId(int userId) {
-		Usuario.userId = userId;
+		DatosUsuario.userId = userId;
 	}
 
 	/**
@@ -65,7 +66,7 @@ public class Usuario {
 	 * @param avatar the avatar to set
 	 */
 	public static void setAvatar(String avatar) {
-		Usuario.avatar = avatar;
+		DatosUsuario.avatar = avatar;
 	}
 
 	public static int getP_rank() {
@@ -73,7 +74,7 @@ public class Usuario {
 	}
 
 	public static void setP_rank(int p_rank) {
-		Usuario.p_rank = p_rank;
+		DatosUsuario.p_rank = p_rank;
 	}
 
 	public static int getIdEquipoSeleccionado() {
@@ -81,9 +82,20 @@ public class Usuario {
 	}
 
 	public static void setIdEquipoSeleccionado(int idEquipoSeleccionado) {
-		Usuario.idEquipoSeleccionado = idEquipoSeleccionado;
+		DatosUsuario.idEquipoSeleccionado = idEquipoSeleccionado;
 	}
 
-	
+	/**
+	 * @return the nombreEquipo
+	 */
+	public static String getNombreEquipo() {
+		return nombreEquipo;
+	}
 
+	/**
+	 * @param nombreEquipo the nombreEquipo to set
+	 */
+	public static void setNombreEquipo(String nombreEquipo) {
+		DatosUsuario.nombreEquipo = nombreEquipo;
+	}
 }

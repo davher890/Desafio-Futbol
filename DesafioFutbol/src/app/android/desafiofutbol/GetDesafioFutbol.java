@@ -16,7 +16,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
-import app.android.desafiofutbol.clases.Usuario;
+import app.android.desafiofutbol.clases.DatosUsuario;
 
 public class GetDesafioFutbol extends AsyncTask<String, Context, String> {
 	
@@ -31,7 +31,7 @@ public class GetDesafioFutbol extends AsyncTask<String, Context, String> {
 
     public GetDesafioFutbol(String url, Context c, HashMap<String, String> mapParams, Fragment fragment, String methodCallback){
     	this.url = new StringBuffer(HTTP_WWW_DESAFIOFUTBOL_COM).
-    			append(url).append("?").append("auth_token").append("=").append(Usuario.getToken()).toString();
+    			append(url).append("?").append("auth_token").append("=").append(DatosUsuario.getToken()).toString();
     	this.mapParams = mapParams;
         this.c = (Context) c;
         this.fragment = fragment;
@@ -100,7 +100,7 @@ public class GetDesafioFutbol extends AsyncTask<String, Context, String> {
 			else{
 				method = c.getClass().getMethod(this.methodCallback, String.class);
 				method.invoke(c, result);
-			}			
+			}
 		} catch (IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

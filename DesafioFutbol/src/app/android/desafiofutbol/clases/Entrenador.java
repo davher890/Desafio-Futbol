@@ -1,4 +1,4 @@
-package app.android.desafiofutbol.entrenadores;
+package app.android.desafiofutbol.clases;
 
 
 public class Entrenador{
@@ -12,7 +12,6 @@ public class Entrenador{
 	
 	public Entrenador(int id, String nombre, String equipo, int salario,
 			int puntos, String propietario) {
-		super();
 		this.id = id;
 		this.nombre = nombre;
 		this.equipo = equipo;

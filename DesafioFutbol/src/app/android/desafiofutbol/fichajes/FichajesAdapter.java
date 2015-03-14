@@ -11,12 +11,11 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import app.android.desafiofutbol.R;
 import app.android.desafiofutbol.clases.Jugador;
-import app.android.desafiofutbol.clases.ManageResources;
 
 public class FichajesAdapter extends ArrayAdapter<Jugador> {
 
 	private ArrayList<Jugador> listaFichajes = null;
-	
+
 	public FichajesAdapter(Context context, ArrayList<Jugador> listaFichajes) {
 		super(context, 0, listaFichajes);
 		this.listaFichajes = listaFichajes;
@@ -47,5 +46,19 @@ public class FichajesAdapter extends ArrayAdapter<Jugador> {
 	    
 	    convertView.setBackgroundResource(jugador.getDrawableEquipo());
 	    return convertView;
+	}
+	
+	/**
+	 * @return the listaFichajes
+	 */
+	public ArrayList<Jugador> getListaFichajes() {
+		return listaFichajes;
+	}
+
+	/**
+	 * @param listaFichajes the listaFichajes to set
+	 */
+	public void setListaFichajes(ArrayList<Jugador> listaFichajes) {
+		this.listaFichajes = listaFichajes;
 	}
 }

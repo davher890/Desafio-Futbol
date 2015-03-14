@@ -1,58 +1,60 @@
 package app.android.desafiofutbol;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ImageView;
+import android.support.v4.app.DialogFragment;
+import app.android.desafiofutbol.clases.ManageResources;
 
 
-class RetreiveFeedTask extends AsyncTask<String, Context, String> {
+public class RetreiveFeedTask extends AsyncTask<String, DialogFragment, String> {
 
 	String img = null;
-	Context c = null;
-	ProgressDialog dialog;
-	AlertDialog.Builder alert;
-	public RetreiveFeedTask(Context c, String imagen, ProgressDialog dialog) {
+	DialogFragment c = null;
+	private String methodCallback = null;
+	
+	public RetreiveFeedTask(DialogFragment c, String imagen, String methodCallbak) {
 		this.img = imagen;
-		this.c = c;
-		this.dialog = dialog;
+		this.c = (DialogFragment)c;
+		this.methodCallback = methodCallbak;
 	}
 
 	@Override
-	protected String doInBackground(String... params) {
+	public String doInBackground(String... params) {
 		// TODO Auto-generated method stub
 		
 		URL url;
 		try {
-			url = new URL(img);
-		
-        	HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        	conn.connect();
-        	Bitmap imagenBm = BitmapFactory.decodeStream(conn.getInputStream());
+			img = img.replace("small", "medium");
 			
-			LayoutInflater inflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			/*View v = inflater.inflate(R.layout.dialog_image, null);
-	    	ImageView iv = (ImageView) v.findViewById(R.id.imagen);
-	    	String titulo = "Código recibido"; 
+			Bitmap imagenBm = ManageResources.getImageJugadorFromUrl(img);
+			if (imagenBm == null){				
+				url = new URL(img);
+	        	HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	        	conn.connect();
+	        	imagenBm = BitmapFactory.decodeStream(conn.getInputStream());
+	        	ManageResources.addImagenJugador(img, imagenBm);
+			}
+			 
 	    	if (imagenBm != null){
-	    		iv.setImageBitmap(imagenBm);
-	    		titulo = "Imagen recibida";	    		
-	    	}*/
-	    		
-	    	alert = new AlertDialog.Builder(c);  
-	        /*alert.setTitle(titulo);  
-	        alert.setView(v);*/
-			
+	    		Method method = null;
+				if (c != null){
+					try {
+						method = c.getClass().getMethod(this.methodCallback, Bitmap.class);
+						method.invoke(c, imagenBm);
+					} catch (IllegalAccessException | IllegalArgumentException
+							| InvocationTargetException | NoSuchMethodException e) {
+						e.printStackTrace();
+					}
+				}
+	    	}
 			return null;
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
@@ -63,9 +65,4 @@ class RetreiveFeedTask extends AsyncTask<String, Context, String> {
 		}
 		return null;
 	}
-	
-	protected void onPostExecute(String result) {
-		dialog.cancel();
-		alert.show();
-	}	
 }

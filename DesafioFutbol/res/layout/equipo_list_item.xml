@@ -4,80 +4,74 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/textViewNombreEq"
+	<LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="nombre equipo"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:layout_height="match_parent"
+        android:layout_margin="25dp"
+        android:layout_weight="1"
+        android:background="@drawable/itemequipodesafio"
+        android:orientation="vertical" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        <TextView
+            android:id="@+id/textViewNombreEq"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="nombre equipo"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1">
 
             <TextView
-                android:id="@+id/TextViewEnt01"
+                android:id="@+id/TextViewEq01"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Valor: "/>
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="15dp"
+                android:gravity="center"
+                android:text="Valor:"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <TextView
                 android:id="@+id/textViewValorEq"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/TextViewEnt01"/>
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_toRightOf="@+id/TextViewEq01"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <TextView
-                android:id="@+id/TextViewEq02"
+                android:id="@+id/textViewEq02"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/TextViewEnt01"
-                android:text="Puntos: "/>
-
-            <TextView
-                android:id="@+id/textViewPuntosEq"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/textViewValorEq"
-                android:layout_toRightOf="@id/TextViewEq02"/>
-
-            <TextView
-                android:id="@+id/textViewEq03"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/TextViewEq02"
-                android:text="Numero de jugadores: "/>
-
-            <TextView
-                android:id="@+id/TextViewJugadoresEq"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/textViewPuntosEq"
-                android:layout_toRightOf="@id/textViewEq03" />
-
-            <TextView
-                android:id="@+id/textViewEq04"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textViewEq03"
-                android:text="Liga: " />
+                android:layout_below="@+id/TextViewEq01"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="15dp"
+                android:gravity="center"
+                android:text="Liga: "
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <TextView
                 android:id="@+id/textViewLigaEq"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/TextViewJugadoresEq"
-                android:layout_toRightOf="@+id/textViewEq04"/>
-
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/textViewValorEq"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_toRightOf="@+id/textViewEq02"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
         </RelativeLayout>
-
     </LinearLayout>
+
 
 </LinearLayout>

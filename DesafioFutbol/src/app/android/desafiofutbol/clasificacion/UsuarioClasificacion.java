@@ -94,7 +94,7 @@ public class UsuarioClasificacion {
 	/**
 	 * @param valor the valor to set
 	 */
-	public void setValor(Double valor) {
+	public void setValor(double valor) {
 		this.valor = (int)Math.round(valor);
 	}
 

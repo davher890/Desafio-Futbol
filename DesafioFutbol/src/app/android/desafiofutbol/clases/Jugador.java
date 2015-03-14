@@ -1,6 +1,6 @@
 package app.android.desafiofutbol.clases;
 
-public class Jugador {
+public class Jugador{
 	
 	private int idMiLiga = -1;
 	private int id = -1;
@@ -10,17 +10,18 @@ public class Jugador {
 	private int valor = -1;
 	private int puntos = -1;
 	private String propietarioNombre = null;
-	private String propietarioId = null;
+	private int propietarioId = -1;
 	private String equipo = null;
 	private int equipoId = -1; 
 	private String posicion = null;
 	private String urlImagen = null;
-	private String miOferta = null;
+	private int miOferta = -1;
 	private int drawableEquipo = -1;
 	private String nacion = null;
 	private String nacionLogo = null;
 	private int edad = 0;
 	private int titular = 0;
+	private String idMercado = null;
 	public Jugador (){
 		
 	}
@@ -32,17 +33,18 @@ public class Jugador {
 		valor = -1;
 		puntos = -1;
 		propietarioNombre = null;
-		propietarioId = null;
+		propietarioId = -1;
 		equipo = null;
 		equipoId = -1; 
 		posicion = null;
 		urlImagen = null;
-		miOferta = null;
+		miOferta = -1;
 		drawableEquipo = -1;
 		nacion = null;
 		nacionLogo = null;
 		edad = 0;
 		titular = 0;
+		idMercado = null;
 	}
 	/**
 	 * @return the id
@@ -107,13 +109,13 @@ public class Jugador {
 	/**
 	 * @return the propietarioId
 	 */
-	public String getPropietarioId() {
+	public int getPropietarioId() {
 		return propietarioId;
 	}
 	/**
 	 * @param propietarioId the propietarioId to set
 	 */
-	public void setPropietarioId(String propietarioId) {
+	public void setPropietarioId(int propietarioId) {
 		this.propietarioId = propietarioId;		
 	}
 	/**
@@ -155,13 +157,13 @@ public class Jugador {
 	/**
 	 * @return the miOferta
 	 */
-	public String getMiOferta() {
+	public int getMiOferta() {
 		return miOferta;
 	}
 	/**
 	 * @param miOferta the miOferta to set
 	 */
-	public void setMiOferta(String miOferta) {
+	public void setMiOferta(int miOferta) {
 		this.miOferta = miOferta;
 		//this.miOferta = (int)Math.round(miOferta);
 	}
@@ -274,5 +276,28 @@ public class Jugador {
 	 */
 	public void setIdMiLiga(int idMiLiga) {
 		this.idMiLiga = idMiLiga;
+	}
+
+	/**
+	 * @return the idMercado
+	 */
+	public String getIdMercado() {
+		return idMercado;
+	}
+
+	/**
+	 * @param idMercado the idMercado to set
+	 */
+	public void setIdMercado(String idMercado) {
+		this.idMercado = idMercado;
+	}
+	
+	public boolean isTitular(){
+		if (this.titular == 1){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 }

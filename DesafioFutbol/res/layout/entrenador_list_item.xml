@@ -1,71 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/index_vacio_grande_sin_jugador"
-    android:orientation="vertical" >
+    android:layout_margin="10dp"
+    android:background="#55ff6c2c" >
 
-    <GridLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="20dp"
-        android:columnCount="2"
-        android:rowCount="6" >
+	<TextView
+	    android:id="@+id/textViewNombreEnt"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:gravity="center"
+	    android:text="TextView"
+	    android:textAppearance="?android:attr/textAppearanceSmall"
+	    android:textStyle="bold" />
+	
+	<TextView
+	    android:id="@+id/textViewEnt01"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@id/textViewNombreEnt"
+	    android:layout_marginLeft="5dp"
+	    android:text="Salario:"
+	    android:textAppearance="?android:attr/textAppearanceSmall" />
+	
+	<TextView
+	    android:id="@+id/textViewSalarioEnt"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@+id/textViewNombreEnt"
+	    android:layout_marginLeft="5dp"
+	    android:layout_toRightOf="@id/textViewEnt01"
+	    android:text="TextView"
+	    android:textAppearance="?android:attr/textAppearanceSmall"/>
+	
+	<TextView
+	    android:id="@+id/textViewEnt02"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@+id/textViewEnt01"
+	    android:layout_marginLeft="5dp"
+	    android:text="Puntos:"
+	    android:textAppearance="?android:attr/textAppearanceSmall"/>
+	
+	<TextView
+	    android:id="@+id/textViewPuntosEnt"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@+id/textViewSalarioEnt"
+	    android:layout_marginLeft="5dp"
+	    android:layout_toRightOf="@+id/textViewEnt02"
+	    android:text="TextView"
+	    android:textAppearance="?android:attr/textAppearanceSmall"/>
+	
+	<TextView
+	    android:id="@+id/textViewEnt03"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@+id/textViewEnt02"
+	    android:layout_marginLeft="5dp"
+	    android:text="Contratado por :"
+	    android:textAppearance="?android:attr/textAppearanceSmall"/>
+	
+	<TextView
+	    android:id="@+id/textViewPropietarioEnt"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@+id/textViewEnt03"
+	    android:layout_marginLeft="5dp"
+	    android:gravity="center"
+	    android:text="TextView"
+	    android:textAppearance="?android:attr/textAppearanceSmall"/>
 
-        <TextView
-            android:id="@+id/textViewNombreEnt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_column="0"
-            android:layout_columnSpan="2"
-            android:layout_gravity="left"
-            android:layout_row="0"
-            android:text="TextView" />
-
-        <TextView
-            android:id="@+id/textViewEnt01"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="0"
-            android:layout_gravity="left"
-            android:layout_row="1"
-            android:text="Salario:" />
-
-        <TextView
-            android:id="@+id/textViewSalarioEnt"
-            android:layout_column="1"
-            android:layout_gravity="left"
-            android:layout_row="1"
-            android:text="TextView" />
-
-        <TextView
-            android:id="@+id/textViewEnt02"
-            android:layout_column="0"
-            android:layout_gravity="left"
-            android:layout_row="2"
-            android:text="Puntos:" />
-
-        <TextView
-            android:id="@+id/textViewPuntosEnt"
-            android:layout_column="1"
-            android:layout_gravity="left"
-            android:layout_row="2"
-            android:text="TextView" />
-
-        <TextView
-            android:id="@+id/textViewEnt03"
-            android:layout_column="0"
-            android:layout_gravity="left"
-            android:layout_row="3"
-            android:text="TextView" />
-
-        <TextView
-            android:id="@+id/textViewPropietarioEnt"
-            android:layout_column="1"
-            android:layout_gravity="left"
-            android:layout_row="3"
-            android:text="TextView" />
-        
-    </GridLayout>
-
-</LinearLayout>
+</RelativeLayout>

@@ -4,8 +4,8 @@
     tools:context="app.android.desafiofutbol.MainActivity" >
 
     <item
-        android:id="@+id/action_example"
-        android:title="@string/action_example"
+        android:id="@+id/tactica"
+        android:title="Tactica"
         app:showAsAction="withText|ifRoom"/>
     <item
         android:id="@+id/action_settings"

@@ -9,26 +9,28 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ClipData;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnDragListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
-import app.android.desafiofutbol.AlineacionAdapter;
 import app.android.desafiofutbol.GetDesafioFutbol;
 import app.android.desafiofutbol.MainActivity;
+import app.android.desafiofutbol.PostDesafioFutbol;
 import app.android.desafiofutbol.R;
+import app.android.desafiofutbol.clases.DatosUsuario;
 import app.android.desafiofutbol.clases.Jugador;
-import app.android.desafiofutbol.clases.Usuario;
 import app.android.desafiofutbol.ddbb.SQLiteDesafioFutbol;
 
-public class FragmentAlineacion extends Fragment {
+public class FragmentAlineacion extends Fragment implements OnDragListener, OnLongClickListener{
 	
 	private ListView porterosTitList = null;
 	private ListView defensasTitList = null;
@@ -37,23 +39,32 @@ public class FragmentAlineacion extends Fragment {
 	
 	private ListView porterosSupList = null;
 	private ListView defensasSupList = null;
-	private ListView mediosSupList = null;    	
+	private ListView mediosSupList = null;
 	private ListView delanterosSupList = null;
-	
-	private Button guardar = null;
-	
-	/**
-	 * Returns a new instance of this fragment for the given section number.
-	 */
+		
+	private Button guardar = null;	
+	private ArrayList<Jugador> jugadores = null;
 	private SQLiteDesafioFutbol admin = null;
+	
+	private AlineacionAdapter porterosTitAdapter;
+	private AlineacionAdapter defensasTitAdapter;
+	private AlineacionAdapter mediosTitAdapter;
+	private AlineacionAdapter delanterosTitAdapter;
+	private AlineacionAdapter porterosSupAdapter;
+	private AlineacionAdapter defensasSupAdapter;
+	private AlineacionAdapter mediosSupAdapter;
+	private AlineacionAdapter delanterosSupAdapter;
+	
+	private EquipoAlineacion equipo = null; 
+	JSONArray ids = null;
+	JSONObject json = null;
 	
 	public static FragmentAlineacion newInstance() {		
 		FragmentAlineacion fragment = new FragmentAlineacion();
-		return fragment;		
+		return fragment;
 	}
 	
 	public FragmentAlineacion() {
-		admin = new SQLiteDesafioFutbol(getActivity());
 	}	
 	
 	@Override
@@ -73,73 +84,128 @@ public class FragmentAlineacion extends Fragment {
     	
     	guardar = (Button)rootView.findViewById(R.id.buttonGuardarAli);
     	
-    	//if (admin.getTitulares(Usuario.getIdEquipoSeleccionado(), "Portero");
+    	admin = new SQLiteDesafioFutbol(getActivity());
+    	//Obtiene los datos de los jugadores para el id de equipo seleccionado
+    	jugadores = admin.getJugadores(DatosUsuario.getIdEquipoSeleccionado());
     	
-		HashMap<String, String> paramMap = new HashMap<String, String>();
-    	paramMap.put("idEquipo", String.valueOf(Usuario.getIdEquipoSeleccionado()));
-    	GetDesafioFutbol get= new GetDesafioFutbol("selecciones/plantilla/"+Usuario.getIdEquipoSeleccionado(), getActivity(), paramMap, this, "seleccionesPlantillaWS");
-    	get.execute();
-    	setData();    	
-    	
+    	if (jugadores == null || jugadores.size() == 0){
+			HashMap<String, String> paramMap = new HashMap<String, String>();
+	    	paramMap.put("idEquipo", String.valueOf(DatosUsuario.getIdEquipoSeleccionado()));
+	    	GetDesafioFutbol get= new GetDesafioFutbol("selecciones/plantilla/"+DatosUsuario.getIdEquipoSeleccionado(), getActivity(), paramMap, this, "seleccionesPlantillaWS");
+	    	get.execute();
+    	}
+    	else{
+    		equipo = new EquipoAlineacion(jugadores);
+    		setData();
+    	}
 		return rootView;
+	}
+	
+	public void seleccionesPlantillaWS (String result){
+		
+		final String idEquipo = result.substring(0,result.indexOf("{"));
+		result = result.substring(result.indexOf("{"));
+		
+		final String json = result;
+		getActivity().runOnUiThread(new Runnable() {
+		     @Override
+		     public void run() {
+				JSONObject respJSON;
+				try {
+					respJSON = new JSONObject(json);
+					JSONArray jsonArrayPorteros = respJSON.getJSONArray(Posicion.porteros.name());			
+					JSONArray jsonArrayDefensas = respJSON.getJSONArray(Posicion.defensas.name());
+					JSONArray jsonArrayMedios = respJSON.getJSONArray(Posicion.medios.name());
+					JSONArray jsonArrayDelanteros = respJSON.getJSONArray(Posicion.delanteros.name());
+					
+					jugadores = getJugadoresFromJson(jsonArrayPorteros, idEquipo);
+					jugadores.addAll(getJugadoresFromJson(jsonArrayDefensas, idEquipo));
+					jugadores.addAll(getJugadoresFromJson(jsonArrayMedios, idEquipo));
+					jugadores.addAll(getJugadoresFromJson(jsonArrayDelanteros, idEquipo));
+					
+					Thread thread = new Thread(){
+			        	public void run(){
+			    	        admin.saveJugadores(FragmentAlineacion.this.jugadores);
+			        }};
+			        thread.start();
+				
+					equipo = new EquipoAlineacion(jugadores);
+		
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				setData();
+		     }
+		});
+	}
+	
+	public ArrayList<Jugador> getJugadoresFromJson(JSONArray arrayJugador, String idMiLiga) throws JSONException{
+		
+		final ArrayList<Jugador> jugadores = new ArrayList<Jugador>();
+		int lengthArray = arrayJugador.length();
+		for (int i=0;i<lengthArray; i++){
+			
+			JSONObject jugadorJson = (JSONObject) arrayJugador.get(i);
+			Jugador jugador = new Jugador();
+			jugador.setIdMiLiga(Integer.parseInt(idMiLiga));
+			jugador.setId(jugadorJson.getInt("id"));
+			jugador.setApodo(jugadorJson.getString("apodo"));
+			jugador.setNombre(jugadorJson.getString("nombre"));
+			jugador.setApellidos(jugadorJson.getString("apellidos"));
+			jugador.setValor(jugadorJson.getDouble("precio"));
+			jugador.setPuntos(jugadorJson.getInt("puntos"));
+			jugador.setEquipo(jugadorJson.getString("equipo_nombre"));
+			jugador.setPosicion(jugadorJson.getString("posicion"));
+			jugador.setUrlImagen(jugadorJson.getString("foto"));
+			Boolean titular = jugadorJson.getBoolean("titular");
+			if (titular)
+				jugador.setTitular(1);
+			else 
+				jugador.setTitular(0);			
+	        jugadores.add(jugador);
+		}		
+		return jugadores;
 	}
 
 	private void setData() {
-		SQLiteDesafioFutbol admin = new SQLiteDesafioFutbol(getActivity());
-    	
-    	ArrayList<Jugador> jugadores = admin.getTitulares(Usuario.getIdEquipoSeleccionado(), "Portero");
-	    final AlineacionAdapter porterosTitAdapter = new AlineacionAdapter(getActivity(), jugadores);
+		
+	    porterosTitAdapter = new AlineacionAdapter(getActivity(), equipo.getPorterosTitulares(), this, Posicion.Portero);
 		porterosTitList.setAdapter(porterosTitAdapter);
 	    
-		jugadores = admin.getTitulares(Usuario.getIdEquipoSeleccionado(), "Defensa");
-		final AlineacionAdapter defensasTitAdapter = new AlineacionAdapter(getActivity(), jugadores);
+		defensasTitAdapter = new AlineacionAdapter(getActivity(), equipo.getDefensasTitulares(), this, Posicion.Defensa);
 		defensasTitList.setAdapter(defensasTitAdapter);
 	    
-		jugadores = admin.getTitulares(Usuario.getIdEquipoSeleccionado(), "Medio");
-		final AlineacionAdapter mediosTitAdapter = new AlineacionAdapter(getActivity(), jugadores);
+		mediosTitAdapter = new AlineacionAdapter(getActivity(), equipo.getMediosTitulares(), this, Posicion.Medio);
 		mediosTitList.setAdapter(mediosTitAdapter);
 	    
-		jugadores = admin.getTitulares(Usuario.getIdEquipoSeleccionado(), "Delantero");
-		final AlineacionAdapter delanterosTitAdapter = new AlineacionAdapter(getActivity(), jugadores);
+		delanterosTitAdapter = new AlineacionAdapter(getActivity(), equipo.getDelanterosTitulares(), this, Posicion.Delantero);
 		delanterosTitList.setAdapter(delanterosTitAdapter);
 	    
-		jugadores = admin.getSuplentes(Usuario.getIdEquipoSeleccionado(), "Portero");
-		final AlineacionAdapter porterosSupAdapter = new AlineacionAdapter(getActivity(), jugadores);
+		porterosSupAdapter = new AlineacionAdapter(getActivity(), equipo.getPorterosSuplentes(), this, Posicion.Portero);
 		porterosSupList.setAdapter(porterosSupAdapter);
 	    
-		jugadores = admin.getSuplentes(Usuario.getIdEquipoSeleccionado(), "Defensa");
-		final AlineacionAdapter defensasSupAdapter = new AlineacionAdapter(getActivity(), jugadores);
+		defensasSupAdapter = new AlineacionAdapter(getActivity(), equipo.getDefensasSuplentes(), this, Posicion.Defensa);
 		defensasSupList.setAdapter(defensasSupAdapter);
 	    
-		jugadores = admin.getSuplentes(Usuario.getIdEquipoSeleccionado(), "Medio");
-		final AlineacionAdapter mediosSupAdapter = new AlineacionAdapter(getActivity(), jugadores);
+		mediosSupAdapter = new AlineacionAdapter(getActivity(), equipo.getMediosSuplentes(), this, Posicion.Medio);
 		mediosSupList.setAdapter(mediosSupAdapter);
 	    
-		jugadores = admin.getSuplentes(Usuario.getIdEquipoSeleccionado(), "Delantero");
-		final AlineacionAdapter delanterosSupAdapter = new AlineacionAdapter(getActivity(), jugadores);
+		delanterosSupAdapter = new AlineacionAdapter(getActivity(), equipo.getDelanterosSuplentes(), this, Posicion.Delantero);
 		delanterosSupList.setAdapter(delanterosSupAdapter);
-	    	
-		setItemListener(porterosTitList, porterosTitAdapter, porterosSupAdapter);
-		setItemListener(porterosSupList, porterosSupAdapter, porterosTitAdapter );
-		
-		setItemListener(defensasTitList, defensasTitAdapter, defensasSupAdapter);
-		setItemListener(defensasSupList, defensasSupAdapter, defensasTitAdapter);
-		
-		setItemListener(mediosTitList, mediosTitAdapter, mediosSupAdapter);
-		setItemListener(mediosSupList, mediosSupAdapter, mediosTitAdapter);
-		
-		setItemListener(delanterosTitList, delanterosTitAdapter, delanterosSupAdapter);
-		setItemListener(delanterosSupList, delanterosSupAdapter, delanterosTitAdapter);
-		
+    	
 		guardar.setOnClickListener(new OnClickListener() {			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				int sizePorteros = porterosTitAdapter.getJugadores().size();
-				int sizeDefensas = defensasTitAdapter.getJugadores().size();
-				int sizeMedios = mediosTitAdapter.getJugadores().size();
-				int sizeDelanteros = delanterosTitAdapter.getJugadores().size();
-				
+				ArrayList<Jugador> porterosAli = porterosTitAdapter.getJugadores();				
+				ArrayList<Jugador> defensasAli = defensasTitAdapter.getJugadores();				
+				ArrayList<Jugador> mediosAli = mediosTitAdapter.getJugadores();				
+				ArrayList<Jugador> delanterosAli = delanterosTitAdapter.getJugadores();
+
+				int sizePorteros = porterosAli.size();
+				int sizeDefensas = defensasAli.size();
+				int sizeMedios = mediosAli.size();
+				int sizeDelanteros = delanterosAli.size();
 				
 				if (sizePorteros == 1 &&
 					((sizeDefensas == 4 && sizeMedios == 4 && sizeDelanteros == 2) ||
@@ -149,8 +215,27 @@ public class FragmentAlineacion extends Fragment {
 					(sizeDefensas == 3 && sizeMedios == 4 && sizeDelanteros == 3) ||
 					(sizeDefensas == 3 && sizeMedios == 5 && sizeDelanteros == 2))){
 						
-					//Guardar en base de datos y WebService					
-				
+					//Guardar en base de datos y WebService
+					StringBuffer tactica = new StringBuffer();
+					tactica.append(String.valueOf(sizeDefensas)).append("_");
+					tactica.append(String.valueOf(sizeMedios)).append("_");
+					tactica.append(String.valueOf(sizeDelanteros));
+					
+					json = new JSONObject();
+					ids = new JSONArray();
+					
+					ArrayList<Jugador> jugadoresAli = new ArrayList<Jugador>();
+					jugadoresAli.addAll(porterosAli);
+					jugadoresAli.addAll(defensasAli);
+					jugadoresAli.addAll(mediosAli);
+					jugadoresAli.addAll(delanterosAli);
+					
+					int size = sizePorteros + sizeDefensas + sizeMedios + sizeDelanteros;
+					for (int i=0; i<size; i++){
+						ids.put(jugadoresAli.get(i).getId());
+					}
+	                PostDesafioFutbol putTactica = new PostDesafioFutbol("cambiar_tactica/"+tactica.toString()+"/"+DatosUsuario.getIdEquipoSeleccionado(), FragmentAlineacion.this, json, "gestionaAlineacion");
+			        putTactica.execute();				
 				}
 				else{					
 					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -180,75 +265,86 @@ public class FragmentAlineacion extends Fragment {
 		super.onAttach(activity);
 		((MainActivity) activity).onSectionAttached(1);
 	}
+		
+	private boolean dropEventNotHandled(DragEvent dragEvent) {
+        return !dragEvent.getResult();
+    }
+		
+	private void checkForValidMove(ListView listViewDrag, ListView listViewView, View dragView) {		
+		cambiaJugador((AlineacionAdapter)listViewDrag.getAdapter(), (AlineacionAdapter)listViewView.getAdapter(), listViewDrag.getPositionForView(dragView));		
+	}
+
+	@Override
+	public boolean onDrag(View v, DragEvent event) {
+		// TODO Auto-generated method stub
+		// Dragged image
+		View dragView = (View) event.getLocalState();
+		
+		// Drag action
+		int dragAction = event.getAction();
+		
+		ListView listViewDrag = (ListView) dragView.getParent();
+		if (listViewDrag == null){
+			return true;
+		}
+		
+        if (dragAction == DragEvent.ACTION_DRAG_ENDED) {
+			// Dragged image
+        	if (dropEventNotHandled(event)) {
+                dragView.setVisibility(View.VISIBLE);
+            }
+		}
+        else if (dragAction == DragEvent.ACTION_DROP) {
+        	ListView listViewView= (ListView) v.getParent();
+        	checkForValidMove(listViewDrag, listViewView, dragView);
+            dragView.setVisibility(View.VISIBLE);
+        }
+		return true;
+	}
 	
 	private void cambiaJugador(AlineacionAdapter side1, AlineacionAdapter side2, int position){
 		
+		if (!side1.getPosicion().equals(side2.getPosicion())){
+			return;
+		}
+		
 		ArrayList<Jugador> arraySide1 = side1.getJugadores();
 		Jugador jugador = arraySide1.get(position);
-		side1.removeJugador(position);
 		
-		side2.addJugador(jugador);
-	}
-	
-	private void setItemListener(ListView listview, final AlineacionAdapter adapter1, final AlineacionAdapter adapter2){
-		listview.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				cambiaJugador(adapter1, adapter2, position);				
+		if (jugador.getApodo() != null){
+			side1.removeJugador(position);
+			if (side1.getCount() == 0){
+				side1.addJugador(new Jugador());
 			}
-		});		
+			
+			if (side2.getJugadores().get(0).getApodo() == null){
+				side2.removeJugador(0);
+			}
+			side2.addJugador(jugador);
+		}
+	}
+
+	@Override
+	public boolean onLongClick(View v) {
+        ClipData clipData = ClipData.newPlainText("", "");
+        View.DragShadowBuilder dsb = new View.DragShadowBuilder(v);
+        v.startDrag(clipData, dsb, v, 0);
+        v.setVisibility(View.INVISIBLE);
+        return true;        
 	}
 	
-public void seleccionesPlantillaWS (String json){
+	public void gestionaAlineacion(String result){
 		
-		String idEquipo = json.substring(0,json.indexOf("{"));
-		json = json.substring(json.indexOf("{"));
-
-		JSONObject respJSON;
-		try {
-			respJSON = new JSONObject(json);
-			JSONArray jsonArrayPorteros = respJSON.getJSONArray("porteros");			
-			JSONArray jsonArrayDefensas = respJSON.getJSONArray("defensas");
-			JSONArray jsonArrayMedios = respJSON.getJSONArray("medios");
-			JSONArray jsonArrayDelanteros = respJSON.getJSONArray("delanteros");
-			
-			getJugadoresFromJson(jsonArrayPorteros, idEquipo);
-			getJugadoresFromJson(jsonArrayDefensas, idEquipo);
-			getJugadoresFromJson(jsonArrayMedios, idEquipo);
-			getJugadoresFromJson(jsonArrayDelanteros, idEquipo);
-
-			//printData(listaEquipos);
+        try {
+        	json.put("id_titulares",ids);
+			json.put("id_seleccion", DatosUsuario.getIdEquipoSeleccionado());
 		} catch (JSONException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		setData();
+        
+        /*PutDesafioFutbol post = new PutDesafioFutbol("selecciones/save_once_titular", FragmentAlineacion.this, json, null);
+        post.execute();*/
 	}
-	public ArrayList<Jugador> getJugadoresFromJson(JSONArray arrayJugador, String idMiLiga) throws JSONException{
-		
-		ArrayList<Jugador> jugadores = new ArrayList<Jugador>();
-		int lengthArray = arrayJugador.length();
-		for (int i=0;i<lengthArray; i++){
-			
-			JSONObject jugadorJson = (JSONObject) arrayJugador.get(i);
-			Jugador jugador = new Jugador();
-			jugador.setIdMiLiga(Integer.parseInt(idMiLiga));
-			jugador.setId(jugadorJson.getInt("id"));
-			jugador.setApodo(jugadorJson.getString("apodo"));
-			jugador.setNombre(jugadorJson.getString("nombre"));
-			jugador.setApellidos(jugadorJson.getString("apellidos"));
-			jugador.setValor(jugadorJson.getDouble("precio"));
-			jugador.setPuntos(jugadorJson.getInt("puntos"));
-			jugador.setEquipo(jugadorJson.getString("equipo_nombre"));
-			jugador.setPosicion(jugadorJson.getString("posicion"));
-			jugador.setUrlImagen(jugadorJson.getString("foto"));
-			Boolean titular = jugadorJson.getBoolean("titular");
-			if (titular)
-				jugador.setTitular(1);
-			else 
-				jugador.setTitular(0);
-			
-	        admin.saveJugador(jugador);
-	        jugadores.add(jugador);
-		}
-		return jugadores;
-	}
+	
 }

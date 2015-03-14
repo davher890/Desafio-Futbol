@@ -109,8 +109,8 @@ public class NavigationDrawerFragment extends Fragment {
 						getString(R.string.label_alineacion),
 						getString(R.string.label_fichajes),
 						getString(R.string.label_entrenadores),
-						getString(R.string.label_liga),
-						getString(R.string.label_clasificacion), }));
+						getString(R.string.label_clasificacion),
+						getString(R.string.label_usuarios),}));
 		mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
 		return mDrawerListView;
 	}
@@ -264,10 +264,10 @@ public class NavigationDrawerFragment extends Fragment {
 		// See also
 		// showGlobalContextActionBar, which controls the top-left area of the
 		// action bar.
-		if (mDrawerLayout != null && isDrawerOpen()) {
-			inflater.inflate(R.menu.global, menu);
+		/*if (mDrawerLayout != null && isDrawerOpen()) {
+			inflater.inflate(R.menu.main, menu);
 			showGlobalContextActionBar();
-		}
+		}*/
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
@@ -277,11 +277,11 @@ public class NavigationDrawerFragment extends Fragment {
 			return true;
 		}
 
-		if (item.getItemId() == R.id.action_example) {
+		/*if (item.getItemId() == R.id.tactica) {
 			Toast.makeText(getActivity(), "Example action.", Toast.LENGTH_SHORT)
 					.show();
 			return true;
-		}
+		}*/
 
 		return super.onOptionsItemSelected(item);
 	}

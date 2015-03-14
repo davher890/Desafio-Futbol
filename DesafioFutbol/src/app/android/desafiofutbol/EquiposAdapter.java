@@ -35,30 +35,7 @@ public class EquiposAdapter extends ArrayAdapter<Equipo> {
 		
 		((TextView)convertView.findViewById(R.id.textViewNombreEq)).setText(equipo.getNombre());
 	    ((TextView)convertView.findViewById(R.id.textViewValorEq)).setText(formatter.format(valor));
-	    ((TextView)convertView.findViewById(R.id.textViewPuntosEq)).setText(String.valueOf(equipo.getPuntos()));
-	    ((TextView)convertView.findViewById(R.id.textViewLigaEq)).setText(equipo.getLigaNombre());
-	    
-	    /*if (equipo.getJugadores() != null){
-	    	int size = equipo.getJugadores().size();
-			((TextView)convertView.findViewById(R.id.TextViewJugadoresEq)).setText(String.valueOf(size));
-	    	
-	    	LinearLayout layoutJugadores = (LinearLayout) convertView.findViewById(R.id.layoutJugadoresEq);
-	    	layoutJugadores.removeAllViews();
-	    	TextView labelUltima = new TextView(getContext());
-	    	labelUltima.setText("Última alineación:");
-	    	layoutJugadores.addView(labelUltima);
-	    	TextView jug = null;
-	    	for(int i=0;i<size;i++){
-	    		Jugador jugador = equipo.getJugadores().get(i);
-	    		if (jugador.getTitular() == 1){
-		    		jug = new TextView(getContext());
-		    		
-					jug.setText(jugador.getApodo());
-		    		layoutJugadores.addView(jug);
-	    		}
-	    	}	    	
-	    }*/
-	    
+	    ((TextView)convertView.findViewById(R.id.textViewLigaEq)).setText(equipo.getLigaNombre());	    
 	    return convertView;
 	}
 }

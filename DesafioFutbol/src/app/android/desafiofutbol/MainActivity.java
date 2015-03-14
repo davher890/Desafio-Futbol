@@ -9,9 +9,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import app.android.desafiofutbol.alineacion.FragmentAlineacion;
 import app.android.desafiofutbol.clasificacion.FragmentClasificacion;
+import app.android.desafiofutbol.ddbb.SQLiteDesafioFutbol;
 import app.android.desafiofutbol.entrenadores.FragmentEntrenadores;
 import app.android.desafiofutbol.fichajes.FragmentFichajes;
-import app.android.desafiofutbol.liga.FragmentLiga;
+import app.android.desafiofutbol.usuarios.FragmentUsuario;
 
 public class MainActivity extends ActionBarActivity implements
 		NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -53,9 +54,9 @@ public class MainActivity extends ActionBarActivity implements
 		} else if (position == 2) {
 			fragmentManager.beginTransaction().replace(R.id.container, FragmentEntrenadores.newInstance()).commit();
 		} else if (position == 3) {
-			fragmentManager.beginTransaction().replace(R.id.container, FragmentLiga.newInstance()).commit();			
-		} else if (position == 4) {
 			fragmentManager.beginTransaction().replace(R.id.container, FragmentClasificacion.newInstance()).commit();			
+		} else if (position == 4) {
+			fragmentManager.beginTransaction().replace(R.id.container, FragmentUsuario.newInstance()).commit();
 		}
 	}
 
@@ -71,10 +72,10 @@ public class MainActivity extends ActionBarActivity implements
 			mTitle = getString(R.string.label_entrenadores);
 			break;
 		case 4:
-			mTitle = getString(R.string.label_liga);
+			mTitle = getString(R.string.label_clasificacion);
 			break;
 		case 5:
-			mTitle = getString(R.string.label_clasificacion);
+			mTitle = getString(R.string.label_usuarios);
 			break;
 		}
 	}
@@ -92,7 +93,7 @@ public class MainActivity extends ActionBarActivity implements
 			// Only show items in the action bar relevant to this screen
 			// if the drawer is not showing. Otherwise, let the drawer
 			// decide what to show in the action bar.
-			getMenuInflater().inflate(R.menu.main, menu);
+			//getMenuInflater().inflate(R.menu.main, menu);
 			restoreActionBar();
 			return true;
 		}
@@ -104,11 +105,22 @@ public class MainActivity extends ActionBarActivity implements
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
+		/*int id = item.getItemId();
 		if (id == R.id.action_settings) {
 			return true;
-		}
+		}*/
 		return super.onOptionsItemSelected(item);
 	}
-
+	
+	@Override
+	protected void onDestroy() {		
+		final SQLiteDesafioFutbol admin = new SQLiteDesafioFutbol(this);
+		Thread thread = new Thread(){
+        	public void run(){        		
+        		admin.cleanDatabase();
+        	}
+        };
+        thread.start();		
+		super.onDestroy();
+	}
 }

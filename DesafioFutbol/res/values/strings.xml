@@ -7,11 +7,11 @@
     <string name="action_example">Example action</string>
     <string name="action_settings">Settings</string>
     
-    <string name="label_liga">Liga</string>
     <string name="label_alineacion">Alineacion</string>
     <string name="label_clasificacion">Clasificacion</string>
     <string name="label_entrenadores">Entrenadores</string>
     <string name="label_fichajes">Fichajes</string>
+    <string name="label_usuarios">Usuarios</string>
     
     <string-array name="numbers05_array">
         <item>1</item>
@@ -20,4 +20,12 @@
         <item>4</item>
         <item>5</item>
     </string-array>
+    
+    <string-array name="num_partidos">
+	    <item>1</item>
+	    <item>2</item>
+	    <item>3</item>
+	    <item>4</item>
+	    <item>5</item>
+	</string-array>	
 </resources>

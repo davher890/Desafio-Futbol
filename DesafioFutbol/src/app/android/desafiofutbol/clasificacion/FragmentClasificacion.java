@@ -16,10 +16,13 @@ import android.widget.ListView;
 import app.android.desafiofutbol.GetDesafioFutbol;
 import app.android.desafiofutbol.MainActivity;
 import app.android.desafiofutbol.R;
+import app.android.desafiofutbol.ddbb.SQLiteDesafioFutbol;
 
 public class FragmentClasificacion extends Fragment {
 	
-	ListView listViewClasificacion = null;
+	private ListView listViewClasificacion = null;
+	private SQLiteDesafioFutbol admin = null;
+	private ArrayList<UsuarioClasificacion> listaClasificacion = null;
 	
 	/**
 	 * Returns a new instance of this fragment for the given section number.
@@ -39,8 +42,17 @@ public class FragmentClasificacion extends Fragment {
 		View rootView = inflater.inflate(R.layout.fragment_clasificacion, container,false);
 		listViewClasificacion = (ListView) rootView.findViewById(R.id.listViewEquipos);		
 	
-		GetDesafioFutbol get = new GetDesafioFutbol("clasificacion", getActivity(), null, this, "parseClasificacionJson");
-        get.execute();
+		admin = new SQLiteDesafioFutbol(getActivity());
+    	//Obtiene los datos de la clasficicacion
+    	listaClasificacion = admin.getClasificacion();
+    	
+    	if (listaClasificacion == null || listaClasificacion.size() == 0){
+    		GetDesafioFutbol get = new GetDesafioFutbol("clasificacion", getActivity(), null, this, "parseClasificacionJson");
+            get.execute();
+    	}
+    	else{
+    		setData();
+    	}
 		return rootView;
 	}
 
@@ -56,7 +68,7 @@ public class FragmentClasificacion extends Fragment {
 			jsonArray = new JSONArray(json);
 			int length = jsonArray.length();
 			if (jsonArray != null) {
-				ArrayList<UsuarioClasificacion> listaClasificacion = new ArrayList<UsuarioClasificacion>(length);
+				listaClasificacion = new ArrayList<UsuarioClasificacion>(length);
 				
 				for(int i=0; i<length;i++){
 					JSONObject usuarioJson = (JSONObject) jsonArray.get(i);
@@ -84,7 +96,16 @@ public class FragmentClasificacion extends Fragment {
 						}
 					}
 					if (ultimaJornada != -1){
-						ultimaJornada = jornadasJson.getInt("jornada_"+ultimaJornada);
+						//while (ultimaJornada )
+						int puntosUltimaJornada = 0;
+						while (puntosUltimaJornada == 0 && ultimaJornada > 0){
+							if (!jornadasJson.getString("jornada_"+ultimaJornada).equals("null")){
+								puntosUltimaJornada = jornadasJson.getInt("jornada_"+ultimaJornada);
+							}
+							ultimaJornada--;
+						}
+						ultimaJornada = puntosUltimaJornada;
+						
 					}
 					else{
 						ultimaJornada = 0;
@@ -92,12 +113,21 @@ public class FragmentClasificacion extends Fragment {
 					usuarioClasficicacion.setUltimaJornada(ultimaJornada);
 					listaClasificacion.add(usuarioClasficicacion);				
 				}
-				ClasificacionAdapter adapter = new ClasificacionAdapter(getActivity(), listaClasificacion);
-			    listViewClasificacion.setAdapter(adapter);
+				Thread thread = new Thread(){
+		        	public void run(){
+		    	        admin.saveClasificacion(FragmentClasificacion.this.listaClasificacion);
+		        }};
+		        thread.start();
+		        setData();
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public void setData(){
+		ClasificacionAdapter adapter = new ClasificacionAdapter(getActivity(), listaClasificacion);
+	    listViewClasificacion.setAdapter(adapter);
 	}
 }

@@ -9,19 +9,10 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="app.android.desafiofutbol.MainActivity$PlaceholderFragment" >
 
-    <TextView
-        android:id="@+id/textViewMisEquipos"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Mis equipos"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
     <ListView
         android:id="@+id/listViewEquipos"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textViewMisEquipos" >
+        android:layout_height="match_parent" >
 
     </ListView>
 

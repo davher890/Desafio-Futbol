@@ -14,8 +14,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import app.android.desafiofutbol.clases.Equipo;
-import app.android.desafiofutbol.clases.Jugador;
-import app.android.desafiofutbol.clases.Usuario;
+import app.android.desafiofutbol.clases.DatosUsuario;
 import app.android.desafiofutbol.ddbb.SQLiteDesafioFutbol;
 
 public class MisEquiposActivity extends Activity {
@@ -30,6 +29,15 @@ public class MisEquiposActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		
+		final SQLiteDesafioFutbol admin = new SQLiteDesafioFutbol(this);
+		Thread thread = new Thread(){
+        	public void run(){
+        		
+        		admin.cleanDatabase();
+        	}
+        };
+        thread.start();
+		
 		setContentView(R.layout.lista_equipos);	
 		listViewEquipos = (ListView) findViewById(R.id.listViewEquipos);		
 		listViewEquipos.setOnItemClickListener(new OnItemClickListener() {
@@ -37,7 +45,8 @@ public class MisEquiposActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
 				// TODO Auto-generated method stub				
-				Usuario.setIdEquipoSeleccionado(listaEquipos.get(position).getId());
+				DatosUsuario.setIdEquipoSeleccionado(listaEquipos.get(position).getId());
+				DatosUsuario.setNombreEquipo(listaEquipos.get(position).getNombre());
 				Intent i = new Intent(MisEquiposActivity.this, MainActivity.class);			
 	            startActivityForResult(i, 1);				
 			}
@@ -51,7 +60,7 @@ public class MisEquiposActivity extends Activity {
 	    listViewEquipos.setAdapter(adapter);
 	}
 
-public void ligasMisligasSW(String json){
+	public void ligasMisligasSW(String json){
 		
 		JSONArray jsonArray = null;
 		try {
@@ -75,35 +84,10 @@ public void ligasMisligasSW(String json){
 					equipo.setLigaId(ligaJson.getInt("id"));					
 					listaEquipos.add(equipo);
 				}
-				GetDesafioFutbol get = new GetDesafioFutbol("clasificacion", this, null, null,  "clasificacionSW");
-		        get.execute();
-			}			
-		} catch (JSONException e) {
-			//Get of team score					
-		}
-	}
-	
-	public void clasificacionSW (String json){		
-		JSONArray jsonArray = null;
-		try{
-			jsonArray = new JSONArray(json);
-			int length = jsonArray.length();
-			if (jsonArray != null) {				
-				for(int i=0; i<length;i++){					
-				
-					JSONObject equipoJson = (JSONObject) jsonArray.get(i);
-					int sizeEquipos = listaEquipos.size();
-					for (int j=0; j<sizeEquipos;j++){						
-						if (equipoJson.getInt("id") == listaEquipos.get(j).getId()){
-							listaEquipos.get(j).setPuntos(equipoJson.getInt("puntos"));
-						}
-					}				
-				}
 			}
 			printData(listaEquipos);
-		} catch (JSONException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		} catch (JSONException e) {
+			//Get of team score					
 		}
 	}
 }

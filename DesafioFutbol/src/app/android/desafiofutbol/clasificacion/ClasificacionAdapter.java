@@ -38,7 +38,6 @@ public class ClasificacionAdapter extends ArrayAdapter<UsuarioClasificacion> {
 		DecimalFormat formatter = new DecimalFormat("###,###,###,###,###€");
 	    
 	    ((TextView) convertView.findViewById(R.id.textViewValorCla)).setText(formatter.format(valor));
-	    ((TextView) convertView.findViewById(R.id.textViewUltimaCla)).setText(String.valueOf(user.getUltimaJornada()));
 	    ((TextView) convertView.findViewById(R.id.textViewPuntosCla)).setText(String.valueOf(user.getPuntos()));
 	    
 	    return convertView;

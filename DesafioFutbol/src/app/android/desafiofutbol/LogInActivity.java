@@ -12,8 +12,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import app.android.desafiofutbol.clases.Usuario;
-import app.android.desafiofutbol.ddbb.SQLiteDesafioFutbol;
+import app.android.desafiofutbol.clases.ManageResources;
+import app.android.desafiofutbol.clases.DatosUsuario;
 
 /**
  * Created by david on 8/06/13.
@@ -35,9 +35,13 @@ public class LogInActivity extends Activity {
         bsign   = (Button)findViewById(R.id.buttonLogIn);
         email   = (EditText)findViewById(R.id.editTextUsuario);
         pwd     = (EditText)findViewById(R.id.editTextPwd);
-
-        SQLiteDesafioFutbol admin = new SQLiteDesafioFutbol(this);
-        admin.deleteTableJugador();
+                 
+        Thread thread = new Thread(){
+        	public void run(){
+        		ManageResources.inicializa();
+        	}
+        };
+        thread.start();        
         
         bsign.setOnClickListener(new View.OnClickListener() {
 
@@ -67,11 +71,11 @@ public class LogInActivity extends Activity {
     	JSONObject respJSON;
 		try {
 			respJSON = new JSONObject(json);
-			Usuario.setToken(respJSON.getString("token"));
-			Usuario.setUserId(Integer.parseInt(respJSON.getString("user_id")));
-			Usuario.setUserName(respJSON.getString("username"));
-			Usuario.setAvatar(respJSON.getString("avatar"));
-			Usuario.setP_rank(Integer.parseInt(respJSON.getString("p_rank")));
+			DatosUsuario.setToken(respJSON.getString("token"));
+			DatosUsuario.setUserId(Integer.parseInt(respJSON.getString("user_id")));
+			DatosUsuario.setUserName(respJSON.getString("username"));
+			DatosUsuario.setAvatar(respJSON.getString("avatar"));
+			DatosUsuario.setP_rank(Integer.parseInt(respJSON.getString("p_rank")));
 			
 			Intent i = new Intent(LogInActivity.this, MisEquiposActivity.class);
             startActivityForResult(i, 1);
@@ -88,7 +92,6 @@ public class LogInActivity extends Activity {
 				}
 			});
 			alertDialog.show();
-		}		
-		//Recuperar datos Usuario
+		}
     }
 }

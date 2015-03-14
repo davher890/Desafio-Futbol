@@ -1,10 +1,19 @@
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/index_vacio_grande_sin_jugador"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="app.android.desafiofutbol.MainActivity$PlaceholderFragment" 
+    android:layout_height="match_parent">
     
-    android:id="@+id/gridLayoutEntrenadores"
-	android:scrollbars="vertical">
-
-</GridLayout>
+	<GridView
+	    android:id="@+id/gridViewEntrenadores"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:layout_margin="10dp"
+	    android:gravity="center"
+	    android:horizontalSpacing="15dp"
+	    android:numColumns="2"
+	    android:verticalSpacing="17dp" >
+	    
+	</GridView>
+</LinearLayout>

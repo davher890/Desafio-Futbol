@@ -1,6 +1,5 @@
 package app.android.desafiofutbol.clases;
 
-import java.util.ArrayList;
 
 public class Equipo {
 	
@@ -9,8 +8,6 @@ public class Equipo {
 	private String nombre = null;
 	private int saldo = 0;
 	private int valor = 0;
-	private int puntos = 0;
-	private ArrayList<Jugador> jugadores = null;
 	
 	private int ligaId = -1;
 	private String ligaNombre = null;
@@ -120,27 +117,5 @@ public class Equipo {
 	 */
 	public void setValor(double valor) {
 		this.valor = (int)Math.round(valor);
-	}
-
-	public int getPuntos() {
-		return puntos;
-	}
-
-	public void setPuntos(int puntos) {
-		this.puntos = puntos;
-	}
-
-	/**
-	 * @return the jugadores
-	 */
-	public ArrayList<Jugador> getJugadores() {
-		return jugadores;
-	}
-
-	/**
-	 * @param jugadores the jugadores to set
-	 */
-	public void setJugadores(ArrayList<Jugador> jugadores) {
-		this.jugadores = jugadores;
 	}
 }

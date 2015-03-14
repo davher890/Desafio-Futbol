@@ -1,148 +1,87 @@
 package app.android.desafiofutbol.clases;
 
+import java.util.HashMap;
+
+import android.graphics.Bitmap;
 import app.android.desafiofutbol.R;
 
-public class ManageResources {
+public final class ManageResources {
+	
+	private static HashMap<String, Integer> mapEquipoIconoAlargado;
+	private static HashMap<String, Integer> mapEquipoIcono;
+	private static HashMap<String, Bitmap> mapImagenJugador;
+	
 
-	public int getDrawableFromString(String equipo){
-		
-		int drawable = -1;
-		switch (equipo) {
-	    case "Almería":
-			drawable = R.drawable.icono_alargado_almeria;
-			break;
-		case "Athletic":
-			drawable = R.drawable.icono_alargado_athletic;
-			break;
-		case "Atlético":
-			drawable = R.drawable.icono_alargado_atletico;
-			break;
-		case "Barcelona":
-			drawable = R.drawable.icono_alargado_barcelona;
-			break;
-		case "Celta":
-			drawable = R.drawable.icono_alargado_celta;
-			break;
-		case "Córdoba":
-			drawable = R.drawable.icono_alargado_cordoba;
-			break;
-		case "Deportivo":
-			drawable = R.drawable.icono_alargado_deportivo;
-			break;
-		case "Eibar":
-			drawable = R.drawable.icono_alargado_eibar;
-			break;
-		case "Elche":
-			drawable = R.drawable.icono_alargado_elche;
-			break;
-		case "Espanyol":
-			drawable = R.drawable.icono_alargado_espanyol;
-			break;
-		case "Getafe":
-			drawable = R.drawable.icono_alargado_getafe;
-			break;
-		case "Granada":
-			drawable = R.drawable.icono_alargado_granada;
-			break;
-		case "Levante":
-			drawable = R.drawable.icono_alargado_levante;
-			break;
-		case "Málaga":
-			drawable = R.drawable.icono_alargado_malaga;
-			break;
-		case "Rayo Vallecano":
-			drawable = R.drawable.icono_alargado_rayo;
-			break;
-		case "Real Madrid":
-			drawable = R.drawable.icono_alargado_madrid;
-			break;
-		case "Real Sociedad":
-			drawable = R.drawable.icono_alargado_real_sociedad;
-			break;
-		case "Sevilla":
-			drawable = R.drawable.icono_alargado_sevilla;
-			break;
-		case "Valencia":
-			drawable = R.drawable.icono_alargado_valencia;
-			break;
-		case "Villarreal":
-			drawable = R.drawable.icono_alargado_villareal;
-			break;
-		default:
-			drawable = -1;
-			break;
-		}		
-		return drawable;
+	public static int getDrawableFromString(String equipo){
+		return mapEquipoIconoAlargado.get(equipo)==null ? -1 : mapEquipoIconoAlargado.get(equipo).intValue();
 	}
 	
-public int getImageFromString(String equipo){
-		
-		int drawable = -1;
-		switch (equipo) {
-	    case "almeria":
-			drawable = R.drawable.almeria;
-			break;
-		case "athletic":
-			drawable = R.drawable.athletic;
-			break;
-		case "atletico":
-			drawable = R.drawable.atletico;
-			break;
-		case "barcelona":
-			drawable = R.drawable.barcelona;
-			break;
-		case "celta":
-			drawable = R.drawable.celta;
-			break;
-		case "cordoba":
-			drawable = R.drawable.cordoba;
-			break;
-		case "deportivo":
-			drawable = R.drawable.deportivo;
-			break;
-		case "eibar":
-			drawable = R.drawable.eibar;
-			break;
-		case "elche":
-			drawable = R.drawable.elche;
-			break;
-		case "espanyol":
-			drawable = R.drawable.espanyol;
-			break;
-		case "getafe":
-			drawable = R.drawable.getafe;
-			break;
-		case "granada":
-			drawable = R.drawable.granada;
-			break;
-		case "levante":
-			drawable = R.drawable.levante;
-			break;
-		case "malaga":
-			drawable = R.drawable.malaga;
-			break;
-		case "rayo-vallecano":
-			drawable = R.drawable.rayo_vallecano;
-			break;
-		case "real-madrid":
-			drawable = R.drawable.real_madrid;
-			break;
-		case "real-sociedad":
-			drawable = R.drawable.real_sociedad;
-			break;
-		case "sevilla":
-			drawable = R.drawable.sevilla;
-			break;
-		case "valencia":
-			drawable = R.drawable.valencia;
-			break;
-		case "villarreal":
-			drawable = R.drawable.villarreal;
-			break;
-		default:
-			drawable = -1;
-			break;
+	public static int getImageFromString(String equipo){
+		return mapEquipoIcono.get(equipo)==null ? mapEquipoIcono.get("desconocido").intValue() : mapEquipoIcono.get(equipo).intValue();
+	}
+	
+	public static Bitmap getImageJugadorFromUrl(String url){
+		if (mapImagenJugador == null){
+			mapImagenJugador = new HashMap<String, Bitmap>();
 		}
-		return drawable;
+		return mapImagenJugador.get(url)== null ? null : mapImagenJugador.get(url);
+	}
+	
+	public static void addImagenJugador(String url, Bitmap bm){
+		mapImagenJugador.put(url, bm);
+	}
+
+	public static void inicilalizaMapIconoAlargado(){
+		mapEquipoIconoAlargado = new HashMap<String, Integer>();
+		mapEquipoIconoAlargado.put("Almería",R.drawable.icono_alargado_almeria);			
+		mapEquipoIconoAlargado.put("Athletic",R.drawable.icono_alargado_athletic);			
+		mapEquipoIconoAlargado.put("Atlético",R.drawable.icono_alargado_atletico);			
+		mapEquipoIconoAlargado.put("Barcelona",R.drawable.icono_alargado_barcelona);			
+		mapEquipoIconoAlargado.put("Celta",R.drawable.icono_alargado_celta);			
+		mapEquipoIconoAlargado.put("Córdoba",R.drawable.icono_alargado_cordoba);			
+		mapEquipoIconoAlargado.put("Deportivo",R.drawable.icono_alargado_deportivo);			
+		mapEquipoIconoAlargado.put("Eibar",R.drawable.icono_alargado_eibar);			
+		mapEquipoIconoAlargado.put("Elche",R.drawable.icono_alargado_elche);			
+		mapEquipoIconoAlargado.put("Espanyol",R.drawable.icono_alargado_espanyol);			
+		mapEquipoIconoAlargado.put("Getafe",R.drawable.icono_alargado_getafe);			
+		mapEquipoIconoAlargado.put("Granada",R.drawable.icono_alargado_granada);			
+		mapEquipoIconoAlargado.put("Levante",R.drawable.icono_alargado_levante);			
+		mapEquipoIconoAlargado.put("Málaga",R.drawable.icono_alargado_malaga);			
+		mapEquipoIconoAlargado.put("Rayo Vallecano",R.drawable.icono_alargado_rayo);			
+		mapEquipoIconoAlargado.put("Real Madrid",R.drawable.icono_alargado_madrid);			
+		mapEquipoIconoAlargado.put("Real Sociedad",R.drawable.icono_alargado_real_sociedad);			
+		mapEquipoIconoAlargado.put("Sevilla",R.drawable.icono_alargado_sevilla);			
+		mapEquipoIconoAlargado.put("Valencia",R.drawable.icono_alargado_valencia);			
+		mapEquipoIconoAlargado.put("Villarreal",R.drawable.icono_alargado_villareal);		
+	}
+	
+	public static void inicilalizaMapIcono(){		
+		mapEquipoIcono = new HashMap<String, Integer>();
+		mapEquipoIcono.put("almeria",R.drawable.almeria);
+		mapEquipoIcono.put("athletic",R.drawable.athletic);		
+		mapEquipoIcono.put("atletico",R.drawable.atletico);		
+		mapEquipoIcono.put("barcelona",R.drawable.barcelona);		
+		mapEquipoIcono.put("celta",R.drawable.celta);		
+		mapEquipoIcono.put("cordoba",R.drawable.cordoba);		
+		mapEquipoIcono.put("deportivo",R.drawable.deportivo);		
+		mapEquipoIcono.put("eibar",R.drawable.eibar);		
+		mapEquipoIcono.put("elche",R.drawable.elche);		
+		mapEquipoIcono.put("espanyol",R.drawable.espanyol);		
+		mapEquipoIcono.put("getafe",R.drawable.getafe);		
+		mapEquipoIcono.put("granada",R.drawable.granada);		
+		mapEquipoIcono.put("levante",R.drawable.levante);		
+		mapEquipoIcono.put("malaga",R.drawable.malaga);		
+		mapEquipoIcono.put("rayo-vallecano",R.drawable.rayo_vallecano);		
+		mapEquipoIcono.put("real-madrid",R.drawable.real_madrid);		
+		mapEquipoIcono.put("real-sociedad",R.drawable.real_sociedad);		
+		mapEquipoIcono.put("sevilla",R.drawable.sevilla);		
+		mapEquipoIcono.put("valencia",R.drawable.valencia);		
+		mapEquipoIcono.put("villarreal",R.drawable.villarreal);
+		mapEquipoIcono.put("desconocido",R.drawable.base_player);
+	}
+
+	public static void inicializa() {
+		inicilalizaMapIconoAlargado();
+		inicilalizaMapIcono();		
 	}
 }

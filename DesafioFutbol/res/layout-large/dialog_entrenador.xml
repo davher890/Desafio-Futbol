@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="15dp"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/textViewDialogEntSalario"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/DialogEntrenadorNombre"
+        android:textStyle="bold"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Salario: " />
+
+    <TextView
+        android:id="@+id/DialogJugadorSalario"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/DialogEntrenadorNombre"
+        android:layout_toRightOf="@+id/textViewDialogEntSalario"
+        android:textStyle="bold"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/textViewDialogEntPuntos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:layout_below="@+id/textViewDialogEntSalario"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Puntos: " />
+
+    <TextView
+        android:id="@+id/DialogEntPuntos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/DialogJugadorSalario"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold"
+        android:layout_toRightOf="@+id/textViewDialogEntPuntos" />
+
+    <TextView
+        android:id="@+id/textViewDialogEntPartidos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewDialogEntPuntos"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold"
+        android:text="Número de partidos: " />
+
+    <Spinner
+        android:id="@+id/spinnerPartidosEnt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/DialogEntPuntos"
+        android:textStyle="bold"
+        android:layout_toRightOf="@+id/textViewDialogEntPartidos" />
+
+</RelativeLayout>

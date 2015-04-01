@@ -5,7 +5,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -89,16 +88,10 @@ public class PostDesafioFutbol extends AsyncTask<String, Context, String> {
 	        HttpResponse response = httpclient.execute(httppost);
 	        result = EntityUtils.toString(response.getEntity());
 	
-	    } catch (ClientProtocolException e) {
-	    	e.printStackTrace();
-	        // TODO Auto-generated catch block
 	    } catch (IOException e) {
 	    	e.printStackTrace();
 	        // TODO Auto-generated catch block
-	    } catch(Exception ex){  
-	    	ex.printStackTrace();
-        	// TODO Auto-generated catch block          
-        }
+	    }
         return result;
     }
 

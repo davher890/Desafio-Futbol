@@ -7,12 +7,20 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
+import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 import app.android.desafiofutbol.GetDesafioFutbol;
 import app.android.desafiofutbol.MainActivity;
@@ -21,9 +29,11 @@ import app.android.desafiofutbol.clases.Entrenador;
 import app.android.desafiofutbol.ddbb.SQLiteDesafioFutbol;
 
 public class FragmentEntrenadores extends Fragment {
-		
-	private View rootView;	
+			
 	LayoutInflater inflater;
+	private ListView listViewEntrenadores = null;
+	private EntrenadoresAdapter adapter  = null;
+	
 	private SQLiteDesafioFutbol admin = null;
 	
 	private ArrayList<Entrenador> listaEntrenadores = null;
@@ -42,8 +52,28 @@ public class FragmentEntrenadores extends Fragment {
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		rootView = inflater.inflate(R.layout.fragment_entrenadores, container,false);
+		View rootView = inflater.inflate(R.layout.fragment_entrenadores, container,false);
 		this.inflater = inflater;
+		
+		listViewEntrenadores = (ListView) rootView.findViewById(R.id.listViewEntrenadores);
+		
+		listViewEntrenadores.setOnItemClickListener(new OnItemClickListener() {	   
+        	
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				
+				Entrenador entrenador = adapter.getItem(position);
+	    		LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				View v = inflater.inflate(R.layout.dialog_entrenador, null);
+				
+		        EntrenadorDialogFragment alert = new EntrenadorDialogFragment(entrenador, FragmentEntrenadores.this);
+		        final AlertDialog createDialogLugar = alert.createDialogLugar(getActivity(), v);
+		        createDialogLugar.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);			
+				createDialogLugar.show();
+				final Button okButton = createDialogLugar.getButton(Dialog.BUTTON_POSITIVE);
+		        okButton.setTypeface(null, Typeface.BOLD);
+			}
+		});
 		
 		admin = new SQLiteDesafioFutbol(getActivity());
     	//Obtiene los datos de los entrenadores
@@ -102,9 +132,9 @@ public class FragmentEntrenadores extends Fragment {
 		}
 	}
 
-	private void setData() {		
-		GridView ll = (GridView) rootView.findViewById(R.id.gridViewEntrenadores);
-		ll.setAdapter(new EntrenadoresGridAdapter(this, getActivity(), listaEntrenadores));		
+	private void setData() {			
+		adapter = new EntrenadoresAdapter(getActivity(), listaEntrenadores);
+		listViewEntrenadores.setAdapter(adapter);		
 	}
 	
 	public void actualizaEntrenador(String result, int idEnt){

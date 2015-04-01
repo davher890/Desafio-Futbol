@@ -6,7 +6,6 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -61,16 +60,10 @@ public class GetDesafioFutbol extends AsyncTask<String, Context, String> {
 	        HttpResponse response = httpclient.execute(httpget);
 	        result = EntityUtils.toString(response.getEntity());
 	
-	    } catch (ClientProtocolException e) {
-	    	e.printStackTrace();
-	        // TODO Auto-generated catch block
 	    } catch (IOException e) {
 	    	e.printStackTrace();
 	        // TODO Auto-generated catch block
-	    } catch(Exception ex){  
-	    	ex.printStackTrace();
-        	// TODO Auto-generated catch block          
-        }
+	    }
         return result;
     }
 
@@ -84,13 +77,7 @@ public class GetDesafioFutbol extends AsyncTask<String, Context, String> {
         dialog.show();
     }
 
-    protected void onPostExecute(String result) {    	
-    	if (mapParams != null){    		
-    		for(String key: mapParams.keySet()){
-    			result = mapParams.get(key)+result;
-    		}
-    	}
-    	
+    protected void onPostExecute(String result) {
     	try {
 			Method method = null;
 			if (fragment != null){
@@ -101,19 +88,10 @@ public class GetDesafioFutbol extends AsyncTask<String, Context, String> {
 				method = c.getClass().getMethod(this.methodCallback, String.class);
 				method.invoke(c, result);
 			}
-		} catch (IllegalAccessException e) {
+		} catch (IllegalAccessException | NoSuchMethodException | IllegalArgumentException | InvocationTargetException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}  	
+		}	
     	dialog.cancel();
     }
 }

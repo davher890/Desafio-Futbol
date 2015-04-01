@@ -15,10 +15,9 @@ import app.android.desafiofutbol.clasificacion.UsuarioClasificacion;
 
 public class SQLiteDesafioFutbol extends SQLiteOpenHelper {
     
-	private static final String SQL_DROP = "DROP TABLE IF EXISTS jugador, entrenador, fichaje";
+	private static final String SQL_DROP = "DROP TABLE IF EXISTS jugador, entrenador, fichaje, clasificacion";
 	private static final String SQL_CREATE_JUGADOR = "CREATE TABLE jugador "
-			+ "(id_liga INTEGER,"
-			+ "id INTEGER,"
+			+ "(id INTEGER,"
 			+ "equipo_id INTEGER,"
 			+ "equipo_nombre TEXT,"
 			+ "puntos INTEGER, "
@@ -32,7 +31,7 @@ public class SQLiteDesafioFutbol extends SQLiteOpenHelper {
 			+ "nacion_logo TEXT,"
 			+ "edad INTEGER,"
 			+ "titular INTEGER,"//0 false, 1 true
-			+ "PRIMARY KEY (id_liga, id))";
+			+ "PRIMARY KEY (id))";
 	
 	private static final String SQL_CREATE_ENTRENADOR = "CREATE TABLE entrenador "
 			+ "(id INTEGER,"
@@ -60,6 +59,7 @@ public class SQLiteDesafioFutbol extends SQLiteOpenHelper {
 			+ "(id INTEGER,"
 			+ "usuario TEXT,"
 			+ "usuario_id INTEGER,"
+			+ "nombre TEXT,"
 			+ "puntos INTEGER,"
 			+ "valor INTEGER, "
 			+ "ultima_jornada INTEGER, "
@@ -85,16 +85,6 @@ public class SQLiteDesafioFutbol extends SQLiteOpenHelper {
     	db.close();
     }
     
-    /*public void deleteTableJugador(){
-    	SQLiteDatabase db = getWritableDatabase();
-    	db.delete("jugador", null, null);
-    }
-    
-    public void deleteTableEntrenador(){
-    	SQLiteDatabase db = getWritableDatabase();
-    	db.delete("entrenador", null, null);
-    }*/
-    
     public void restartDatabase(){
     	SQLiteDatabase db = getWritableDatabase();
     	db.execSQL(SQL_DROP);
@@ -109,7 +99,6 @@ public class SQLiteDesafioFutbol extends SQLiteOpenHelper {
         	  Jugador jugador = jugadores.get(i);
           
 	          StringBuffer sb = new StringBuffer("INSERT INTO jugador VALUES (");
-	          sb.append(jugador.getIdMiLiga()).append(", ");
 	          sb.append(jugador.getId()).append(", ");
 	          sb.append(jugador.getEquipoId()).append(", ");
 	          sb.append("'").append(jugador.getEquipo()).append("', ");
@@ -129,10 +118,10 @@ public class SQLiteDesafioFutbol extends SQLiteOpenHelper {
           db.close();
     }
     
-	public ArrayList<Jugador> getJugadores(int equipoId) {
+	public ArrayList<Jugador> getJugadores() {
 		ArrayList<Jugador> result = new ArrayList<Jugador>();
     	SQLiteDatabase db = getReadableDatabase();
-    	String query = "SELECT apodo, posicion, equipo_nombre, puntos, titular FROM jugador WHERE id_liga="+equipoId;
+    	String query = "SELECT apodo, posicion, equipo_nombre, puntos, titular, nombre, apellidos, foto ,precio FROM jugador";
     	
     	Cursor cursor = db.rawQuery(query, null);
     	Jugador j = null;
@@ -143,6 +132,10 @@ public class SQLiteDesafioFutbol extends SQLiteOpenHelper {
     		j.setEquipo(cursor.getString(2));
     		j.setPuntos(cursor.getInt(3));
     		j.setTitular(cursor.getInt(4));
+    		j.setNombre(cursor.getString(5));
+    		j.setApellidos(cursor.getString(6));
+    		j.setUrlImagen(cursor.getString(7));
+    		j.setValor(cursor.getInt(8));
     		result.add(j);
     	}
     	cursor.close();
@@ -203,7 +196,7 @@ public class SQLiteDesafioFutbol extends SQLiteOpenHelper {
 		
 		ArrayList<UsuarioClasificacion> result = new ArrayList<UsuarioClasificacion>();
     	SQLiteDatabase db = getReadableDatabase();
-    	String query = "SELECT id, usuario, usuario_id, puntos, valor, ultima_jornada FROM clasificacion ORDER BY puntos desc";    	
+    	String query = "SELECT id, usuario, usuario_id, puntos, valor, ultima_jornada, nombre FROM clasificacion ORDER BY puntos desc";    	
     	Cursor cursor = db.rawQuery(query, null);
     	UsuarioClasificacion j = null;
     	while (cursor.moveToNext()){
@@ -214,6 +207,7 @@ public class SQLiteDesafioFutbol extends SQLiteOpenHelper {
     		j.setPuntos(cursor.getInt(3));
     		j.setValor(cursor.getInt(4));
     		j.setUltimaJornada(cursor.getInt(5));
+    		j.setNombre(cursor.getString(6));
     		result.add(j);
     	}
     	cursor.close();
@@ -247,7 +241,9 @@ public class SQLiteDesafioFutbol extends SQLiteOpenHelper {
 		SQLiteDatabase db = getWritableDatabase();
 		ContentValues args = new ContentValues();
 	    args.put("propietario", value);
-		return db.update("entrenador", args, "id="+idEntrenador, null);		
+		int update = db.update("entrenador", args, "id="+idEntrenador, null);
+		db.close();
+		return update;		
 	}
 	
 	public int updateFichaje(int idFichaje, int oferta){
@@ -259,7 +255,16 @@ public class SQLiteDesafioFutbol extends SQLiteOpenHelper {
 	    args.put("propietario", DatosUsuario.getNombreEquipo());
 	    args.put("propietario_id", DatosUsuario.getIdEquipoSeleccionado());
 	    args.put("mi_oferta", oferta);
-		return db.update("fichaje", args, "id="+idFichaje, null);		
+		int update = db.update("fichaje", args, "id="+idFichaje, null);
+		db.close();
+		return update;		
+	}
+	
+	public int deleteFichaje(int idFichaje){
+		SQLiteDatabase db = getWritableDatabase();
+		int delete = db.delete("fichaje", "id="+idFichaje, null);
+		db.close();
+		return delete;
 	}
 	
 	public void saveFichajes(ArrayList<Jugador> fichajes) {
@@ -297,6 +302,7 @@ public class SQLiteDesafioFutbol extends SQLiteOpenHelper {
 	        sb.append(usuario.getId()).append(", ");
 	        sb.append("'").append(usuario.getUsuario()).append("', ");
 	        sb.append(usuario.getUsuario_id()).append(", ");
+	        sb.append("'").append(usuario.getNombre()).append("', ");
 	        sb.append(usuario.getPuntos()).append(",");
 	        sb.append(usuario.getValor()).append(",");
 	        sb.append(usuario.getUltimaJornada()).append(")");
@@ -311,6 +317,7 @@ public class SQLiteDesafioFutbol extends SQLiteOpenHelper {
 		db.delete("entrenador", null, null);
 		db.delete("jugador", null, null);
 		db.delete("fichaje", null, null);
-		db.delete("clasificacion", null, null);		
+		db.delete("clasificacion", null, null);
+		db.close();
 	}
 }

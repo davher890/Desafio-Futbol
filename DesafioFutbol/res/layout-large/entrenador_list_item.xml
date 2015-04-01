@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="10dp"
+    android:background="#55ff6c2c" >
+
+	<TextView
+	    android:id="@+id/textViewNombreEnt"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:gravity="center"
+	    android:text="TextView"
+	    android:textAppearance="?android:attr/textAppearanceMedium"
+	    android:textStyle="bold" />
+	
+	<TextView
+	    android:id="@+id/textViewEnt01"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@id/textViewNombreEnt"
+	    android:layout_marginLeft="5dp"
+	    android:text="Salario:"
+	    android:textAppearance="?android:attr/textAppearanceMedium" />
+	
+	<TextView
+	    android:id="@+id/textViewSalarioEnt"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@+id/textViewNombreEnt"
+	    android:layout_marginLeft="5dp"
+	    android:layout_toRightOf="@id/textViewEnt01"
+	    android:text="TextView"
+	    android:textAppearance="?android:attr/textAppearanceMedium" />
+	
+	<TextView
+	    android:id="@+id/textViewEnt02"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@+id/textViewEnt01"
+	    android:layout_marginLeft="5dp"
+	    android:text="Puntos:"
+	    android:textAppearance="?android:attr/textAppearanceMedium" />
+	
+	<TextView
+	    android:id="@+id/textViewPuntosEnt"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@+id/textViewSalarioEnt"
+	    android:layout_marginLeft="5dp"
+	    android:layout_toRightOf="@+id/textViewEnt02"
+	    android:text="TextView"
+	    android:textAppearance="?android:attr/textAppearanceMedium" />
+	
+	<TextView
+	    android:id="@+id/textViewEnt03"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@+id/textViewEnt02"
+	    android:layout_marginLeft="5dp"
+	    android:text="Contratado por :"
+	    android:textAppearance="?android:attr/textAppearanceMedium" />
+	
+	<TextView
+	    android:id="@+id/textViewPropietarioEnt"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@+id/textViewEnt03"
+	    android:layout_marginLeft="5dp"
+	    android:gravity="center"
+	    android:text="TextView"
+	    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</RelativeLayout>

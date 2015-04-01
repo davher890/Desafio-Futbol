@@ -33,8 +33,9 @@
             android:id="@+id/textViewValorCla"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
+            android:layout_gravity="right"
             android:layout_weight="5"
+            android:gravity="right"
             android:textSize="18dp" />
 
         <TextView

@@ -1,0 +1,32 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+
+    <!-- More -->
+    <item
+        android:id="@+id/ordenar"
+        app:showAsAction="always"
+        android:title="Ordenar">
+        <menu>
+            <item
+		        android:id="@+id/nombre"
+		        android:title="Nombre"
+		        app:showAsAction="never"/>
+		    <item
+		        android:id="@+id/puntos"
+		        android:title="Puntos"
+		        app:showAsAction="never"/>
+		    <item
+		        android:id="@+id/posicion"
+		        android:title="Posicion"
+		        app:showAsAction="never"/>
+		    <item
+		        android:id="@+id/valor"
+		        android:title="Valor"
+		        app:showAsAction="never"/>
+		    <item
+		        android:id="@+id/equipo"
+		        android:title="Equipo"
+		        app:showAsAction="never"/>
+        </menu>
+    </item>
+</menu>

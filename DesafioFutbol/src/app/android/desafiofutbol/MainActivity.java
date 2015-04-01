@@ -12,7 +12,6 @@ import app.android.desafiofutbol.clasificacion.FragmentClasificacion;
 import app.android.desafiofutbol.ddbb.SQLiteDesafioFutbol;
 import app.android.desafiofutbol.entrenadores.FragmentEntrenadores;
 import app.android.desafiofutbol.fichajes.FragmentFichajes;
-import app.android.desafiofutbol.usuarios.FragmentUsuario;
 
 public class MainActivity extends ActionBarActivity implements
 		NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -55,8 +54,6 @@ public class MainActivity extends ActionBarActivity implements
 			fragmentManager.beginTransaction().replace(R.id.container, FragmentEntrenadores.newInstance()).commit();
 		} else if (position == 3) {
 			fragmentManager.beginTransaction().replace(R.id.container, FragmentClasificacion.newInstance()).commit();			
-		} else if (position == 4) {
-			fragmentManager.beginTransaction().replace(R.id.container, FragmentUsuario.newInstance()).commit();
 		}
 	}
 
@@ -73,9 +70,6 @@ public class MainActivity extends ActionBarActivity implements
 			break;
 		case 4:
 			mTitle = getString(R.string.label_clasificacion);
-			break;
-		case 5:
-			mTitle = getString(R.string.label_usuarios);
 			break;
 		}
 	}

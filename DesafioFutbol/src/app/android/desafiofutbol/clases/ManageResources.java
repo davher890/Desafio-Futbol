@@ -13,14 +13,23 @@ public final class ManageResources {
 	
 
 	public static int getDrawableFromString(String equipo){
+		if (equipo == null){
+			return -1;
+		}
 		return mapEquipoIconoAlargado.get(equipo)==null ? -1 : mapEquipoIconoAlargado.get(equipo).intValue();
 	}
 	
 	public static int getImageFromString(String equipo){
+		if (equipo == null){
+			return -1;
+		}
 		return mapEquipoIcono.get(equipo)==null ? mapEquipoIcono.get("desconocido").intValue() : mapEquipoIcono.get(equipo).intValue();
 	}
 	
 	public static Bitmap getImageJugadorFromUrl(String url){
+		if (url == null){
+			return null;
+		}
 		if (mapImagenJugador == null){
 			mapImagenJugador = new HashMap<String, Bitmap>();
 		}
@@ -28,7 +37,9 @@ public final class ManageResources {
 	}
 	
 	public static void addImagenJugador(String url, Bitmap bm){
-		mapImagenJugador.put(url, bm);
+		if (url != null && bm != null){
+			mapImagenJugador.put(url, bm);
+		}
 	}
 
 	public static void inicilalizaMapIconoAlargado(){

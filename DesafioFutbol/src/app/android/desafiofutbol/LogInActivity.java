@@ -12,8 +12,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import app.android.desafiofutbol.clases.ManageResources;
 import app.android.desafiofutbol.clases.DatosUsuario;
+import app.android.desafiofutbol.clases.ManageResources;
 
 /**
  * Created by david on 8/06/13.
@@ -86,8 +86,7 @@ public class LogInActivity extends Activity {
 			alertDialog.setButton(RESULT_OK, "Aceptar", new DialogInterface.OnClickListener() {
 				
 				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub		
+				public void onClick(DialogInterface dialog, int which) {		
 					alertDialog.cancel();
 				}
 			});

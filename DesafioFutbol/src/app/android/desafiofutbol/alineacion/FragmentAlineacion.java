@@ -24,7 +24,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import app.android.desafiofutbol.GetDesafioFutbol;
 import app.android.desafiofutbol.MainActivity;
-import app.android.desafiofutbol.PostDesafioFutbol;
+import app.android.desafiofutbol.PutDesafioFutbol;
 import app.android.desafiofutbol.R;
 import app.android.desafiofutbol.clases.DatosUsuario;
 import app.android.desafiofutbol.clases.Jugador;
@@ -58,6 +58,7 @@ public class FragmentAlineacion extends Fragment implements OnDragListener, OnLo
 	private EquipoAlineacion equipo = null; 
 	JSONArray ids = null;
 	JSONObject json = null;
+	ArrayList<Integer> idArray = null;
 	
 	public static FragmentAlineacion newInstance() {		
 		FragmentAlineacion fragment = new FragmentAlineacion();
@@ -86,11 +87,12 @@ public class FragmentAlineacion extends Fragment implements OnDragListener, OnLo
     	
     	admin = new SQLiteDesafioFutbol(getActivity());
     	//Obtiene los datos de los jugadores para el id de equipo seleccionado
-    	jugadores = admin.getJugadores(DatosUsuario.getIdEquipoSeleccionado());
+    	jugadores = admin.getJugadores();
     	
     	if (jugadores == null || jugadores.size() == 0){
 			HashMap<String, String> paramMap = new HashMap<String, String>();
 	    	paramMap.put("idEquipo", String.valueOf(DatosUsuario.getIdEquipoSeleccionado()));
+	    	paramMap.put("change_sele", String.valueOf(DatosUsuario.getIdEquipoSeleccionado()));
 	    	GetDesafioFutbol get= new GetDesafioFutbol("selecciones/plantilla/"+DatosUsuario.getIdEquipoSeleccionado(), getActivity(), paramMap, this, "seleccionesPlantillaWS");
 	    	get.execute();
     	}
@@ -102,10 +104,6 @@ public class FragmentAlineacion extends Fragment implements OnDragListener, OnLo
 	}
 	
 	public void seleccionesPlantillaWS (String result){
-		
-		final String idEquipo = result.substring(0,result.indexOf("{"));
-		result = result.substring(result.indexOf("{"));
-		
 		final String json = result;
 		getActivity().runOnUiThread(new Runnable() {
 		     @Override
@@ -118,10 +116,10 @@ public class FragmentAlineacion extends Fragment implements OnDragListener, OnLo
 					JSONArray jsonArrayMedios = respJSON.getJSONArray(Posicion.medios.name());
 					JSONArray jsonArrayDelanteros = respJSON.getJSONArray(Posicion.delanteros.name());
 					
-					jugadores = getJugadoresFromJson(jsonArrayPorteros, idEquipo);
-					jugadores.addAll(getJugadoresFromJson(jsonArrayDefensas, idEquipo));
-					jugadores.addAll(getJugadoresFromJson(jsonArrayMedios, idEquipo));
-					jugadores.addAll(getJugadoresFromJson(jsonArrayDelanteros, idEquipo));
+					jugadores = getJugadoresFromJson(jsonArrayPorteros);
+					jugadores.addAll(getJugadoresFromJson(jsonArrayDefensas));
+					jugadores.addAll(getJugadoresFromJson(jsonArrayMedios));
+					jugadores.addAll(getJugadoresFromJson(jsonArrayDelanteros));
 					
 					Thread thread = new Thread(){
 			        	public void run(){
@@ -139,7 +137,7 @@ public class FragmentAlineacion extends Fragment implements OnDragListener, OnLo
 		});
 	}
 	
-	public ArrayList<Jugador> getJugadoresFromJson(JSONArray arrayJugador, String idMiLiga) throws JSONException{
+	public ArrayList<Jugador> getJugadoresFromJson(JSONArray arrayJugador) throws JSONException{
 		
 		final ArrayList<Jugador> jugadores = new ArrayList<Jugador>();
 		int lengthArray = arrayJugador.length();
@@ -147,7 +145,6 @@ public class FragmentAlineacion extends Fragment implements OnDragListener, OnLo
 			
 			JSONObject jugadorJson = (JSONObject) arrayJugador.get(i);
 			Jugador jugador = new Jugador();
-			jugador.setIdMiLiga(Integer.parseInt(idMiLiga));
 			jugador.setId(jugadorJson.getInt("id"));
 			jugador.setApodo(jugadorJson.getString("apodo"));
 			jugador.setNombre(jugadorJson.getString("nombre"));
@@ -223,6 +220,7 @@ public class FragmentAlineacion extends Fragment implements OnDragListener, OnLo
 					
 					json = new JSONObject();
 					ids = new JSONArray();
+					idArray = new ArrayList<Integer>();
 					
 					ArrayList<Jugador> jugadoresAli = new ArrayList<Jugador>();
 					jugadoresAli.addAll(porterosAli);
@@ -233,8 +231,9 @@ public class FragmentAlineacion extends Fragment implements OnDragListener, OnLo
 					int size = sizePorteros + sizeDefensas + sizeMedios + sizeDelanteros;
 					for (int i=0; i<size; i++){
 						ids.put(jugadoresAli.get(i).getId());
+						idArray.add(jugadoresAli.get(i).getId());
 					}
-	                PostDesafioFutbol putTactica = new PostDesafioFutbol("cambiar_tactica/"+tactica.toString()+"/"+DatosUsuario.getIdEquipoSeleccionado(), FragmentAlineacion.this, json, "gestionaAlineacion");
+	                PutDesafioFutbol putTactica = new PutDesafioFutbol("selecciones/cambiar_tactica/"+tactica.toString()+"/"+DatosUsuario.getIdEquipoSeleccionado(), FragmentAlineacion.this, json, "gestionaAlineacion");
 			        putTactica.execute();				
 				}
 				else{					
@@ -336,15 +335,26 @@ public class FragmentAlineacion extends Fragment implements OnDragListener, OnLo
 	public void gestionaAlineacion(String result){
 		
         try {
-        	json.put("id_titulares",ids);
+        	//json.put("id_titulares",ids);
+        	json.put("id_titulares",new JSONArray(idArray));
 			json.put("id_seleccion", DatosUsuario.getIdEquipoSeleccionado());
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         
-        /*PutDesafioFutbol post = new PutDesafioFutbol("selecciones/save_once_titular", FragmentAlineacion.this, json, null);
-        post.execute();*/
+        PutDesafioFutbol post = new PutDesafioFutbol("selecciones/save_once_titular/", FragmentAlineacion.this, json, "updateBBDD");
+        post.execute();
+	}
+	
+	public void getsionaWS(String result){
+		
+		String res = result;
+	}
+	
+	public void updateBBDD(String result){
+		
+		String res = result;
 	}
 	
 }

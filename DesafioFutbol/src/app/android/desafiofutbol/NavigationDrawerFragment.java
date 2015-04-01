@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation
@@ -100,18 +99,36 @@ public class NavigationDrawerFragment extends Fragment {
 		mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				/*images[0] = R.drawable.icono_alineacion;
+				images[1] = R.drawable.icono_fichaje;
+				images[2] = R.drawable.icono_entrenador;
+				images[3] = R.drawable.icono_clasificacion;*/
+				
+				selectedposition[0] = position;
+				mMyDrawerAdapter.notifyDataSetChanged();
 				selectItem(position);
 			}
 		});
-		mDrawerListView.setAdapter(new ArrayAdapter<String>(getActionBar().getThemedContext(), 
+		titles = new String[] { getString(R.string.label_alineacion),  
+			    getString(R.string.label_fichajes),  
+			    getString(R.string.label_entrenadores),
+			    getString(R.string.label_clasificacion)};
+		images = new int[] {R.drawable.icono_alineacion, 
+				R.drawable.icono_fichaje,
+				R.drawable.icono_entrenador,
+				R.drawable.icono_clasificacion};
+		selectedposition = new int[] { mCurrentSelectedPosition };
+		mMyDrawerAdapter = new MyDrawerAdapter(getActivity(), titles, images,selectedposition);
+		mDrawerListView.setAdapter(mMyDrawerAdapter);
+		mDrawerListView.setItemChecked(mCurrentSelectedPosition, true); 
+		/*mDrawerListView.setAdapter(new ArrayAdapter<String>(getActionBar().getThemedContext(), 
 				android.R.layout.simple_list_item_1,
 				android.R.id.text1, new String[] {
 						getString(R.string.label_alineacion),
 						getString(R.string.label_fichajes),
 						getString(R.string.label_entrenadores),
-						getString(R.string.label_clasificacion),
-						getString(R.string.label_usuarios),}));
-		mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
+						getString(R.string.label_clasificacion),}));
+		mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);*/
 		return mDrawerListView;
 	}
 
@@ -161,14 +178,14 @@ public class NavigationDrawerFragment extends Fragment {
 				if (!isAdded()) {
 					return;
 				}
-				if (!mUserLearnedDrawer) {
+				/*if (!mUserLearnedDrawer) {
 					// The user manually opened the drawer; store this flag to  
 				    // prevent auto-showing  
 				    // the navigation drawer automatically in the future.
 					mUserLearnedDrawer = true;  
 				    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
 				    sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).commit();				    
-				}
+				}*/
 
 				getActivity().supportInvalidateOptionsMenu(); // calls
 																// onPrepareOptionsMenu()

@@ -30,9 +30,9 @@ import app.android.desafiofutbol.JugadoresComparator;
 import app.android.desafiofutbol.MainActivity;
 import app.android.desafiofutbol.R;
 import app.android.desafiofutbol.SortTypes;
+import app.android.desafiofutbol.clases.DatosUsuario;
 import app.android.desafiofutbol.clases.Jugador;
 import app.android.desafiofutbol.clases.ManageResources;
-import app.android.desafiofutbol.clases.DatosUsuario;
 import app.android.desafiofutbol.ddbb.SQLiteDesafioFutbol;
 
 public class FragmentFichajes extends Fragment {
@@ -42,8 +42,7 @@ public class FragmentFichajes extends Fragment {
 	private SQLiteDesafioFutbol admin = null;
 	private ArrayList<Jugador> fichajes = null;
 	
-	
-	/**
+		/**
 	 * Returns a new instance of this fragment for the given section number.
 	 */
 	
@@ -57,8 +56,9 @@ public class FragmentFichajes extends Fragment {
 	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		
+		inflater.inflate(R.menu.menu_fichajes, menu);
 		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.menu_clasificacion, menu);
 	};
 	
 	@Override
@@ -167,7 +167,7 @@ public class FragmentFichajes extends Fragment {
 		}
 	}
 	
-    public void gestionaWS(String result, int idFic, int oferta){
+    public void gestionaWS(String result, int idFichaje, int oferta){
     	
     	try {
 			JSONArray resultJson;
@@ -176,7 +176,18 @@ public class FragmentFichajes extends Fragment {
 			if (tipoMensaje.equals("notice")){
 				//Actualizar base de datos y refrescar tabla
 				
-				admin.updateFichaje(idFic, oferta);
+				//Clausula Pagada
+				if (oferta == 0){
+					admin.deleteFichaje(idFichaje);
+				}
+				// Elimina oferta
+				else if (oferta == -1){
+					admin.updateFichaje(idFichaje, oferta);
+				}
+				// Cambia/Crea oferta
+				else{
+					admin.updateFichaje(idFichaje, oferta);					
+				}
 				
 				fichajes = admin.getFichajes();
 				setData(fichajes, SortTypes.puntos.name());				

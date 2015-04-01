@@ -24,7 +24,6 @@ public class FichajesAdapter extends ArrayAdapter<Jugador> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		// TODO Auto-generated method stub
 		
 		if (convertView == null) {
 			convertView = LayoutInflater.from(getContext()).inflate(R.layout.fichajes_list_item, parent, false);	          

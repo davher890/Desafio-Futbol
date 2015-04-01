@@ -102,10 +102,10 @@ public class AlineacionAdapter extends ArrayAdapter<Jugador> {
 				LayoutInflater inflater = (LayoutInflater) context.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				View vDialog = inflater.inflate(R.layout.dialog_jugador, null);
 				
-		        JugadorDialogFragment alert = new JugadorDialogFragment(jugador, context);
-		        AlertDialog createDialogLugar = alert.createDialogLugar(context.getActivity(), vDialog);
-		        createDialogLugar.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);			
-				createDialogLugar.show();
+		        JugadorDialogFragment alert = new JugadorDialogFragment(jugador, context, jugador.getId());
+		        AlertDialog createDialogJugador = alert.createDialogJugador(context.getActivity(), vDialog);
+		        createDialogJugador.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);			
+		        createDialogJugador.show();
 				
 			}
 		});
@@ -114,7 +114,10 @@ public class AlineacionAdapter extends ArrayAdapter<Jugador> {
 		
 		ImageView imgEquipo = (ImageView)convertView.findViewById(R.id.imageViewEquipoAli);
 		
-		imgEquipo.setImageResource(ManageResources.getImageFromString(jugador.getEquipo()));
+		int imageFromString = ManageResources.getImageFromString(jugador.getEquipo());
+		if (imageFromString != -1){
+			imgEquipo.setImageResource(imageFromString);
+		}
 		
 		TextView apodo = (TextView)convertView.findViewById(R.id.textViewApodoAli);
 		apodo.setText(jugador.getApodo());

@@ -2,7 +2,6 @@ package app.android.desafiofutbol.clases;
 
 public class Jugador{
 	
-	private int idMiLiga = -1;
 	private int id = -1;
 	private String apodo = null;
 	private String nombre = null;
@@ -262,20 +261,6 @@ public class Jugador{
 	 */
 	public void setTitular(int titular) {
 		this.titular = titular;
-	}
-
-	/**
-	 * @return the idMiLiga
-	 */
-	public int getIdMiLiga() {
-		return idMiLiga;
-	}
-
-	/**
-	 * @param idMiLiga the idMiLiga to set
-	 */
-	public void setIdMiLiga(int idMiLiga) {
-		this.idMiLiga = idMiLiga;
 	}
 
 	/**

@@ -60,10 +60,12 @@ public class MyDrawerAdapter extends BaseAdapter {
 
   mViewHolder.tvTitle = (TextView) convertView
     .findViewById(R.id.textViewUltima);
+  
+  mViewHolder.ivIcon = (ImageView) convertView  
+		    .findViewById(R.id.imageViewUltima); 
 
   mViewHolder.tvTitle.setText(titles[position]);
   mViewHolder.ivIcon.setImageResource(images[position]);
-
   //Highlight the selected list item
   if (position == selectedposition[0]) {
    convertView.setBackgroundColor(Color.WHITE);

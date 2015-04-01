@@ -13,9 +13,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import app.android.desafiofutbol.clases.Equipo;
 import app.android.desafiofutbol.clases.DatosUsuario;
-import app.android.desafiofutbol.ddbb.SQLiteDesafioFutbol;
+import app.android.desafiofutbol.clases.Equipo;
 
 public class MisEquiposActivity extends Activity {
 	
@@ -29,14 +28,13 @@ public class MisEquiposActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		
-		final SQLiteDesafioFutbol admin = new SQLiteDesafioFutbol(this);
+		/*final SQLiteDesafioFutbol admin = new SQLiteDesafioFutbol(this);
 		Thread thread = new Thread(){
-        	public void run(){
-        		
+        	public void run(){	
         		admin.cleanDatabase();
         	}
         };
-        thread.start();
+        thread.start();*/
 		
 		setContentView(R.layout.lista_equipos);	
 		listViewEquipos = (ListView) findViewById(R.id.listViewEquipos);		

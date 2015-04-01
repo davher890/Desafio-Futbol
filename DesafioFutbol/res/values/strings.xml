@@ -11,7 +11,6 @@
     <string name="label_clasificacion">Clasificacion</string>
     <string name="label_entrenadores">Entrenadores</string>
     <string name="label_fichajes">Fichajes</string>
-    <string name="label_usuarios">Usuarios</string>
     
     <string-array name="numbers05_array">
         <item>1</item>

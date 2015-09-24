@@ -19,34 +19,43 @@ public class FichajesAdapter extends ArrayAdapter<Jugador> {
 	public FichajesAdapter(Context context, ArrayList<Jugador> listaFichajes) {
 		super(context, 0, listaFichajes);
 		this.listaFichajes = listaFichajes;
-		 
+
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		
+
 		if (convertView == null) {
-			convertView = LayoutInflater.from(getContext()).inflate(R.layout.fichajes_list_item, parent, false);	          
+			convertView = LayoutInflater.from(getContext()).inflate(
+					R.layout.fichajes_list_item, parent, false);
 		}
 		Jugador jugador = listaFichajes.get(position);
-	    
-	    String number = String.valueOf(jugador.getValor());
+
+		String number = String.valueOf(jugador.getValor());
 		double precio = Double.parseDouble(number);
 		number = String.valueOf(jugador.getPuntos());
 		double puntos = Double.parseDouble(number);
-		DecimalFormat formatterValor = new DecimalFormat("###,###,###,###,###€");
+		DecimalFormat formatterValor = new DecimalFormat(
+				"###,###,###,###,### euros");
 		DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
-	    
-	    ((TextView) convertView.findViewById(R.id.textViewNombreJug)).setText(jugador.getApodo());
-	    ((TextView) convertView.findViewById(R.id.textViewPosicionJug)).setText(jugador.getPosicion());
-	    ((TextView) convertView.findViewById(R.id.textViewEquipoJug)).setText(jugador.getEquipo());
-	    ((TextView) convertView.findViewById(R.id.textViewPrecioJug)).setText(formatterValor.format(precio));
-	    ((TextView) convertView.findViewById(R.id.textViewPuntosJug)).setText(formatter.format(puntos));
-	    
-	    convertView.setBackgroundResource(jugador.getDrawableEquipo());
-	    return convertView;
+
+		((TextView) convertView.findViewById(R.id.textViewNombreJug))
+				.setText(jugador.getApodo());
+		((TextView) convertView.findViewById(R.id.textViewPosicionJug))
+				.setText(jugador.getPosicion());
+		((TextView) convertView.findViewById(R.id.textViewEquipoJug))
+				.setText(jugador.getEquipo());
+		((TextView) convertView.findViewById(R.id.textViewPrecioJug))
+				.setText(formatterValor.format(precio));
+		((TextView) convertView.findViewById(R.id.textViewPuntosJug))
+				.setText(formatter.format(puntos));
+
+		if (jugador.getDrawableEquipo() != -1) {
+			convertView.setBackgroundResource(jugador.getDrawableEquipo());
+		}
+		return convertView;
 	}
-	
+
 	/**
 	 * @return the listaFichajes
 	 */
@@ -55,7 +64,8 @@ public class FichajesAdapter extends ArrayAdapter<Jugador> {
 	}
 
 	/**
-	 * @param listaFichajes the listaFichajes to set
+	 * @param listaFichajes
+	 *            the listaFichajes to set
 	 */
 	public void setListaFichajes(ArrayList<Jugador> listaFichajes) {
 		this.listaFichajes = listaFichajes;

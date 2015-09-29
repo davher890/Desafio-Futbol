@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import app.android.desafiofutbol.clases.DatosUsuario;
 import app.android.desafiofutbol.clases.ManageResources;
+import app.android.desafiofutbol.ddbb.SQLiteDesafioFutbol;
 import app.android.desafiofutbol.webservices.VolleyRequest;
 
 import com.android.volley.AuthFailureError;
@@ -40,8 +41,7 @@ public class LogInActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
 
-		getWindow().setSoftInputMode(
-				WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		c = this;
 		bsign = (Button) findViewById(R.id.buttonLogIn);
 		email = (EditText) findViewById(R.id.editTextUsuario);
@@ -49,6 +49,11 @@ public class LogInActivity extends Activity {
 
 		Thread thread = new Thread() {
 			public void run() {
+
+				final SQLiteDesafioFutbol admin = new SQLiteDesafioFutbol(LogInActivity.this);
+
+				admin.cleanDatabase();
+
 				ManageResources.inicializa();
 			}
 		};
@@ -75,24 +80,21 @@ public class LogInActivity extends Activity {
 				String url = "http://www.desafiofutbol.com/api/token";
 
 				// Request a string response
-				JsonObjectRequest request = new JsonObjectRequest(
-						Request.Method.POST, url, json,
-						new Response.Listener<JSONObject>() {
-							@Override
-							public void onResponse(JSONObject json) {
-								gestionaWS(json.toString());
-
-							}
-						}, new Response.ErrorListener() {
-
-							@Override
-							public void onErrorResponse(VolleyError error) {
-								error.printStackTrace();
-							}
-						}) {
+				JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, json, new Response.Listener<JSONObject>() {
 					@Override
-					public Map<String, String> getHeaders()
-							throws AuthFailureError {
+					public void onResponse(JSONObject json) {
+						gestionaWS(json.toString());
+
+					}
+				}, new Response.ErrorListener() {
+
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						error.printStackTrace();
+					}
+				}) {
+					@Override
+					public Map<String, String> getHeaders() throws AuthFailureError {
 						HashMap<String, String> map = new HashMap<String, String>();
 						map.put("Accept", "application/json");
 						map.put("Content-Type", "application/json");
@@ -112,28 +114,24 @@ public class LogInActivity extends Activity {
 		try {
 			respJSON = new JSONObject(json);
 			DatosUsuario.setToken(respJSON.getString("token"));
-			DatosUsuario.setUserId(Integer.parseInt(respJSON
-					.getString("user_id")));
+			DatosUsuario.setUserId(Integer.parseInt(respJSON.getString("user_id")));
 			DatosUsuario.setUserName(respJSON.getString("username"));
 			DatosUsuario.setAvatar(respJSON.getString("avatar"));
-			DatosUsuario.setP_rank(Integer.parseInt(respJSON
-					.getString("p_rank")));
+			DatosUsuario.setP_rank(Integer.parseInt(respJSON.getString("p_rank")));
 
 			Intent i = new Intent(LogInActivity.this, MisEquiposActivity.class);
 			startActivityForResult(i, 1);
 
 		} catch (JSONException e) {
-			final AlertDialog alertDialog = new AlertDialog.Builder(this)
-					.create();
-			alertDialog.setTitle("Email o contrase�a incorrectos");
-			alertDialog.setButton(RESULT_OK, "Aceptar",
-					new DialogInterface.OnClickListener() {
+			final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+			alertDialog.setTitle("Email o contrasena incorrectos");
+			alertDialog.setButton(RESULT_OK, "Aceptar", new DialogInterface.OnClickListener() {
 
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							alertDialog.cancel();
-						}
-					});
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					alertDialog.cancel();
+				}
+			});
 			alertDialog.show();
 		}
 	}

@@ -41,39 +41,32 @@ public class MisEquiposActivity extends Activity {
 		listViewEquipos.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO Auto-generated method stub
-				DatosUsuario.setIdEquipoSeleccionado(listaEquipos.get(position)
-						.getId());
-				DatosUsuario.setNombreEquipo(listaEquipos.get(position)
-						.getNombre());
-				Intent i = new Intent(MisEquiposActivity.this,
-						MainActivity.class);
+				DatosUsuario.setIdEquipoSeleccionado(listaEquipos.get(position).getId());
+				DatosUsuario.setNombreEquipo(listaEquipos.get(position).getNombre());
+				Intent i = new Intent(MisEquiposActivity.this, MainActivity.class);
 				startActivityForResult(i, 1);
 			}
 		});
 
-		StringBuffer url = new StringBuffer(
-				"http://www.desafiofutbol.com/ligas/misligas").append("?")
-				.append("auth_token").append("=")
+		StringBuffer url = new StringBuffer("http://www.desafiofutbol.com/ligas/misligas").append("?").append("auth_token").append("=")
 				.append(DatosUsuario.getToken());
 
 		// Request a string response
-		JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET,
-				url.toString(), null, new Response.Listener<JSONArray>() {
-					@Override
-					public void onResponse(JSONArray json) {
-						ligasMisligasSW(json.toString());
+		JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url.toString(), new JSONObject(), new Response.Listener<JSONArray>() {
+			@Override
+			public void onResponse(JSONArray json) {
+				ligasMisligasSW(json.toString());
 
-					}
-				}, new Response.ErrorListener() {
+			}
+		}, new Response.ErrorListener() {
 
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						error.printStackTrace();
-					}
-				}) {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				error.printStackTrace();
+			}
+		}) {
 			@Override
 			public Map<String, String> getHeaders() throws AuthFailureError {
 				HashMap<String, String> map = new HashMap<String, String>();

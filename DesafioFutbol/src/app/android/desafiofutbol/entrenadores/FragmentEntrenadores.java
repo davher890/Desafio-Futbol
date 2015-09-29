@@ -58,37 +58,26 @@ public class FragmentEntrenadores extends Fragment {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_entrenadores,
-				container, false);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View rootView = inflater.inflate(R.layout.fragment_entrenadores, container, false);
 		this.inflater = inflater;
 
-		listViewEntrenadores = (ListView) rootView
-				.findViewById(R.id.listViewEntrenadores);
+		listViewEntrenadores = (ListView) rootView.findViewById(R.id.listViewEntrenadores);
 
 		listViewEntrenadores.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
 				Entrenador entrenador = adapter.getItem(position);
-				LayoutInflater inflater = (LayoutInflater) getActivity()
-						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				View v = inflater.inflate(R.layout.dialog_entrenador, null);
 
-				EntrenadorDialogFragment alert = new EntrenadorDialogFragment(
-						entrenador, FragmentEntrenadores.this);
-				final AlertDialog createDialogLugar = alert.createDialogLugar(
-						getActivity(), v);
-				createDialogLugar
-						.getWindow()
-						.setSoftInputMode(
-								WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+				EntrenadorDialogFragment alert = new EntrenadorDialogFragment(entrenador, FragmentEntrenadores.this);
+				final AlertDialog createDialogLugar = alert.createDialogLugar(getActivity(), v);
+				createDialogLugar.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 				createDialogLugar.show();
-				final Button okButton = createDialogLugar
-						.getButton(Dialog.BUTTON_POSITIVE);
+				final Button okButton = createDialogLugar.getButton(Dialog.BUTTON_POSITIVE);
 				okButton.setTypeface(null, Typeface.BOLD);
 			}
 		});
@@ -99,25 +88,22 @@ public class FragmentEntrenadores extends Fragment {
 
 		if (listaEntrenadores == null || listaEntrenadores.size() == 0) {
 
-			StringBuffer url = new StringBuffer(
-					"http://www.desafiofutbol.com/entrenadores?auth_token=")
-					.append(DatosUsuario.getToken());
+			StringBuffer url = new StringBuffer("http://www.desafiofutbol.com/entrenadores?auth_token=").append(DatosUsuario.getToken());
 
 			// Request a string response
-			JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET,
-					url.toString(), null, new Response.Listener<JSONArray>() {
-						@Override
-						public void onResponse(JSONArray response) {
-							parseEntrenadoresJson(response);
-						}
-					}, new Response.ErrorListener() {
-						@Override
-						public void onErrorResponse(VolleyError error) {
-							// Error handling
-							System.out.println("Something went wrong!");
-							error.printStackTrace();
-						}
-					}) {
+			JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url.toString(), new JSONObject(), new Response.Listener<JSONArray>() {
+				@Override
+				public void onResponse(JSONArray response) {
+					parseEntrenadoresJson(response);
+				}
+			}, new Response.ErrorListener() {
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					// Error handling
+					System.out.println("Something went wrong!");
+					error.printStackTrace();
+				}
+			}) {
 				@Override
 				public Map<String, String> getHeaders() throws AuthFailureError {
 					HashMap<String, String> map = new HashMap<String, String>();
@@ -151,8 +137,7 @@ public class FragmentEntrenadores extends Fragment {
 					entrenador.setEquipo(usuarioJson.getString("equipo"));
 					entrenador.setSalario(usuarioJson.getDouble("salario"));
 					entrenador.setPuntos(usuarioJson.getDouble("puntos"));
-					entrenador.setPropietario(usuarioJson
-							.getString("propietario"));
+					entrenador.setPropietario(usuarioJson.getString("propietario"));
 
 					listaEntrenadores.add(entrenador);
 
@@ -177,21 +162,20 @@ public class FragmentEntrenadores extends Fragment {
 		listViewEntrenadores.setAdapter(adapter);
 	}
 
-	public void actualizaEntrenador(JSONArray resultJson, int idEnt) {
+	public void actualizaEntrenador(JSONArray resultJson, int idEnt, String propietario) {
 
 		try {
 			String tipoMensaje = ((JSONArray) resultJson.get(0)).getString(0);
 			if (tipoMensaje.equals("notice")) {
 				// Actualizar base de datos y refrescar tabla
-				String value = null;
-
-				admin.updateEntrenador(idEnt, value);
+				admin.updateEntrenador(idEnt, propietario);
 
 				listaEntrenadores = admin.getEntrenadores();
 				setData();
 			}
 			String mensaje = ((JSONArray) resultJson.get(0)).getString(1);
-			Toast.makeText(this.getActivity(), mensaje, Toast.LENGTH_LONG);
+			Toast.makeText(this.getActivity(), mensaje, Toast.LENGTH_LONG).show();
+			;
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

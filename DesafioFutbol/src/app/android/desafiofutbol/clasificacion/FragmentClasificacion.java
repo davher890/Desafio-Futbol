@@ -46,12 +46,9 @@ public class FragmentClasificacion extends Fragment {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_clasificacion,
-				container, false);
-		listViewClasificacion = (ListView) rootView
-				.findViewById(R.id.listViewEquipos);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View rootView = inflater.inflate(R.layout.fragment_clasificacion, container, false);
+		listViewClasificacion = (ListView) rootView.findViewById(R.id.listViewEquipos);
 
 		admin = new SQLiteDesafioFutbol(getActivity());
 		// Obtiene los datos de la clasficicacion
@@ -59,26 +56,23 @@ public class FragmentClasificacion extends Fragment {
 
 		if (listaClasificacion == null || listaClasificacion.size() == 0) {
 
-			StringBuffer url = new StringBuffer(
-					"http://www.desafiofutbol.com/clasificacion").append("?")
-					.append("auth_token").append("=")
+			StringBuffer url = new StringBuffer("http://www.desafiofutbol.com/clasificacion").append("?").append("auth_token").append("=")
 					.append(DatosUsuario.getToken());
 
 			// Request a string response
-			JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET,
-					url.toString(), null, new Response.Listener<JSONArray>() {
-						@Override
-						public void onResponse(JSONArray response) {
-							parseClasificacionJson(response);
-						}
-					}, new Response.ErrorListener() {
-						@Override
-						public void onErrorResponse(VolleyError error) {
-							// Error handling
-							System.out.println("Something went wrong!");
-							error.printStackTrace();
-						}
-					}) {
+			JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url.toString(), new JSONObject(), new Response.Listener<JSONArray>() {
+				@Override
+				public void onResponse(JSONArray response) {
+					parseClasificacionJson(response);
+				}
+			}, new Response.ErrorListener() {
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					// Error handling
+					System.out.println("Something went wrong!");
+					error.printStackTrace();
+				}
+			}) {
 				@Override
 				public Map<String, String> getHeaders() throws AuthFailureError {
 					HashMap<String, String> map = new HashMap<String, String>();
@@ -108,17 +102,12 @@ public class FragmentClasificacion extends Fragment {
 
 					UsuarioClasificacion usuarioClasficicacion = new UsuarioClasificacion();
 					usuarioClasficicacion.setId(usuarioJson.getInt("id"));
-					usuarioClasficicacion.setNombre(usuarioJson
-							.getString("nombre"));
-					usuarioClasficicacion.setPuntos(usuarioJson
-							.getInt("puntos"));
-					usuarioClasficicacion.setUsuario(usuarioJson
-							.getString("usuario"));
-					usuarioClasficicacion.setValor(usuarioJson
-							.getDouble("valor"));
+					usuarioClasficicacion.setNombre(usuarioJson.getString("nombre"));
+					usuarioClasficicacion.setPuntos(usuarioJson.getInt("puntos"));
+					usuarioClasficicacion.setUsuario(usuarioJson.getString("usuario"));
+					usuarioClasficicacion.setValor(usuarioJson.getDouble("valor"));
 
-					JSONObject jornadasJson = usuarioJson
-							.getJSONObject("jornadas");
+					JSONObject jornadasJson = usuarioJson.getJSONObject("jornadas");
 					JSONArray names = jornadasJson.names();
 					int ultimaJornada = -1;
 
@@ -128,15 +117,12 @@ public class FragmentClasificacion extends Fragment {
 						for (int k = 0; k < lengthJornadas; k++) {
 
 							String jornada = (String) names.get(k);
-							int numeroJornada = Integer.parseInt(jornada
-									.substring(jornada.indexOf('_') + 1));
-							mapJornadas.put(numeroJornada,
-									jornadasJson.getInt(jornada));
+							int numeroJornada = Integer.parseInt(jornada.substring(jornada.indexOf('_') + 1));
+							mapJornadas.put(numeroJornada, jornadasJson.getInt(jornada));
 						}
 					}
 
-					Map<Integer, Integer> map = new TreeMap<Integer, Integer>(
-							mapJornadas);
+					Map<Integer, Integer> map = new TreeMap<Integer, Integer>(mapJornadas);
 
 					ultimaJornada = (int) map.values().toArray()[map.size() - 1];
 
@@ -158,8 +144,7 @@ public class FragmentClasificacion extends Fragment {
 	}
 
 	public void setData() {
-		ClasificacionAdapter adapter = new ClasificacionAdapter(getActivity(),
-				listaClasificacion);
+		ClasificacionAdapter adapter = new ClasificacionAdapter(getActivity(), listaClasificacion);
 		listViewClasificacion.setAdapter(adapter);
 	}
 }

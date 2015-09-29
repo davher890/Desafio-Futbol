@@ -1,17 +1,15 @@
 package app.android.desafiofutbol.clases;
 
+public class Entrenador {
 
-public class Entrenador{
-	
 	private int id = -1;
 	private String nombre = null;
 	private String equipo = null;
 	private int salario = -1;
 	private int puntos = 0;
 	private String propietario = null;
-	
-	public Entrenador(int id, String nombre, String equipo, int salario,
-			int puntos, String propietario) {
+
+	public Entrenador(int id, String nombre, String equipo, int salario, int puntos, String propietario) {
 		this.id = id;
 		this.nombre = nombre;
 		this.equipo = equipo;
@@ -19,8 +17,8 @@ public class Entrenador{
 		this.puntos = puntos;
 		this.propietario = propietario;
 	}
-	
-	public Entrenador(){		
+
+	public Entrenador() {
 	}
 
 	/**
@@ -31,7 +29,8 @@ public class Entrenador{
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
 	public void setId(int id) {
 		this.id = id;
@@ -45,7 +44,8 @@ public class Entrenador{
 	}
 
 	/**
-	 * @param nombre the nombre to set
+	 * @param nombre
+	 *            the nombre to set
 	 */
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
@@ -59,7 +59,8 @@ public class Entrenador{
 	}
 
 	/**
-	 * @param equipo the equipo to set
+	 * @param equipo
+	 *            the equipo to set
 	 */
 	public void setEquipo(String equipo) {
 		this.equipo = equipo;
@@ -73,10 +74,11 @@ public class Entrenador{
 	}
 
 	/**
-	 * @param salario the salario to set
+	 * @param salario
+	 *            the salario to set
 	 */
 	public void setSalario(double salario) {
-		this.salario = (int)Math.round(salario);
+		this.salario = (int) Math.round(salario);
 	}
 
 	/**
@@ -87,10 +89,11 @@ public class Entrenador{
 	}
 
 	/**
-	 * @param puntos the puntos to set
+	 * @param puntos
+	 *            the puntos to set
 	 */
 	public void setPuntos(double puntos) {
-		this.puntos = (int)Math.round(puntos);
+		this.puntos = (int) Math.round(puntos);
 	}
 
 	/**
@@ -101,11 +104,11 @@ public class Entrenador{
 	}
 
 	/**
-	 * @param propietario the propietario to set
+	 * @param propietario
+	 *            the propietario to set
 	 */
 	public void setPropietario(String propietario) {
 		this.propietario = propietario;
-	} 
-	
-	
+	}
+
 }

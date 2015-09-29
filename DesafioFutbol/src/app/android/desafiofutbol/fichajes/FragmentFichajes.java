@@ -81,35 +81,24 @@ public class FragmentFichajes extends Fragment {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		setHasOptionsMenu(true);
-		View rootView = inflater.inflate(R.layout.fragment_fichajes, container,
-				false);
-		listViewFichajes = (ListView) rootView
-				.findViewById(R.id.listViewFichajes);
+		View rootView = inflater.inflate(R.layout.fragment_fichajes, container, false);
+		listViewFichajes = (ListView) rootView.findViewById(R.id.listViewFichajes);
 
 		listViewFichajes.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Jugador jugador = adapter.getItem(position);
 
-				LayoutInflater inflater = (LayoutInflater) getActivity()
-						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				View v = inflater.inflate(R.layout.dialog_fichaje, null);
 
-				FichajeDialogFragment alert = new FichajeDialogFragment(
-						jugador, FragmentFichajes.this);
-				AlertDialog createDialogLugar = alert.createDialogLugar(
-						getActivity(), v);
-				createDialogLugar
-						.getWindow()
-						.setSoftInputMode(
-								WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+				FichajeDialogFragment alert = new FichajeDialogFragment();
+				AlertDialog createDialogLugar = alert.createDialogLugar(getActivity(), v, jugador, FragmentFichajes.this);
+				createDialogLugar.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 				createDialogLugar.show();
-				Button button = createDialogLugar
-						.getButton(Dialog.BUTTON_NEUTRAL);
+				Button button = createDialogLugar.getButton(Dialog.BUTTON_NEUTRAL);
 				if (jugador.getMiOferta() == -1) {
 					button.setVisibility(View.INVISIBLE);
 				}
@@ -122,26 +111,22 @@ public class FragmentFichajes extends Fragment {
 
 		if (fichajes == null || fichajes.size() == 0) {
 
-			StringBuffer url = new StringBuffer(
-					"http://www.desafiofutbol.com/mercado/")
-					.append(DatosUsuario.getIdEquipoSeleccionado())
-					.append("/index?auth_token=")
-					.append(DatosUsuario.getToken());
+			StringBuffer url = new StringBuffer("http://www.desafiofutbol.com/mercado/").append(DatosUsuario.getIdEquipoSeleccionado())
+					.append("/index?auth_token=").append(DatosUsuario.getToken());
 			// Request a string response
-			JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET,
-					url.toString(), null, new Response.Listener<JSONArray>() {
-						@Override
-						public void onResponse(JSONArray response) {
-							parseFichajesJson(response);
-						}
-					}, new Response.ErrorListener() {
-						@Override
-						public void onErrorResponse(VolleyError error) {
-							// Error handling
-							System.out.println("Something went wrong!");
-							error.printStackTrace();
-						}
-					}) {
+			JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url.toString(), new JSONObject(), new Response.Listener<JSONArray>() {
+				@Override
+				public void onResponse(JSONArray response) {
+					parseFichajesJson(response);
+				}
+			}, new Response.ErrorListener() {
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					// Error handling
+					System.out.println("Something went wrong!");
+					error.printStackTrace();
+				}
+			}) {
 				@Override
 				public Map<String, String> getHeaders() throws AuthFailureError {
 					HashMap<String, String> map = new HashMap<String, String>();
@@ -164,8 +149,7 @@ public class FragmentFichajes extends Fragment {
 		try {
 			int length = jsonArray.length();
 			if (jsonArray != null) {
-				final ArrayList<Jugador> listaFichajes = new ArrayList<Jugador>(
-						length);
+				final ArrayList<Jugador> listaFichajes = new ArrayList<Jugador>(length);
 
 				for (int i = 0; i < length; i++) {
 					JSONObject usuarioJson = (JSONObject) jsonArray.get(i);
@@ -175,26 +159,24 @@ public class FragmentFichajes extends Fragment {
 					jugador.setApodo(usuarioJson.getString("apodo"));
 					jugador.setValor(usuarioJson.getDouble("valor"));
 					jugador.setPuntos(usuarioJson.getInt("puntos"));
-					jugador.setPropietarioNombre(usuarioJson
-							.getString("propietario"));
-					jugador.setPropietarioId(usuarioJson.getString(
-							"propietario_id").equals("null") ? -1 : usuarioJson
-							.getInt("propietario_id"));
+					jugador.setPropietarioNombre(usuarioJson.getString("propietario"));
+					jugador.setPropietarioId(usuarioJson.getString("propietario_id").equals("null") ? -1 : usuarioJson.getInt("propietario_id"));
 					jugador.setEquipo(usuarioJson.getString("equipo"));
 					jugador.setPosicion(usuarioJson.getString("posicion"));
 					jugador.setUrlImagen(usuarioJson.getString("url_imagen"));
 					if (usuarioJson.getString("mioferta").equals("null")) {
 						jugador.setMiOferta(-1);
 					} else {
-						JSONObject miOferta = usuarioJson
-								.getJSONObject("mioferta");
+						JSONObject miOferta = usuarioJson.getJSONObject("mioferta");
 						jugador.setMiOferta(miOferta.getInt("valor"));
 					}
-					jugador.setDrawableEquipo(ManageResources
-							.getDrawableFromString(jugador.getEquipo()));
-					JSONObject idMercado = usuarioJson
-							.getJSONObject("id_mercado");
-					jugador.setIdMercado(idMercado.getString("$oid"));
+					jugador.setDrawableEquipo(ManageResources.getDrawableFromString(jugador.getEquipo()));
+					JSONObject idMercado = usuarioJson.getJSONObject("id_mercado");
+					String stringIdMercado = idMercado.getString("$oid");
+					if (stringIdMercado == null || stringIdMercado.equals("") || stringIdMercado.equals("null")) {
+						System.out.println("Id mercado null");
+					}
+					jugador.setIdMercado(stringIdMercado);
 
 					listaFichajes.add(jugador);
 				}
@@ -212,43 +194,42 @@ public class FragmentFichajes extends Fragment {
 		}
 	}
 
-	public void gestionaWS(String result, int idFichaje, int oferta) {
+	public void gestionaWS(JSONArray resultJson, int idFichaje, int oferta) {
 
 		try {
-			JSONArray resultJson;
-			resultJson = new JSONArray(result);
 			String tipoMensaje = ((JSONArray) resultJson.get(0)).getString(0);
+			String mensaje = null;
 			if (tipoMensaje.equals("notice")) {
 				// Actualizar base de datos y refrescar tabla
 
 				// Clausula Pagada
 				if (oferta == 0) {
+					mensaje = ((JSONArray) resultJson.get(0)).getString(1);
 					admin.deleteFichaje(idFichaje);
 				}
 				// Elimina oferta
 				else if (oferta == -1) {
+					mensaje = "Oferta eliminada";
 					admin.updateFichaje(idFichaje, oferta);
 				}
 				// Cambia/Crea oferta
 				else {
+					mensaje = ((JSONArray) resultJson.get(0)).getString(1);
 					admin.updateFichaje(idFichaje, oferta);
 				}
 
 				fichajes = admin.getFichajes();
 				setData(fichajes, SortTypes.puntos.name());
 			}
-			String mensaje = ((JSONArray) resultJson.get(0)).getString(1);
-			Toast.makeText(this.getActivity(), mensaje, Toast.LENGTH_LONG);
+			Toast.makeText(this.getActivity(), mensaje, Toast.LENGTH_LONG).show();
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	private void setData(final ArrayList<Jugador> listaFichajes, String orden) {
 
-		Collections.sort(listaFichajes,
-				new JugadoresComparator(SortTypes.valueOf(orden)));
+		Collections.sort(listaFichajes, new JugadoresComparator(SortTypes.valueOf(orden)));
 
 		adapter = new FichajesAdapter(getActivity(), listaFichajes);
 		listViewFichajes.setAdapter(adapter);

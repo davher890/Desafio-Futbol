@@ -25,8 +25,7 @@ public class EquiposAdapter extends ArrayAdapter<Equipo> {
 		// TODO Auto-generated method stub
 
 		if (convertView == null) {
-			convertView = LayoutInflater.from(getContext()).inflate(
-					R.layout.equipo_list_item, parent, false);
+			convertView = LayoutInflater.from(getContext()).inflate(R.layout.equipo_list_item, parent, false);
 		}
 		Equipo equipo = equipos.get(position);
 
@@ -34,12 +33,9 @@ public class EquiposAdapter extends ArrayAdapter<Equipo> {
 		double valor = Double.parseDouble(number);
 		DecimalFormat formatter = new DecimalFormat("###,###,###,###,### euros");
 
-		((TextView) convertView.findViewById(R.id.textViewNombreEq))
-				.setText(equipo.getNombre());
-		((TextView) convertView.findViewById(R.id.textViewValorEq))
-				.setText(formatter.format(valor));
-		((TextView) convertView.findViewById(R.id.textViewLigaEq))
-				.setText(equipo.getLigaNombre());
+		((TextView) convertView.findViewById(R.id.textViewNombreEq)).setText(equipo.getNombre());
+		((TextView) convertView.findViewById(R.id.textViewValorEq)).setText(formatter.format(valor));
+		((TextView) convertView.findViewById(R.id.textViewLigaEq)).setText(equipo.getLigaNombre());
 		return convertView;
 	}
 }

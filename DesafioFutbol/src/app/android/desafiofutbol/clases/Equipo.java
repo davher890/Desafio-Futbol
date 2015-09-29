@@ -1,19 +1,17 @@
 package app.android.desafiofutbol.clases;
 
-
 public class Equipo {
-	
+
 	private int id = -1;
 	private boolean activa = false;
 	private String nombre = null;
 	private int saldo = 0;
 	private int valor = 0;
-	
+
 	private int ligaId = -1;
 	private String ligaNombre = null;
-	
-	public Equipo(int id, String nombre, int ligaId, String ligaNombre,
-			int saldo, int valor) {
+
+	public Equipo(int id, String nombre, int ligaId, String ligaNombre, int saldo, int valor) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
@@ -22,9 +20,9 @@ public class Equipo {
 		this.saldo = saldo;
 		this.valor = valor;
 	}
-	
-	public Equipo(){
-		
+
+	public Equipo() {
+
 	}
 
 	/**
@@ -35,7 +33,8 @@ public class Equipo {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
 	public void setId(int id) {
 		this.id = id;
@@ -49,7 +48,8 @@ public class Equipo {
 	}
 
 	/**
-	 * @param nombre the nombre to set
+	 * @param nombre
+	 *            the nombre to set
 	 */
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
@@ -63,7 +63,8 @@ public class Equipo {
 	}
 
 	/**
-	 * @param ligaId the ligaId to set
+	 * @param ligaId
+	 *            the ligaId to set
 	 */
 	public void setLigaId(int ligaId) {
 		this.ligaId = ligaId;
@@ -85,7 +86,8 @@ public class Equipo {
 	}
 
 	/**
-	 * @param ligaNombre the ligaNombre to set
+	 * @param ligaNombre
+	 *            the ligaNombre to set
 	 */
 	public void setLigaNombre(String ligaNombre) {
 		this.ligaNombre = ligaNombre;
@@ -99,7 +101,8 @@ public class Equipo {
 	}
 
 	/**
-	 * @param saldo the saldo to set
+	 * @param saldo
+	 *            the saldo to set
 	 */
 	public void setSaldo(int saldo) {
 		this.saldo = saldo;
@@ -113,9 +116,10 @@ public class Equipo {
 	}
 
 	/**
-	 * @param valor the valor to set
+	 * @param valor
+	 *            the valor to set
 	 */
 	public void setValor(double valor) {
-		this.valor = (int)Math.round(valor);
+		this.valor = (int) Math.round(valor);
 	}
 }

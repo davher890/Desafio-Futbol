@@ -63,12 +63,10 @@ public class FragmentUsuario extends Fragment {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		setHasOptionsMenu(true);
-		View rootView = inflater.inflate(R.layout.fragment_usuarios, container,
-				false);
+		View rootView = inflater.inflate(R.layout.fragment_usuarios, container, false);
 
 		usuariosList = (ListView) rootView.findViewById(R.id.listViewUsuarios);
 
@@ -77,20 +75,19 @@ public class FragmentUsuario extends Fragment {
 		// get.execute();
 		String url = "http://www.desafiofutbol.com/usuarios";
 		// Request a string response
-		StringRequest stringRequest = new StringRequest(Request.Method.GET,
-				url, new Response.Listener<String>() {
-					@Override
-					public void onResponse(String response) {
-						gestionaWS(response);
-					}
-				}, new Response.ErrorListener() {
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						// Error handling
-						System.out.println("Something went wrong!");
-						error.printStackTrace();
-					}
-				});
+		StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+			@Override
+			public void onResponse(String response) {
+				gestionaWS(response);
+			}
+		}, new Response.ErrorListener() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				// Error handling
+				System.out.println("Something went wrong!");
+				error.printStackTrace();
+			}
+		});
 		// Add the request to the queue
 		Volley.newRequestQueue(getActivity()).add(stringRequest);
 		return rootView;
@@ -112,12 +109,8 @@ public class FragmentUsuario extends Fragment {
 			for (int i = 0; i < length; i++) {
 				JSONObject usuarioJson = (JSONObject) jsonSeguidores.get(i);
 
-				Usuario seguidor = new Usuario(
-						usuarioJson.getString("username"),
-						usuarioJson.getInt("user_id"),
-						usuarioJson.getString("avatar"),
-						usuarioJson.getInt("numequipos"),
-						usuarioJson.getInt("p_rank"));
+				Usuario seguidor = new Usuario(usuarioJson.getString("username"), usuarioJson.getInt("user_id"), usuarioJson.getString("avatar"),
+						usuarioJson.getInt("numequipos"), usuarioJson.getInt("p_rank"));
 
 				seguidores.add(seguidor);
 			}
@@ -126,12 +119,8 @@ public class FragmentUsuario extends Fragment {
 			for (int i = 0; i < length; i++) {
 				JSONObject usuarioJson = (JSONObject) jsonSiguiendo.get(i);
 
-				Usuario siguiendo = new Usuario(
-						usuarioJson.getString("username"),
-						usuarioJson.getInt("user_id"),
-						usuarioJson.getString("avatar"),
-						usuarioJson.getInt("numequipos"),
-						usuarioJson.getInt("p_rank"));
+				Usuario siguiendo = new Usuario(usuarioJson.getString("username"), usuarioJson.getInt("user_id"), usuarioJson.getString("avatar"),
+						usuarioJson.getInt("numequipos"), usuarioJson.getInt("p_rank"));
 
 				siguiendos.add(siguiendo);
 			}

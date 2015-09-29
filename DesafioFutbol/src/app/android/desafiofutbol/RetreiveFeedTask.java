@@ -13,48 +13,46 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import app.android.desafiofutbol.clases.ManageResources;
 
-
 public class RetreiveFeedTask extends AsyncTask<String, DialogFragment, String> {
 
 	String img = null;
 	DialogFragment c = null;
 	private String methodCallback = null;
-	
+
 	public RetreiveFeedTask(DialogFragment c, String imagen, String methodCallbak) {
 		this.img = imagen;
-		this.c = (DialogFragment)c;
+		this.c = (DialogFragment) c;
 		this.methodCallback = methodCallbak;
 	}
 
 	@Override
 	public String doInBackground(String... params) {
 		// TODO Auto-generated method stub
-		
+
 		URL url;
 		try {
 			img = img.replace("small", "medium");
-			
+
 			Bitmap imagenBm = ManageResources.getImageJugadorFromUrl(img);
-			if (imagenBm == null){				
+			if (imagenBm == null) {
 				url = new URL(img);
-	        	HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-	        	conn.connect();
-	        	imagenBm = BitmapFactory.decodeStream(conn.getInputStream());
-	        	ManageResources.addImagenJugador(img, imagenBm);
+				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+				conn.connect();
+				imagenBm = BitmapFactory.decodeStream(conn.getInputStream());
+				ManageResources.addImagenJugador(img, imagenBm);
 			}
-			 
-	    	if (imagenBm != null){
-	    		Method method = null;
-				if (c != null){
+
+			if (imagenBm != null) {
+				Method method = null;
+				if (c != null) {
 					try {
 						method = c.getClass().getMethod(this.methodCallback, Bitmap.class);
 						method.invoke(c, imagenBm);
-					} catch (IllegalAccessException | IllegalArgumentException
-							| InvocationTargetException | NoSuchMethodException e) {
+					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException e) {
 						e.printStackTrace();
 					}
 				}
-	    	}
+			}
 			return null;
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block

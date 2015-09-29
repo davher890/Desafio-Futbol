@@ -36,8 +36,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-public class FragmentAlineacion extends Fragment implements OnDragListener,
-		OnLongClickListener {
+public class FragmentAlineacion extends Fragment implements OnDragListener, OnLongClickListener {
 
 	private ListView porterosTitList = null;
 	private ListView defensasTitList = null;
@@ -76,24 +75,19 @@ public class FragmentAlineacion extends Fragment implements OnDragListener,
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View rootView = inflater.inflate(R.layout.fragment_alineacion,
-				container, false);
+		View rootView = inflater.inflate(R.layout.fragment_alineacion, container, false);
 
-		porterosTitList = (ListView) rootView
-				.findViewById(R.id.listViewPortTit);
+		porterosTitList = (ListView) rootView.findViewById(R.id.listViewPortTit);
 		defensasTitList = (ListView) rootView.findViewById(R.id.listViewDefTit);
 		mediosTitList = (ListView) rootView.findViewById(R.id.listViewMedTit);
-		delanterosTitList = (ListView) rootView
-				.findViewById(R.id.listViewDelTit);
+		delanterosTitList = (ListView) rootView.findViewById(R.id.listViewDelTit);
 
 		porterosSupList = (ListView) rootView.findViewById(R.id.listViewPorSup);
 		defensasSupList = (ListView) rootView.findViewById(R.id.listViewDefSup);
 		mediosSupList = (ListView) rootView.findViewById(R.id.listViewMedSup);
-		delanterosSupList = (ListView) rootView
-				.findViewById(R.id.listViewDelSup);
+		delanterosSupList = (ListView) rootView.findViewById(R.id.listViewDelSup);
 
 		guardar = (Button) rootView.findViewById(R.id.buttonGuardarAli);
 
@@ -105,35 +99,29 @@ public class FragmentAlineacion extends Fragment implements OnDragListener,
 
 			JSONObject json = new JSONObject();
 			try {
-				json.put("idEquipo",
-						String.valueOf(DatosUsuario.getIdEquipoSeleccionado()));
-				json.put("change_sele",
-						String.valueOf(DatosUsuario.getIdEquipoSeleccionado()));
+				json.put("idEquipo", String.valueOf(DatosUsuario.getIdEquipoSeleccionado()));
+				json.put("change_sele", String.valueOf(DatosUsuario.getIdEquipoSeleccionado()));
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 
-			StringBuffer url = new StringBuffer(
-					"http://www.desafiofutbol.com/selecciones/plantilla/")
-					.append(DatosUsuario.getIdEquipoSeleccionado())
+			StringBuffer url = new StringBuffer("http://www.desafiofutbol.com/selecciones/plantilla/").append(DatosUsuario.getIdEquipoSeleccionado())
 					.append("?auth_token=").append(DatosUsuario.getToken());
 
 			// Request a string response
-			JsonObjectRequest request = new JsonObjectRequest(
-					Request.Method.GET, url.toString(), null,
-					new Response.Listener<JSONObject>() {
-						@Override
-						public void onResponse(JSONObject response) {
-							seleccionesPlantillaWS(response);
-						}
-					}, new Response.ErrorListener() {
-						@Override
-						public void onErrorResponse(VolleyError error) {
-							// Error handling
-							System.out.println("Something went wrong!");
-							error.printStackTrace();
-						}
-					}) {
+			JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url.toString(), null, new Response.Listener<JSONObject>() {
+				@Override
+				public void onResponse(JSONObject response) {
+					seleccionesPlantillaWS(response);
+				}
+			}, new Response.ErrorListener() {
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					// Error handling
+					System.out.println("Something went wrong!");
+					error.printStackTrace();
+				}
+			}) {
 				@Override
 				public Map<String, String> getHeaders() throws AuthFailureError {
 					HashMap<String, String> map = new HashMap<String, String>();
@@ -160,14 +148,10 @@ public class FragmentAlineacion extends Fragment implements OnDragListener,
 			@Override
 			public void run() {
 				try {
-					JSONArray jsonArrayPorteros = respJSON
-							.getJSONArray(Posicion.porteros.name());
-					JSONArray jsonArrayDefensas = respJSON
-							.getJSONArray(Posicion.defensas.name());
-					JSONArray jsonArrayMedios = respJSON
-							.getJSONArray(Posicion.medios.name());
-					JSONArray jsonArrayDelanteros = respJSON
-							.getJSONArray(Posicion.delanteros.name());
+					JSONArray jsonArrayPorteros = respJSON.getJSONArray(Posicion.porteros.name());
+					JSONArray jsonArrayDefensas = respJSON.getJSONArray(Posicion.defensas.name());
+					JSONArray jsonArrayMedios = respJSON.getJSONArray(Posicion.medios.name());
+					JSONArray jsonArrayDelanteros = respJSON.getJSONArray(Posicion.delanteros.name());
 
 					jugadores = getJugadoresFromJson(jsonArrayPorteros);
 					jugadores.addAll(getJugadoresFromJson(jsonArrayDefensas));
@@ -191,8 +175,7 @@ public class FragmentAlineacion extends Fragment implements OnDragListener,
 		});
 	}
 
-	public ArrayList<Jugador> getJugadoresFromJson(JSONArray arrayJugador)
-			throws JSONException {
+	public ArrayList<Jugador> getJugadoresFromJson(JSONArray arrayJugador) throws JSONException {
 
 		final ArrayList<Jugador> jugadores = new ArrayList<Jugador>();
 		int lengthArray = arrayJugador.length();
@@ -221,49 +204,38 @@ public class FragmentAlineacion extends Fragment implements OnDragListener,
 
 	private void setData() {
 
-		porterosTitAdapter = new AlineacionAdapter(getActivity(),
-				equipo.getPorterosTitulares(), this, Posicion.Portero);
+		porterosTitAdapter = new AlineacionAdapter(getActivity(), equipo.getPorterosTitulares(), this, Posicion.Portero);
 		porterosTitList.setAdapter(porterosTitAdapter);
 
-		defensasTitAdapter = new AlineacionAdapter(getActivity(),
-				equipo.getDefensasTitulares(), this, Posicion.Defensa);
+		defensasTitAdapter = new AlineacionAdapter(getActivity(), equipo.getDefensasTitulares(), this, Posicion.Defensa);
 		defensasTitList.setAdapter(defensasTitAdapter);
 
-		mediosTitAdapter = new AlineacionAdapter(getActivity(),
-				equipo.getMediosTitulares(), this, Posicion.Medio);
+		mediosTitAdapter = new AlineacionAdapter(getActivity(), equipo.getMediosTitulares(), this, Posicion.Medio);
 		mediosTitList.setAdapter(mediosTitAdapter);
 
-		delanterosTitAdapter = new AlineacionAdapter(getActivity(),
-				equipo.getDelanterosTitulares(), this, Posicion.Delantero);
+		delanterosTitAdapter = new AlineacionAdapter(getActivity(), equipo.getDelanterosTitulares(), this, Posicion.Delantero);
 		delanterosTitList.setAdapter(delanterosTitAdapter);
 
-		porterosSupAdapter = new AlineacionAdapter(getActivity(),
-				equipo.getPorterosSuplentes(), this, Posicion.Portero);
+		porterosSupAdapter = new AlineacionAdapter(getActivity(), equipo.getPorterosSuplentes(), this, Posicion.Portero);
 		porterosSupList.setAdapter(porterosSupAdapter);
 
-		defensasSupAdapter = new AlineacionAdapter(getActivity(),
-				equipo.getDefensasSuplentes(), this, Posicion.Defensa);
+		defensasSupAdapter = new AlineacionAdapter(getActivity(), equipo.getDefensasSuplentes(), this, Posicion.Defensa);
 		defensasSupList.setAdapter(defensasSupAdapter);
 
-		mediosSupAdapter = new AlineacionAdapter(getActivity(),
-				equipo.getMediosSuplentes(), this, Posicion.Medio);
+		mediosSupAdapter = new AlineacionAdapter(getActivity(), equipo.getMediosSuplentes(), this, Posicion.Medio);
 		mediosSupList.setAdapter(mediosSupAdapter);
 
-		delanterosSupAdapter = new AlineacionAdapter(getActivity(),
-				equipo.getDelanterosSuplentes(), this, Posicion.Delantero);
+		delanterosSupAdapter = new AlineacionAdapter(getActivity(), equipo.getDelanterosSuplentes(), this, Posicion.Delantero);
 		delanterosSupList.setAdapter(delanterosSupAdapter);
 
 		guardar.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				ArrayList<Jugador> porterosAli = porterosTitAdapter
-						.getJugadores();
-				ArrayList<Jugador> defensasAli = defensasTitAdapter
-						.getJugadores();
+				ArrayList<Jugador> porterosAli = porterosTitAdapter.getJugadores();
+				ArrayList<Jugador> defensasAli = defensasTitAdapter.getJugadores();
 				ArrayList<Jugador> mediosAli = mediosTitAdapter.getJugadores();
-				ArrayList<Jugador> delanterosAli = delanterosTitAdapter
-						.getJugadores();
+				ArrayList<Jugador> delanterosAli = delanterosTitAdapter.getJugadores();
 
 				int sizePorteros = porterosAli.size();
 				int sizeDefensas = defensasAli.size();
@@ -275,8 +247,7 @@ public class FragmentAlineacion extends Fragment implements OnDragListener,
 								|| (sizeDefensas == 4 && sizeMedios == 3 && sizeDelanteros == 3)
 								|| (sizeDefensas == 4 && sizeMedios == 5 && sizeDelanteros == 1)
 								|| (sizeDefensas == 5 && sizeMedios == 4 && sizeDelanteros == 1)
-								|| (sizeDefensas == 3 && sizeMedios == 4 && sizeDelanteros == 3) || (sizeDefensas == 3
-								&& sizeMedios == 5 && sizeDelanteros == 2))) {
+								|| (sizeDefensas == 3 && sizeMedios == 4 && sizeDelanteros == 3) || (sizeDefensas == 3 && sizeMedios == 5 && sizeDelanteros == 2))) {
 
 					// Guardar en base de datos y WebService
 					StringBuffer tactica = new StringBuffer();
@@ -294,8 +265,7 @@ public class FragmentAlineacion extends Fragment implements OnDragListener,
 					jugadoresAli.addAll(mediosAli);
 					jugadoresAli.addAll(delanterosAli);
 
-					int size = sizePorteros + sizeDefensas + sizeMedios
-							+ sizeDelanteros;
+					int size = sizePorteros + sizeDefensas + sizeMedios + sizeDelanteros;
 					for (int i = 0; i < size; i++) {
 						ids.put(jugadoresAli.get(i).getId());
 						idArray.add(jugadoresAli.get(i).getId());
@@ -307,46 +277,34 @@ public class FragmentAlineacion extends Fragment implements OnDragListener,
 					// FragmentAlineacion.this, json, "gestionaAlineacion");
 					// putTactica.execute();
 
-					String url = "http://www.desafiofutbol.com/selecciones/cambiar_tactica/"
-							+ tactica.toString()
-							+ "/"
+					String url = "http://www.desafiofutbol.com/selecciones/cambiar_tactica/" + tactica.toString() + "/"
 							+ DatosUsuario.getIdEquipoSeleccionado();
 					// Request a string response
-					StringRequest stringRequest = new StringRequest(
-							Request.Method.PUT, url,
-							new Response.Listener<String>() {
-								@Override
-								public void onResponse(String response) {
-									gestionaAlineacion(response);
-								}
-							}, new Response.ErrorListener() {
-								@Override
-								public void onErrorResponse(VolleyError error) {
-									// Error handling
-									System.out.println("Something went wrong!");
-									error.printStackTrace();
-								}
-							});
+					StringRequest stringRequest = new StringRequest(Request.Method.PUT, url, new Response.Listener<String>() {
+						@Override
+						public void onResponse(String response) {
+							gestionaAlineacion(response);
+						}
+					}, new Response.ErrorListener() {
+						@Override
+						public void onErrorResponse(VolleyError error) {
+							// Error handling
+							System.out.println("Something went wrong!");
+							error.printStackTrace();
+						}
+					});
 					// Add the request to the queue
 					Volley.newRequestQueue(getActivity()).add(stringRequest);
 
 				} else {
-					AlertDialog.Builder builder = new AlertDialog.Builder(
-							getActivity());
+					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 					builder.setTitle("Alineacion incorrecta")
-							.setMessage(
-									"Posibles alineaciones:" + "\n 4-4-2"
-											+ "\n 4-3-3" + "\n 4-5-1"
-											+ "\n 5-4-1" + "\n 3-4-3"
-											+ "\n 3-5-2")
-							.setCancelable(false)
-							.setNegativeButton("Close",
-									new DialogInterface.OnClickListener() {
-										public void onClick(
-												DialogInterface dialog, int id) {
-											dialog.cancel();
-										}
-									});
+							.setMessage("Posibles alineaciones:" + "\n 4-4-2" + "\n 4-3-3" + "\n 4-5-1" + "\n 5-4-1" + "\n 3-4-3" + "\n 3-5-2")
+							.setCancelable(false).setNegativeButton("Close", new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int id) {
+									dialog.cancel();
+								}
+							});
 					AlertDialog alert = builder.create();
 					alert.show();
 				}
@@ -358,10 +316,8 @@ public class FragmentAlineacion extends Fragment implements OnDragListener,
 		return !dragEvent.getResult();
 	}
 
-	private void checkForValidMove(ListView listViewDrag,
-			ListView listViewView, View dragView) {
-		cambiaJugador((AlineacionAdapter) listViewDrag.getAdapter(),
-				(AlineacionAdapter) listViewView.getAdapter(),
+	private void checkForValidMove(ListView listViewDrag, ListView listViewView, View dragView) {
+		cambiaJugador((AlineacionAdapter) listViewDrag.getAdapter(), (AlineacionAdapter) listViewView.getAdapter(),
 				listViewDrag.getPositionForView(dragView));
 	}
 
@@ -392,8 +348,7 @@ public class FragmentAlineacion extends Fragment implements OnDragListener,
 		return true;
 	}
 
-	private void cambiaJugador(AlineacionAdapter side1,
-			AlineacionAdapter side2, int position) {
+	private void cambiaJugador(AlineacionAdapter side1, AlineacionAdapter side2, int position) {
 
 		if (!side1.getPosicion().equals(side2.getPosicion())) {
 			return;
@@ -440,25 +395,22 @@ public class FragmentAlineacion extends Fragment implements OnDragListener,
 		// json, "updateBBDD");
 		// post.execute();
 
-		StringBuffer url = new StringBuffer(
-				"http://www.desafiofutbol.com/selecciones/save_once_titular/")
-				.append("?auth_token=").append(DatosUsuario.getToken());
+		StringBuffer url = new StringBuffer("http://www.desafiofutbol.com/selecciones/save_once_titular/").append("?auth_token=").append(
+				DatosUsuario.getToken());
 		// Request a string response
-		JsonObjectRequest stringRequest = new JsonObjectRequest(
-				Request.Method.PUT, url.toString(), null,
-				new Response.Listener<JSONObject>() {
-					@Override
-					public void onResponse(JSONObject response) {
-						updateBBDD(response);
-					}
-				}, new Response.ErrorListener() {
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						// Error handling
-						System.out.println("Something went wrong!");
-						error.printStackTrace();
-					}
-				}) {
+		JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.PUT, url.toString(), null, new Response.Listener<JSONObject>() {
+			@Override
+			public void onResponse(JSONObject response) {
+				updateBBDD(response);
+			}
+		}, new Response.ErrorListener() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				// Error handling
+				System.out.println("Something went wrong!");
+				error.printStackTrace();
+			}
+		}) {
 			@Override
 			public Map<String, String> getHeaders() throws AuthFailureError {
 				HashMap<String, String> map = new HashMap<String, String>();

@@ -46,8 +46,7 @@ public class JugadorDialogFragment extends DialogFragment {
 	private ImageView imageJugador;
 
 	// Default constructor. Sets the dialog field to null
-	public JugadorDialogFragment(Jugador jugador, FragmentAlineacion fragment,
-			int id) {
+	public JugadorDialogFragment(Jugador jugador, FragmentAlineacion fragment, int id) {
 		super();
 		this.jugador = jugador;
 		this.fragment = fragment;
@@ -76,136 +75,101 @@ public class JugadorDialogFragment extends DialogFragment {
 
 		nombre.setText(jugador.getNombre() + " " + jugador.getApellidos());
 
-		StringBuffer nombreEquipo = new StringBuffer(jugador.getEquipo()
-				.substring(0, 1).toUpperCase()).append(jugador.getEquipo()
-				.substring(1));
+		StringBuffer nombreEquipo = new StringBuffer(jugador.getEquipo().substring(0, 1).toUpperCase()).append(jugador.getEquipo().substring(1));
 
 		equipo.setText(nombreEquipo.toString().replaceAll("-", " "));
 		posicion.setText(jugador.getPosicion());
 		puntos.setText(String.valueOf(jugador.getPuntos()));
 
-		DecimalFormat formatterSalario = new DecimalFormat(
-				"###,###,###,###,### euros");
+		DecimalFormat formatterSalario = new DecimalFormat("###,###,###,###,### euros");
 		valor.setText(String.valueOf(formatterSalario.format(jugador.getValor())));
 
-		RetreiveFeedTask aus = new RetreiveFeedTask(this,
-				jugador.getUrlImagen(), "actualizaImagen");
+		RetreiveFeedTask aus = new RetreiveFeedTask(this, jugador.getUrlImagen(), "actualizaImagen");
 		aus.execute();
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(contexto);
-		builder.setTitle(jugador.getApodo())
-				.setPositiveButton("Poner a la Venta",
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								JSONObject json = new JSONObject();
-								try {
-									json.put("jugador_id",
-											JugadorDialogFragment.this.jugador
-													.getId());
-								} catch (JSONException e) {
-									e.printStackTrace();
-								}
+		builder.setTitle(jugador.getApodo()).setPositiveButton("Poner a la Venta", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				JSONObject json = new JSONObject();
+				try {
+					json.put("jugador_id", JugadorDialogFragment.this.jugador.getId());
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 
-								StringBuffer url = new StringBuffer(
-										"http://www.desafiofutbol.com/mercado")
-										.append("?auth_token=").append(
-												DatosUsuario.getToken());
+				StringBuffer url = new StringBuffer("http://www.desafiofutbol.com/mercado").append("?auth_token=").append(DatosUsuario.getToken());
 
-								// Request a string response
-								JsonObjectRequest request = new JsonObjectRequest(
-										Request.Method.POST, url.toString(),
-										json,
-										new Response.Listener<JSONObject>() {
-											@Override
-											public void onResponse(
-													JSONObject json) {
-												fragment.gestionaWS(json);
+				// Request a string response
+				JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url.toString(), json, new Response.Listener<JSONObject>() {
+					@Override
+					public void onResponse(JSONObject json) {
+						fragment.gestionaWS(json);
 
-											}
-										}, new Response.ErrorListener() {
-											@Override
-											public void onErrorResponse(
-													VolleyError error) {
-												error.printStackTrace();
-											}
-										}) {
-									@Override
-									public Map<String, String> getHeaders()
-											throws AuthFailureError {
-										HashMap<String, String> map = new HashMap<String, String>();
-										map.put("Accept", "application/json");
-										map.put("Content-Type",
-												"application/json");
-										map.put("Accept-Charset", "utf-8");
+					}
+				}, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						error.printStackTrace();
+					}
+				}) {
+					@Override
+					public Map<String, String> getHeaders() throws AuthFailureError {
+						HashMap<String, String> map = new HashMap<String, String>();
+						map.put("Accept", "application/json");
+						map.put("Content-Type", "application/json");
+						map.put("Accept-Charset", "utf-8");
 
-										return map;
-									}
-								};
-								// Add the request to the queue
-								VolleyRequest.getInstance(getActivity())
-										.addToRequestQueue(request);
+						return map;
+					}
+				};
+				// Add the request to the queue
+				VolleyRequest.getInstance(getActivity()).addToRequestQueue(request);
 
-								dialog.cancel();
-							}
-						})
-				.setNegativeButton("Venta Expres",
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								JSONObject json = new JSONObject();
-								try {
-									json.put("jugador",
-											JugadorDialogFragment.this.jugador
-													.getId());
-								} catch (JSONException e) {
-									e.printStackTrace();
-								}
+				dialog.cancel();
+			}
+		}).setNegativeButton("Venta Expres", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				JSONObject json = new JSONObject();
+				try {
+					json.put("jugador", JugadorDialogFragment.this.jugador.getId());
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 
-								StringBuffer url = new StringBuffer(
-										"http://www.desafiofutbol.com/mercado/0/clausula_pagar")
-										.append("?auth_token=").append(
-												DatosUsuario.getToken());
+				StringBuffer url = new StringBuffer("http://www.desafiofutbol.com/mercado/0/clausula_pagar").append("?auth_token=").append(
+						DatosUsuario.getToken());
 
-								// Request a string response
-								JsonObjectRequest request = new JsonObjectRequest(
-										Request.Method.POST, url.toString(),
-										json,
-										new Response.Listener<JSONObject>() {
-											@Override
-											public void onResponse(
-													JSONObject json) {
-												fragment.gestionaWS(json);
+				// Request a string response
+				JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url.toString(), json, new Response.Listener<JSONObject>() {
+					@Override
+					public void onResponse(JSONObject json) {
+						fragment.gestionaWS(json);
 
-											}
-										}, new Response.ErrorListener() {
-											@Override
-											public void onErrorResponse(
-													VolleyError error) {
-												error.printStackTrace();
-											}
-										}) {
-									@Override
-									public Map<String, String> getHeaders()
-											throws AuthFailureError {
-										HashMap<String, String> map = new HashMap<String, String>();
-										map.put("Accept", "application/json");
-										map.put("Content-Type",
-												"application/json");
-										map.put("Accept-Charset", "utf-8");
+					}
+				}, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						error.printStackTrace();
+					}
+				}) {
+					@Override
+					public Map<String, String> getHeaders() throws AuthFailureError {
+						HashMap<String, String> map = new HashMap<String, String>();
+						map.put("Accept", "application/json");
+						map.put("Content-Type", "application/json");
+						map.put("Accept-Charset", "utf-8");
 
-										return map;
-									}
-								};
-								// Add the request to the queue
-								VolleyRequest.getInstance(getActivity())
-										.addToRequestQueue(request);
+						return map;
+					}
+				};
+				// Add the request to the queue
+				VolleyRequest.getInstance(getActivity()).addToRequestQueue(request);
 
-								dialog.cancel();
-							}
-						}).setView(v);
+				dialog.cancel();
+			}
+		}).setView(v);
 		return builder.create();
 	}
 

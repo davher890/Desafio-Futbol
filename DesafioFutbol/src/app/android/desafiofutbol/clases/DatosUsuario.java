@@ -1,7 +1,7 @@
 package app.android.desafiofutbol.clases;
 
 public class DatosUsuario {
-	
+
 	private static String token = null;
 	private static String userName = null;
 	private static String nombreEquipo = null;
@@ -9,8 +9,8 @@ public class DatosUsuario {
 	private static String avatar = null;
 	private static int p_rank = -1;
 	private static int idEquipoSeleccionado = -1;
-	
-	public DatosUsuario(){
+
+	public DatosUsuario() {
 	}
 
 	/**
@@ -21,7 +21,8 @@ public class DatosUsuario {
 	}
 
 	/**
-	 * @param token the token to set
+	 * @param token
+	 *            the token to set
 	 */
 	public static void setToken(String token) {
 		DatosUsuario.token = token;
@@ -35,7 +36,8 @@ public class DatosUsuario {
 	}
 
 	/**
-	 * @param userName the userName to set
+	 * @param userName
+	 *            the userName to set
 	 */
 	public static void setUserName(String userName) {
 		DatosUsuario.userName = userName;
@@ -49,7 +51,8 @@ public class DatosUsuario {
 	}
 
 	/**
-	 * @param userId the userId to set
+	 * @param userId
+	 *            the userId to set
 	 */
 	public static void setUserId(int userId) {
 		DatosUsuario.userId = userId;
@@ -63,7 +66,8 @@ public class DatosUsuario {
 	}
 
 	/**
-	 * @param avatar the avatar to set
+	 * @param avatar
+	 *            the avatar to set
 	 */
 	public static void setAvatar(String avatar) {
 		DatosUsuario.avatar = avatar;
@@ -93,7 +97,8 @@ public class DatosUsuario {
 	}
 
 	/**
-	 * @param nombreEquipo the nombreEquipo to set
+	 * @param nombreEquipo
+	 *            the nombreEquipo to set
 	 */
 	public static void setNombreEquipo(String nombreEquipo) {
 		DatosUsuario.nombreEquipo = nombreEquipo;

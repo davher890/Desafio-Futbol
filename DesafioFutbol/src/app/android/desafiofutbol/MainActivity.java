@@ -13,8 +13,7 @@ import app.android.desafiofutbol.ddbb.SQLiteDesafioFutbol;
 import app.android.desafiofutbol.entrenadores.FragmentEntrenadores;
 import app.android.desafiofutbol.fichajes.FragmentFichajes;
 
-public class MainActivity extends AppCompatActivity implements
-		NavigationDrawerFragment.NavigationDrawerCallbacks {
+public class MainActivity extends AppCompatActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
 	/**
 	 * Fragment managing the behaviors, interactions and presentation of the
@@ -33,13 +32,11 @@ public class MainActivity extends AppCompatActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager()
-				.findFragmentById(R.id.navigation_drawer);
+		mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 		mTitle = getTitle();
 
 		// Set up the drawer.
-		mNavigationDrawerFragment.setUp(R.id.navigation_drawer,
-				(DrawerLayout) findViewById(R.id.drawer_layout));
+		mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
 	}
 
 	@Override
@@ -49,23 +46,13 @@ public class MainActivity extends AppCompatActivity implements
 
 		// update the main content by replacing fragments
 		if (position == 0) {
-			fragmentManager.beginTransaction()
-					.replace(R.id.container, FragmentAlineacion.newInstance())
-					.commit();
+			fragmentManager.beginTransaction().replace(R.id.container, FragmentAlineacion.newInstance()).commit();
 		} else if (position == 1) {
-			fragmentManager.beginTransaction()
-					.replace(R.id.container, FragmentFichajes.newInstance())
-					.commit();
+			fragmentManager.beginTransaction().replace(R.id.container, FragmentFichajes.newInstance()).commit();
 		} else if (position == 2) {
-			fragmentManager
-					.beginTransaction()
-					.replace(R.id.container, FragmentEntrenadores.newInstance())
-					.commit();
+			fragmentManager.beginTransaction().replace(R.id.container, FragmentEntrenadores.newInstance()).commit();
 		} else if (position == 3) {
-			fragmentManager
-					.beginTransaction()
-					.replace(R.id.container,
-							FragmentClasificacion.newInstance()).commit();
+			fragmentManager.beginTransaction().replace(R.id.container, FragmentClasificacion.newInstance()).commit();
 		}
 	}
 

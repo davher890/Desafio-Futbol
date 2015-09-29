@@ -3,7 +3,7 @@ package app.android.desafiofutbol.clasificacion;
 import java.util.HashMap;
 
 public class UsuarioClasificacion {
-	
+
 	private String usuario = null;
 	private int usuario_id = -1;
 	private String nombre = null;
@@ -11,10 +11,9 @@ public class UsuarioClasificacion {
 	private int valor = 0;
 	private int puntos = 0;
 	private HashMap<Integer, String> jornadas = null;
-	private int ultimaJornada = 0; 
-	
-	public UsuarioClasificacion(String usuario, int usuario_id,
-			String nombre, int id, int valor, int puntos) {
+	private int ultimaJornada = 0;
+
+	public UsuarioClasificacion(String usuario, int usuario_id, String nombre, int id, int valor, int puntos) {
 		super();
 		this.usuario = usuario;
 		this.usuario_id = usuario_id;
@@ -36,7 +35,8 @@ public class UsuarioClasificacion {
 	}
 
 	/**
-	 * @param usuario the usuario to set
+	 * @param usuario
+	 *            the usuario to set
 	 */
 	public void setUsuario(String usuario) {
 		this.usuario = usuario;
@@ -50,7 +50,8 @@ public class UsuarioClasificacion {
 	}
 
 	/**
-	 * @param usuario_id the usuario_id to set
+	 * @param usuario_id
+	 *            the usuario_id to set
 	 */
 	public void setUsuario_id(int usuario_id) {
 		this.usuario_id = usuario_id;
@@ -64,7 +65,8 @@ public class UsuarioClasificacion {
 	}
 
 	/**
-	 * @param nombre the nombre to set
+	 * @param nombre
+	 *            the nombre to set
 	 */
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
@@ -78,7 +80,8 @@ public class UsuarioClasificacion {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
 	public void setId(int id) {
 		this.id = id;
@@ -92,10 +95,11 @@ public class UsuarioClasificacion {
 	}
 
 	/**
-	 * @param valor the valor to set
+	 * @param valor
+	 *            the valor to set
 	 */
 	public void setValor(double valor) {
-		this.valor = (int)Math.round(valor);
+		this.valor = (int) Math.round(valor);
 	}
 
 	public int getPuntos() {
@@ -114,7 +118,8 @@ public class UsuarioClasificacion {
 	}
 
 	/**
-	 * @param jornadas the jornadas to set
+	 * @param jornadas
+	 *            the jornadas to set
 	 */
 	public void setJornadas(HashMap<Integer, String> jornadas) {
 		this.jornadas = jornadas;

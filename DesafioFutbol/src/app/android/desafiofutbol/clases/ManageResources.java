@@ -15,17 +15,14 @@ public final class ManageResources {
 		if (equipo == null) {
 			return -1;
 		}
-		return mapEquipoIconoAlargado.get(equipo) == null ? -1
-				: mapEquipoIconoAlargado.get(equipo).intValue();
+		return mapEquipoIconoAlargado.get(equipo) == null ? -1 : mapEquipoIconoAlargado.get(equipo).intValue();
 	}
 
 	public static int getImageFromString(String equipo) {
 		if (equipo == null) {
 			return -1;
 		}
-		return mapEquipoIcono.get(equipo) == null ? mapEquipoIcono.get(
-				"desconocido").intValue() : mapEquipoIcono.get(equipo)
-				.intValue();
+		return mapEquipoIcono.get(equipo) == null ? mapEquipoIcono.get("desconocido").intValue() : mapEquipoIcono.get(equipo).intValue();
 	}
 
 	public static Bitmap getImageJugadorFromUrl(String url) {
@@ -35,8 +32,7 @@ public final class ManageResources {
 		if (mapImagenJugador == null) {
 			mapImagenJugador = new HashMap<String, Bitmap>();
 		}
-		return mapImagenJugador.get(url) == null ? null : mapImagenJugador
-				.get(url);
+		return mapImagenJugador.get(url) == null ? null : mapImagenJugador.get(url);
 	}
 
 	public static void addImagenJugador(String url, Bitmap bm) {
@@ -47,49 +43,30 @@ public final class ManageResources {
 
 	public static void inicilalizaMapIconoAlargado() {
 		mapEquipoIconoAlargado = new HashMap<String, Integer>();
-		mapEquipoIconoAlargado
-				.put("Almería", R.drawable.icono_alargado_almeria);
-		mapEquipoIconoAlargado.put("Athletic",
-				R.drawable.icono_alargado_athletic);
-		mapEquipoIconoAlargado.put("Atlético",
-				R.drawable.icono_alargado_atletico);
-		mapEquipoIconoAlargado.put("Barcelona",
-				R.drawable.icono_alargado_barcelona);
-		mapEquipoIconoAlargado.put("Real Betis",
-				R.drawable.icono_alargado_betis);
+		mapEquipoIconoAlargado.put("Almería", R.drawable.icono_alargado_almeria);
+		mapEquipoIconoAlargado.put("Athletic", R.drawable.icono_alargado_athletic);
+		mapEquipoIconoAlargado.put("Atlético", R.drawable.icono_alargado_atletico);
+		mapEquipoIconoAlargado.put("Barcelona", R.drawable.icono_alargado_barcelona);
+		mapEquipoIconoAlargado.put("Real Betis", R.drawable.icono_alargado_betis);
 		mapEquipoIconoAlargado.put("Celta", R.drawable.icono_alargado_celta);
-		mapEquipoIconoAlargado
-				.put("Córdoba", R.drawable.icono_alargado_cordoba);
-		mapEquipoIconoAlargado.put("Deportivo",
-				R.drawable.icono_alargado_deportivo);
+		mapEquipoIconoAlargado.put("Córdoba", R.drawable.icono_alargado_cordoba);
+		mapEquipoIconoAlargado.put("Deportivo", R.drawable.icono_alargado_deportivo);
 		mapEquipoIconoAlargado.put("Eibar", R.drawable.icono_alargado_eibar);
 		mapEquipoIconoAlargado.put("Elche", R.drawable.icono_alargado_elche);
-		mapEquipoIconoAlargado.put("Espanyol",
-				R.drawable.icono_alargado_espanyol);
+		mapEquipoIconoAlargado.put("Espanyol", R.drawable.icono_alargado_espanyol);
 		mapEquipoIconoAlargado.put("Getafe", R.drawable.icono_alargado_getafe);
-		mapEquipoIconoAlargado
-				.put("Granada", R.drawable.icono_alargado_granada);
-		mapEquipoIconoAlargado
-				.put("Levante", R.drawable.icono_alargado_levante);
-		mapEquipoIconoAlargado.put("Las Palmas",
-				R.drawable.icono_alargado_las_palmas);
+		mapEquipoIconoAlargado.put("Granada", R.drawable.icono_alargado_granada);
+		mapEquipoIconoAlargado.put("Levante", R.drawable.icono_alargado_levante);
+		mapEquipoIconoAlargado.put("Las Palmas", R.drawable.icono_alargado_las_palmas);
 		mapEquipoIconoAlargado.put("Málaga", R.drawable.icono_alargado_malaga);
-		mapEquipoIconoAlargado.put("Rayo Vallecano",
-				R.drawable.icono_alargado_rayo);
-		mapEquipoIconoAlargado.put("Real Madrid",
-				R.drawable.icono_alargado_madrid);
-		mapEquipoIconoAlargado.put("Real Sociedad",
-				R.drawable.icono_alargado_real_sociedad);
-		mapEquipoIconoAlargado
-				.put("Sevilla", R.drawable.icono_alargado_sevilla);
-		mapEquipoIconoAlargado.put("Sporting",
-				R.drawable.icono_alargado_sporting);
-		mapEquipoIconoAlargado.put("Valencia",
-				R.drawable.icono_alargado_valencia);
-		mapEquipoIconoAlargado.put("Villarreal",
-				R.drawable.icono_alargado_villareal);
-		mapEquipoIconoAlargado.put("Villarreal",
-				R.drawable.icono_alargado_villareal);
+		mapEquipoIconoAlargado.put("Rayo Vallecano", R.drawable.icono_alargado_rayo);
+		mapEquipoIconoAlargado.put("Real Madrid", R.drawable.icono_alargado_madrid);
+		mapEquipoIconoAlargado.put("Real Sociedad", R.drawable.icono_alargado_real_sociedad);
+		mapEquipoIconoAlargado.put("Sevilla", R.drawable.icono_alargado_sevilla);
+		mapEquipoIconoAlargado.put("Sporting", R.drawable.icono_alargado_sporting);
+		mapEquipoIconoAlargado.put("Valencia", R.drawable.icono_alargado_valencia);
+		mapEquipoIconoAlargado.put("Villarreal", R.drawable.icono_alargado_villareal);
+		mapEquipoIconoAlargado.put("Villarreal", R.drawable.icono_alargado_villareal);
 	}
 
 	public static void inicilalizaMapIcono() {

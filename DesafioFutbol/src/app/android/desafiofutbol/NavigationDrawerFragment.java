@@ -68,13 +68,11 @@ public class NavigationDrawerFragment extends Fragment {
 		// Read in the flag indicating whether or not the user has demonstrated
 		// awareness of the
 		// drawer. See PREF_USER_LEARNED_DRAWER for details.
-		SharedPreferences sp = PreferenceManager
-				.getDefaultSharedPreferences(getActivity());
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
 		mUserLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
 
 		if (savedInstanceState != null) {
-			mCurrentSelectedPosition = savedInstanceState
-					.getInt(STATE_SELECTED_POSITION);
+			mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
 			mFromSavedInstanceState = true;
 		}
 
@@ -91,37 +89,28 @@ public class NavigationDrawerFragment extends Fragment {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		mDrawerListView = (ListView) inflater.inflate(
-				R.layout.fragment_navigation_drawer, container, false);
-		mDrawerListView
-				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-					@Override
-					public void onItemClick(AdapterView<?> parent, View view,
-							int position, long id) {
-						/*
-						 * images[0] = R.drawable.icono_alineacion; images[1] =
-						 * R.drawable.icono_fichaje; images[2] =
-						 * R.drawable.icono_entrenador; images[3] =
-						 * R.drawable.icono_clasificacion;
-						 */
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		mDrawerListView = (ListView) inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
+		mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				/*
+				 * images[0] = R.drawable.icono_alineacion; images[1] =
+				 * R.drawable.icono_fichaje; images[2] =
+				 * R.drawable.icono_entrenador; images[3] =
+				 * R.drawable.icono_clasificacion;
+				 */
 
-						selectedposition[0] = position;
-						mMyDrawerAdapter.notifyDataSetChanged();
-						selectItem(position);
-					}
-				});
-		titles = new String[] { getString(R.string.label_alineacion),
-				getString(R.string.label_fichajes),
-				getString(R.string.label_entrenadores),
+				selectedposition[0] = position;
+				mMyDrawerAdapter.notifyDataSetChanged();
+				selectItem(position);
+			}
+		});
+		titles = new String[] { getString(R.string.label_alineacion), getString(R.string.label_fichajes), getString(R.string.label_entrenadores),
 				getString(R.string.label_clasificacion) };
-		images = new int[] { R.drawable.icono_alineacion,
-				R.drawable.icono_fichaje, R.drawable.icono_entrenador,
-				R.drawable.icono_clasificacion };
+		images = new int[] { R.drawable.icono_alineacion, R.drawable.icono_fichaje, R.drawable.icono_entrenador, R.drawable.icono_clasificacion };
 		selectedposition = new int[] { mCurrentSelectedPosition };
-		mMyDrawerAdapter = new MyDrawerAdapter(getActivity(), titles, images,
-				selectedposition);
+		mMyDrawerAdapter = new MyDrawerAdapter(getActivity(), titles, images, selectedposition);
 		mDrawerListView.setAdapter(mMyDrawerAdapter);
 		mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
 		/*
@@ -138,8 +127,7 @@ public class NavigationDrawerFragment extends Fragment {
 	}
 
 	public boolean isDrawerOpen() {
-		return mDrawerLayout != null
-				&& mDrawerLayout.isDrawerOpen(mFragmentContainerView);
+		return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView);
 	}
 
 	/**
@@ -157,8 +145,7 @@ public class NavigationDrawerFragment extends Fragment {
 
 		// set a custom shadow that overlays the main content when the drawer
 		// opens
-		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
-				GravityCompat.START);
+		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
 		// ActionBarDrawerToggle ties together the the proper interactions
 		// between the navigation drawer and the action bar app icon.
@@ -206,10 +193,8 @@ public class NavigationDrawerFragment extends Fragment {
 					// prevent auto-showing
 					// the navigation drawer automatically in the future.
 					mUserLearnedDrawer = true;
-					SharedPreferences sp = PreferenceManager
-							.getDefaultSharedPreferences(getActivity());
-					sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true)
-							.commit();
+					SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+					sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).commit();
 				}
 
 				getActivity().supportInvalidateOptionsMenu(); // calls
@@ -254,8 +239,7 @@ public class NavigationDrawerFragment extends Fragment {
 		try {
 			mCallbacks = (NavigationDrawerCallbacks) activity;
 		} catch (ClassCastException e) {
-			throw new ClassCastException(
-					"Activity must implement NavigationDrawerCallbacks.");
+			throw new ClassCastException("Activity must implement NavigationDrawerCallbacks.");
 		}
 	}
 

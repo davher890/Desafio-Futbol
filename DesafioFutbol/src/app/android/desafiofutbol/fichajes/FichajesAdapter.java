@@ -26,8 +26,7 @@ public class FichajesAdapter extends ArrayAdapter<Jugador> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 
 		if (convertView == null) {
-			convertView = LayoutInflater.from(getContext()).inflate(
-					R.layout.fichajes_list_item, parent, false);
+			convertView = LayoutInflater.from(getContext()).inflate(R.layout.fichajes_list_item, parent, false);
 		}
 		Jugador jugador = listaFichajes.get(position);
 
@@ -35,20 +34,14 @@ public class FichajesAdapter extends ArrayAdapter<Jugador> {
 		double precio = Double.parseDouble(number);
 		number = String.valueOf(jugador.getPuntos());
 		double puntos = Double.parseDouble(number);
-		DecimalFormat formatterValor = new DecimalFormat(
-				"###,###,###,###,### euros");
+		DecimalFormat formatterValor = new DecimalFormat("###,###,###,###,### euros");
 		DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
 
-		((TextView) convertView.findViewById(R.id.textViewNombreJug))
-				.setText(jugador.getApodo());
-		((TextView) convertView.findViewById(R.id.textViewPosicionJug))
-				.setText(jugador.getPosicion());
-		((TextView) convertView.findViewById(R.id.textViewEquipoJug))
-				.setText(jugador.getEquipo());
-		((TextView) convertView.findViewById(R.id.textViewPrecioJug))
-				.setText(formatterValor.format(precio));
-		((TextView) convertView.findViewById(R.id.textViewPuntosJug))
-				.setText(formatter.format(puntos));
+		((TextView) convertView.findViewById(R.id.textViewNombreJug)).setText(jugador.getApodo());
+		((TextView) convertView.findViewById(R.id.textViewPosicionJug)).setText(jugador.getPosicion());
+		((TextView) convertView.findViewById(R.id.textViewEquipoJug)).setText(jugador.getEquipo());
+		((TextView) convertView.findViewById(R.id.textViewPrecioJug)).setText(formatterValor.format(precio));
+		((TextView) convertView.findViewById(R.id.textViewPuntosJug)).setText(formatter.format(puntos));
 
 		if (jugador.getDrawableEquipo() != -1) {
 			convertView.setBackgroundResource(jugador.getDrawableEquipo());

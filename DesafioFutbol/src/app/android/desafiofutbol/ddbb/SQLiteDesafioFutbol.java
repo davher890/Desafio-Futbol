@@ -16,37 +16,23 @@ import app.android.desafiofutbol.clasificacion.UsuarioClasificacion;
 public class SQLiteDesafioFutbol extends SQLiteOpenHelper {
 
 	private static final String SQL_DROP = "DROP TABLE IF EXISTS jugador, entrenador, fichaje, clasificacion";
-	private static final String SQL_CREATE_JUGADOR = "CREATE TABLE jugador "
-			+ "(id INTEGER," + "equipo_id INTEGER," + "equipo_nombre TEXT,"
-			+ "puntos INTEGER, " + "nombre TEXT, " + "apellidos TEXT,"
-			+ "apodo TEXT," + "foto TEXT," + "precio INTEGER,"
-			+ "posicion TEXT," + "nacion TEXT," + "nacion_logo TEXT,"
-			+ "edad INTEGER," + "titular INTEGER,"// 0 false, 1 true
+	private static final String SQL_CREATE_JUGADOR = "CREATE TABLE jugador " + "(id INTEGER," + "equipo_id INTEGER," + "equipo_nombre TEXT,"
+			+ "puntos INTEGER, " + "nombre TEXT, " + "apellidos TEXT," + "apodo TEXT," + "foto TEXT," + "precio INTEGER," + "posicion TEXT,"
+			+ "nacion TEXT," + "nacion_logo TEXT," + "edad INTEGER," + "titular INTEGER,"// 0
+																							// false,
+																							// 1
+																							// true
 			+ "PRIMARY KEY (id))";
 
-	private static final String SQL_CREATE_ENTRENADOR = "CREATE TABLE entrenador "
-			+ "(id INTEGER,"
-			+ "nombre TEXT, "
-			+ "equipo TEXT,"
-			+ "salario INTEGER,"
-			+ "puntos INTEGER, "
-			+ "propietario TEXT, "
-			+ "PRIMARY KEY (id))";
+	private static final String SQL_CREATE_ENTRENADOR = "CREATE TABLE entrenador " + "(id INTEGER," + "nombre TEXT, " + "equipo TEXT,"
+			+ "salario INTEGER," + "puntos INTEGER, " + "propietario TEXT, " + "PRIMARY KEY (id))";
 
-	private static final String SQL_CREATE_FICHAJE = "CREATE TABLE fichaje "
-			+ "(id INTEGER," + "apodo TEXT," + "valor INTEGER,"
-			+ "puntos INTEGER, " + "propietario TEXT, "
-			+ "propietario_id INTEGER," + "equipo TEXT," + "posicion TEXT,"
-			+ "url_imagen TEXT," + "mi_oferta INTEGER," + "PRIMARY KEY (id))";
+	private static final String SQL_CREATE_FICHAJE = "CREATE TABLE fichaje " + "(id INTEGER," + "apodo TEXT," + "valor INTEGER," + "puntos INTEGER, "
+			+ "propietario TEXT, " + "propietario_id INTEGER," + "equipo TEXT," + "posicion TEXT," + "url_imagen TEXT," + "mi_oferta INTEGER,"
+			+ "id_mercado TEXT," + "PRIMARY KEY (id))";
 
-	private static final String SQL_CREATE_CLASFICIACION = "CREATE TABLE clasificacion "
-			+ "(id INTEGER,"
-			+ "usuario TEXT,"
-			+ "usuario_id INTEGER,"
-			+ "nombre TEXT,"
-			+ "puntos INTEGER,"
-			+ "valor INTEGER, "
-			+ "ultima_jornada INTEGER, " + "PRIMARY KEY (id))";
+	private static final String SQL_CREATE_CLASFICIACION = "CREATE TABLE clasificacion " + "(id INTEGER," + "usuario TEXT," + "usuario_id INTEGER,"
+			+ "nombre TEXT," + "puntos INTEGER," + "valor INTEGER, " + "ultima_jornada INTEGER, " + "PRIMARY KEY (id))";
 
 	// M�todos de SQLiteOpenHelper
 	public SQLiteDesafioFutbol(Context context) {
@@ -86,12 +72,9 @@ public class SQLiteDesafioFutbol extends SQLiteOpenHelper {
 			sb.append(jugador.getEquipoId()).append(", ");
 			sb.append("'").append(jugador.getEquipo()).append("', ");
 			sb.append(jugador.getPuntos()).append(", ");
-			sb.append("'").append(jugador.getNombre().replaceAll("'", "''"))
-					.append("', ");
-			sb.append("'").append(jugador.getApellidos().replaceAll("'", "''"))
-					.append("', ");
-			sb.append("'").append(jugador.getApodo().replaceAll("'", "''"))
-					.append("', ");
+			sb.append("'").append(jugador.getNombre().replaceAll("'", "''")).append("', ");
+			sb.append("'").append(jugador.getApellidos().replaceAll("'", "''")).append("', ");
+			sb.append("'").append(jugador.getApodo().replaceAll("'", "''")).append("', ");
 			sb.append("'").append(jugador.getUrlImagen()).append("', ");
 			sb.append(jugador.getValor()).append(", ");
 			sb.append("'").append(jugador.getPosicion()).append("', ");
@@ -151,11 +134,39 @@ public class SQLiteDesafioFutbol extends SQLiteOpenHelper {
 		return result;
 	}
 
+	public void saveFichajes(ArrayList<Jugador> fichajes) {
+		SQLiteDatabase db = getWritableDatabase();
+
+		for (int i = 0; i < fichajes.size(); i++) {
+
+			Jugador jugador = fichajes.get(i);
+			String apodo = jugador.getApodo().replaceAll("'", "''");
+			String equipo = jugador.getEquipo().replaceAll("'", "''");
+			String posicion = jugador.getPosicion().replaceAll("'", "''");
+			String propiertarioNombre = jugador.getPropietarioNombre().replaceAll("'", "''");
+
+			StringBuffer sb = new StringBuffer("INSERT INTO fichaje VALUES (");
+			sb.append(jugador.getId()).append(", ");
+			sb.append("'").append(apodo).append("', ");
+			sb.append(jugador.getValor()).append(",");
+			sb.append(jugador.getPuntos()).append(",");
+			sb.append("'").append(propiertarioNombre).append("'").append(", ");
+			sb.append("'").append(jugador.getPropietarioId()).append("'").append(", ");
+			sb.append("'").append(equipo).append("'").append(", ");
+			sb.append("'").append(posicion).append("'").append(", ");
+			sb.append("'").append(jugador.getUrlImagen()).append("'").append(", ");
+			sb.append(jugador.getMiOferta()).append(",");
+			sb.append("'").append(jugador.getIdMercado()).append("'").append(")");
+			db.execSQL(sb.toString());
+		}
+		db.close();
+	}
+
 	public ArrayList<Jugador> getFichajes() {
 
 		ArrayList<Jugador> result = new ArrayList<Jugador>();
 		SQLiteDatabase db = getReadableDatabase();
-		String query = "SELECT id, apodo, valor, puntos, propietario, propietario_id, equipo, posicion, url_imagen, mi_oferta FROM fichaje ORDER BY puntos desc";
+		String query = "SELECT id, apodo, valor, puntos, propietario, propietario_id, equipo, posicion, url_imagen, mi_oferta, id_mercado FROM fichaje ORDER BY puntos desc";
 		Cursor cursor = db.rawQuery(query, null);
 		Jugador j = null;
 		while (cursor.moveToNext()) {
@@ -170,8 +181,8 @@ public class SQLiteDesafioFutbol extends SQLiteOpenHelper {
 			j.setPosicion(cursor.getString(7));
 			j.setUrlImagen(cursor.getString(8));
 			j.setMiOferta(cursor.getInt(9));
-			j.setDrawableEquipo(ManageResources.getDrawableFromString(j
-					.getEquipo()));
+			j.setIdMercado(cursor.getString(10));
+			j.setDrawableEquipo(ManageResources.getDrawableFromString(j.getEquipo()));
 			result.add(j);
 		}
 		cursor.close();
@@ -209,8 +220,7 @@ public class SQLiteDesafioFutbol extends SQLiteOpenHelper {
 
 			Entrenador entrenador = entrenadores.get(i);
 
-			StringBuffer sb = new StringBuffer(
-					"INSERT INTO entrenador VALUES (");
+			StringBuffer sb = new StringBuffer("INSERT INTO entrenador VALUES (");
 			sb.append(entrenador.getId()).append(", ");
 			sb.append("'").append(entrenador.getNombre()).append("', ");
 			sb.append("'").append(entrenador.getEquipo()).append("', ");
@@ -255,37 +265,6 @@ public class SQLiteDesafioFutbol extends SQLiteOpenHelper {
 		return delete;
 	}
 
-	public void saveFichajes(ArrayList<Jugador> fichajes) {
-		SQLiteDatabase db = getWritableDatabase();
-
-		for (int i = 0; i < 5; i++) {
-
-			Jugador jugador = fichajes.get(i);
-			String apodo = jugador.getApodo().replaceAll("'", "''");
-			String equipo = jugador.getEquipo().replaceAll("'", "''");
-			String posicion = jugador.getPosicion().replaceAll("'", "''");
-			String propiertarioNombre = jugador.getPropietarioNombre()
-					.replaceAll("'", "''");
-
-			StringBuffer sb = new StringBuffer("INSERT INTO fichaje VALUES (");
-			sb.append(jugador.getId()).append(", ");
-			sb.append("'").append(apodo).append("', ");
-			sb.append(jugador.getValor()).append(",");
-			sb.append(jugador.getPuntos()).append(",");
-			sb.append("'").append(propiertarioNombre).append("'").append(", ");
-			sb.append("'").append(jugador.getPropietarioId()).append("'")
-					.append(", ");
-			sb.append("'").append(equipo).append("'").append(", ");
-			sb.append("'").append(posicion).append("'").append(", ");
-			sb.append("'").append(jugador.getUrlImagen()).append("'")
-					.append(", ");
-			sb.append(jugador.getMiOferta()).append(")");
-
-			db.execSQL(sb.toString());
-		}
-		db.close();
-	}
-
 	public void saveClasificacion(ArrayList<UsuarioClasificacion> usuariosClas) {
 		SQLiteDatabase db = getWritableDatabase();
 
@@ -293,8 +272,7 @@ public class SQLiteDesafioFutbol extends SQLiteOpenHelper {
 
 			UsuarioClasificacion usuario = usuariosClas.get(i);
 
-			StringBuffer sb = new StringBuffer(
-					"INSERT INTO clasificacion VALUES (");
+			StringBuffer sb = new StringBuffer("INSERT INTO clasificacion VALUES (");
 			sb.append(usuario.getId()).append(", ");
 			sb.append("'").append(usuario.getUsuario()).append("', ");
 			sb.append(usuario.getUsuario_id()).append(", ");

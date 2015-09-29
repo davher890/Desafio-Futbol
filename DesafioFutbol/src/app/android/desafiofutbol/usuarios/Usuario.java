@@ -1,15 +1,14 @@
 package app.android.desafiofutbol.usuarios;
 
 public class Usuario {
-	
+
 	String nombre = null;
 	int id = -1;
 	String avatar = null;
 	int numEquipos = -1;
 	int ranking = -1;
 
-	public Usuario(String nombre, int id, String avatar, int numEquipos,
-			int ranking) {
+	public Usuario(String nombre, int id, String avatar, int numEquipos, int ranking) {
 		super();
 		this.nombre = nombre;
 		this.id = id;
@@ -26,7 +25,8 @@ public class Usuario {
 	}
 
 	/**
-	 * @param nombre the nombre to set
+	 * @param nombre
+	 *            the nombre to set
 	 */
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
@@ -40,7 +40,8 @@ public class Usuario {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
 	public void setId(int id) {
 		this.id = id;
@@ -54,7 +55,8 @@ public class Usuario {
 	}
 
 	/**
-	 * @param avatar the avatar to set
+	 * @param avatar
+	 *            the avatar to set
 	 */
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
@@ -68,7 +70,8 @@ public class Usuario {
 	}
 
 	/**
-	 * @param numEquipos the numEquipos to set
+	 * @param numEquipos
+	 *            the numEquipos to set
 	 */
 	public void setNumEquipos(int numEquipos) {
 		this.numEquipos = numEquipos;
@@ -82,7 +85,8 @@ public class Usuario {
 	}
 
 	/**
-	 * @param ranking the ranking to set
+	 * @param ranking
+	 *            the ranking to set
 	 */
 	public void setRanking(int ranking) {
 		this.ranking = ranking;

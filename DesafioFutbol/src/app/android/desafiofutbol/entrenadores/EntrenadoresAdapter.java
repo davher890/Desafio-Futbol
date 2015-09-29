@@ -17,8 +17,7 @@ public class EntrenadoresAdapter extends ArrayAdapter<Entrenador> {
 	private ArrayList<Entrenador> entrenadores;
 
 	// Constructor to initialize values
-	public EntrenadoresAdapter(Context context,
-			ArrayList<Entrenador> entrenadores) {
+	public EntrenadoresAdapter(Context context, ArrayList<Entrenador> entrenadores) {
 		super(context, 0, entrenadores);
 		this.entrenadores = entrenadores;
 	}
@@ -42,36 +41,26 @@ public class EntrenadoresAdapter extends ArrayAdapter<Entrenador> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 
 		if (convertView == null) {
-			convertView = LayoutInflater.from(getContext()).inflate(
-					R.layout.entrenador_list_item, parent, false);
+			convertView = LayoutInflater.from(getContext()).inflate(R.layout.entrenador_list_item, parent, false);
 		}
 
 		final Entrenador entrenador = getItem(position);
 
-		TextView nombre = (TextView) convertView
-				.findViewById(R.id.textViewNombreEnt);
+		TextView nombre = (TextView) convertView.findViewById(R.id.textViewNombreEnt);
 		nombre.setText(entrenador.getNombre());
-		TextView salario = (TextView) convertView
-				.findViewById(R.id.textViewSalarioEnt);
+		TextView salario = (TextView) convertView.findViewById(R.id.textViewSalarioEnt);
 
-		DecimalFormat formatterSalario = new DecimalFormat(
-				"###,###,###,###,### euros/partido");
+		DecimalFormat formatterSalario = new DecimalFormat("###,###,###,###,### euros/partido");
 
-		salario.setText(String.valueOf(formatterSalario.format(entrenador
-				.getSalario())));
-		TextView puntos = (TextView) convertView
-				.findViewById(R.id.textViewPuntosEnt);
+		salario.setText(String.valueOf(formatterSalario.format(entrenador.getSalario())));
+		TextView puntos = (TextView) convertView.findViewById(R.id.textViewPuntosEnt);
 		puntos.setText(String.valueOf(entrenador.getPuntos()));
 
-		TextView textViewEnt03 = (TextView) convertView
-				.findViewById(R.id.textViewEnt03);
-		TextView propietario = (TextView) convertView
-				.findViewById(R.id.textViewPropietarioEnt);
+		TextView textViewEnt03 = (TextView) convertView.findViewById(R.id.textViewEnt03);
+		TextView propietario = (TextView) convertView.findViewById(R.id.textViewPropietarioEnt);
 		propietario.setText(entrenador.getPropietario());
 
-		if (entrenador.getPropietario() == null
-				|| entrenador.getPropietario().equals("")
-				|| entrenador.getPropietario().equals("null")) {
+		if (entrenador.getPropietario() == null || entrenador.getPropietario().equals("") || entrenador.getPropietario().equals("null")) {
 			textViewEnt03.setVisibility(View.INVISIBLE);
 			propietario.setVisibility(View.INVISIBLE);
 		} else {

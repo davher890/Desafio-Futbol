@@ -1,4 +1,4 @@
-package app.android.desafiofutbol;
+package app.android.desafiofutbol.clases;
 
 public enum SortTypes {
 

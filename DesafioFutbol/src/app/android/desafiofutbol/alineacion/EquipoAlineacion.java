@@ -28,19 +28,20 @@ public class EquipoAlineacion {
 
 	private void creaEquipo(ArrayList<Jugador> jugadores) {
 
+		// Jugadores titulares
 		porterosTitulares = new ArrayList<Jugador>();
 		defensasTitulares = new ArrayList<Jugador>();
 		mediosTitulares = new ArrayList<Jugador>();
 		delanterosTitulares = new ArrayList<Jugador>();
+
+		// Jugadores suplentes
 		porterosSuplentes = new ArrayList<Jugador>();
 		defensasSuplentes = new ArrayList<Jugador>();
 		mediosSuplentes = new ArrayList<Jugador>();
 		delanterosSuplentes = new ArrayList<Jugador>();
 
-		int size = jugadores.size();
-		for (int i = 0; i < size; i++) {
+		for (Jugador jugador : jugadores) {
 
-			Jugador jugador = jugadores.get(i);
 			if (jugador.isTitular()) {
 				if (jugador.getPosicion().equals("Portero")) {
 					porterosTitulares.add(jugador);

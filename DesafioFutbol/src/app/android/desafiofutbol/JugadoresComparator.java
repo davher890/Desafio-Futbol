@@ -3,6 +3,7 @@ package app.android.desafiofutbol;
 import java.util.Comparator;
 
 import app.android.desafiofutbol.clases.Jugador;
+import app.android.desafiofutbol.clases.SortTypes;
 
 public class JugadoresComparator implements Comparator<Jugador> {
 

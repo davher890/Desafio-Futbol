@@ -6,8 +6,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,12 +16,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import app.android.desafiofutbol.R;
+import app.android.desafiofutbol.webservices.VolleyRequest;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 
 public class FragmentUsuario extends Fragment {
 
@@ -75,7 +75,7 @@ public class FragmentUsuario extends Fragment {
 		// get.execute();
 		String url = "http://www.desafiofutbol.com/usuarios";
 		// Request a string response
-		StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+		StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
 			@Override
 			public void onResponse(String response) {
 				gestionaWS(response);
@@ -89,7 +89,7 @@ public class FragmentUsuario extends Fragment {
 			}
 		});
 		// Add the request to the queue
-		Volley.newRequestQueue(getActivity()).add(stringRequest);
+		VolleyRequest.getInstance(getActivity()).addToRequestQueue(request);
 		return rootView;
 	}
 

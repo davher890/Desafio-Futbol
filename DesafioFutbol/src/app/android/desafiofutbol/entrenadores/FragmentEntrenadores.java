@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -44,17 +45,21 @@ public class FragmentEntrenadores extends Fragment {
 	private SQLiteDesafioFutbol admin = null;
 
 	private ArrayList<Entrenador> listaEntrenadores = null;
+	private Activity activity = null;
 
 	/**
 	 * Returns a new instance of this fragment for the given section number.
+	 * 
+	 * @param mainActivity
 	 */
 
-	public static FragmentEntrenadores newInstance() {
-		FragmentEntrenadores fragment = new FragmentEntrenadores();
+	public static FragmentEntrenadores newInstance(Activity activity) {
+		FragmentEntrenadores fragment = new FragmentEntrenadores(activity);
 		return fragment;
 	}
 
-	public FragmentEntrenadores() {
+	public FragmentEntrenadores(Activity activity) {
+		this.activity = activity;
 	}
 
 	@Override
@@ -70,11 +75,11 @@ public class FragmentEntrenadores extends Fragment {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
 				Entrenador entrenador = adapter.getItem(position);
-				LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				View v = inflater.inflate(R.layout.dialog_entrenador, null);
 
 				EntrenadorDialogFragment alert = new EntrenadorDialogFragment(entrenador, FragmentEntrenadores.this);
-				final AlertDialog createDialogLugar = alert.createDialogLugar(getActivity(), v);
+				final AlertDialog createDialogLugar = alert.createDialogLugar(activity, v);
 				createDialogLugar.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 				createDialogLugar.show();
 				final Button okButton = createDialogLugar.getButton(Dialog.BUTTON_POSITIVE);
@@ -82,7 +87,7 @@ public class FragmentEntrenadores extends Fragment {
 			}
 		});
 
-		admin = new SQLiteDesafioFutbol(getActivity());
+		admin = new SQLiteDesafioFutbol(activity);
 		// Obtiene los datos de los entrenadores
 		listaEntrenadores = admin.getEntrenadores();
 
@@ -115,7 +120,7 @@ public class FragmentEntrenadores extends Fragment {
 				}
 			};
 			// Add the request to the queue
-			VolleyRequest.getInstance(getActivity()).addToRequestQueue(request);
+			VolleyRequest.getInstance(activity).addToRequestQueue(request);
 		} else {
 			setData();
 		}
@@ -158,7 +163,7 @@ public class FragmentEntrenadores extends Fragment {
 	}
 
 	private void setData() {
-		adapter = new EntrenadoresAdapter(getActivity(), listaEntrenadores);
+		adapter = new EntrenadoresAdapter(activity, listaEntrenadores);
 		listViewEntrenadores.setAdapter(adapter);
 	}
 
@@ -174,7 +179,7 @@ public class FragmentEntrenadores extends Fragment {
 				setData();
 			}
 			String mensaje = ((JSONArray) resultJson.get(0)).getString(1);
-			Toast.makeText(this.getActivity(), mensaje, Toast.LENGTH_LONG).show();
+			Toast.makeText(this.activity, mensaje, Toast.LENGTH_LONG).show();
 			;
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block

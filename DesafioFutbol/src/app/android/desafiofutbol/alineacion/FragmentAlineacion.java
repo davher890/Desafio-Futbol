@@ -8,9 +8,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.AlertDialog;
+import android.app.Activity;
 import android.content.ClipData;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.DragEvent;
@@ -34,7 +33,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 
 public class FragmentAlineacion extends Fragment implements OnDragListener, OnLongClickListener {
 
@@ -62,16 +60,18 @@ public class FragmentAlineacion extends Fragment implements OnDragListener, OnLo
 	private AlineacionAdapter delanterosSupAdapter;
 
 	private EquipoAlineacion equipo = null;
-	JSONArray ids = null;
 	JSONObject json = null;
 	ArrayList<Integer> idArray = null;
+	private Activity activity = null;
 
-	public static FragmentAlineacion newInstance() {
-		FragmentAlineacion fragment = new FragmentAlineacion();
+	public static FragmentAlineacion newInstance(Activity activity) {
+
+		FragmentAlineacion fragment = new FragmentAlineacion(activity);
 		return fragment;
 	}
 
-	public FragmentAlineacion() {
+	public FragmentAlineacion(Activity activity) {
+		this.activity = activity;
 	}
 
 	@Override
@@ -91,7 +91,7 @@ public class FragmentAlineacion extends Fragment implements OnDragListener, OnLo
 
 		guardar = (Button) rootView.findViewById(R.id.buttonGuardarAli);
 
-		admin = new SQLiteDesafioFutbol(getActivity());
+		admin = new SQLiteDesafioFutbol(activity);
 		// Obtiene los datos de los jugadores para el id de equipo seleccionado
 		jugadores = admin.getJugadores();
 
@@ -106,10 +106,10 @@ public class FragmentAlineacion extends Fragment implements OnDragListener, OnLo
 			}
 
 			StringBuffer url = new StringBuffer("http://www.desafiofutbol.com/selecciones/plantilla/").append(DatosUsuario.getIdEquipoSeleccionado())
-					.append("?auth_token=").append(DatosUsuario.getToken());
+					.append("?change_sele=").append(DatosUsuario.getIdEquipoSeleccionado()).append("&auth_token=").append(DatosUsuario.getToken());
 
 			// Request a string response
-			JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url.toString(), null, new Response.Listener<JSONObject>() {
+			JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url.toString(), json, new Response.Listener<JSONObject>() {
 				@Override
 				public void onResponse(JSONObject response) {
 					seleccionesPlantillaWS(response);
@@ -134,7 +134,7 @@ public class FragmentAlineacion extends Fragment implements OnDragListener, OnLo
 			};
 			;
 			// Add the request to the queue
-			VolleyRequest.getInstance(getActivity()).addToRequestQueue(request);
+			VolleyRequest.getInstance(activity).addToRequestQueue(request);
 
 		} else {
 			equipo = new EquipoAlineacion(jugadores);
@@ -144,7 +144,7 @@ public class FragmentAlineacion extends Fragment implements OnDragListener, OnLo
 	}
 
 	public void seleccionesPlantillaWS(final JSONObject respJSON) {
-		getActivity().runOnUiThread(new Runnable() {
+		activity.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				try {
@@ -204,28 +204,28 @@ public class FragmentAlineacion extends Fragment implements OnDragListener, OnLo
 
 	private void setData() {
 
-		porterosTitAdapter = new AlineacionAdapter(getActivity(), equipo.getPorterosTitulares(), this, Posicion.Portero);
+		porterosTitAdapter = new AlineacionAdapter(activity, equipo.getPorterosTitulares(), this, Posicion.Portero);
 		porterosTitList.setAdapter(porterosTitAdapter);
 
-		defensasTitAdapter = new AlineacionAdapter(getActivity(), equipo.getDefensasTitulares(), this, Posicion.Defensa);
+		defensasTitAdapter = new AlineacionAdapter(activity, equipo.getDefensasTitulares(), this, Posicion.Defensa);
 		defensasTitList.setAdapter(defensasTitAdapter);
 
-		mediosTitAdapter = new AlineacionAdapter(getActivity(), equipo.getMediosTitulares(), this, Posicion.Medio);
+		mediosTitAdapter = new AlineacionAdapter(activity, equipo.getMediosTitulares(), this, Posicion.Medio);
 		mediosTitList.setAdapter(mediosTitAdapter);
 
-		delanterosTitAdapter = new AlineacionAdapter(getActivity(), equipo.getDelanterosTitulares(), this, Posicion.Delantero);
+		delanterosTitAdapter = new AlineacionAdapter(activity, equipo.getDelanterosTitulares(), this, Posicion.Delantero);
 		delanterosTitList.setAdapter(delanterosTitAdapter);
 
-		porterosSupAdapter = new AlineacionAdapter(getActivity(), equipo.getPorterosSuplentes(), this, Posicion.Portero);
+		porterosSupAdapter = new AlineacionAdapter(activity, equipo.getPorterosSuplentes(), this, Posicion.Portero);
 		porterosSupList.setAdapter(porterosSupAdapter);
 
-		defensasSupAdapter = new AlineacionAdapter(getActivity(), equipo.getDefensasSuplentes(), this, Posicion.Defensa);
+		defensasSupAdapter = new AlineacionAdapter(activity, equipo.getDefensasSuplentes(), this, Posicion.Defensa);
 		defensasSupList.setAdapter(defensasSupAdapter);
 
-		mediosSupAdapter = new AlineacionAdapter(getActivity(), equipo.getMediosSuplentes(), this, Posicion.Medio);
+		mediosSupAdapter = new AlineacionAdapter(activity, equipo.getMediosSuplentes(), this, Posicion.Medio);
 		mediosSupList.setAdapter(mediosSupAdapter);
 
-		delanterosSupAdapter = new AlineacionAdapter(getActivity(), equipo.getDelanterosSuplentes(), this, Posicion.Delantero);
+		delanterosSupAdapter = new AlineacionAdapter(activity, equipo.getDelanterosSuplentes(), this, Posicion.Delantero);
 		delanterosSupList.setAdapter(delanterosSupAdapter);
 
 		guardar.setOnClickListener(new OnClickListener() {
@@ -242,72 +242,93 @@ public class FragmentAlineacion extends Fragment implements OnDragListener, OnLo
 				int sizeMedios = mediosAli.size();
 				int sizeDelanteros = delanterosAli.size();
 
-				if (sizePorteros == 1
-						&& ((sizeDefensas == 4 && sizeMedios == 4 && sizeDelanteros == 2)
-								|| (sizeDefensas == 4 && sizeMedios == 3 && sizeDelanteros == 3)
-								|| (sizeDefensas == 4 && sizeMedios == 5 && sizeDelanteros == 1)
-								|| (sizeDefensas == 5 && sizeMedios == 4 && sizeDelanteros == 1)
-								|| (sizeDefensas == 3 && sizeMedios == 4 && sizeDelanteros == 3) || (sizeDefensas == 3 && sizeMedios == 5 && sizeDelanteros == 2))) {
+				// if (sizePorteros == 1
+				// && ((sizeDefensas == 4 && sizeMedios == 4 && sizeDelanteros
+				// == 2)
+				// || (sizeDefensas == 4 && sizeMedios == 3 && sizeDelanteros ==
+				// 3)
+				// || (sizeDefensas == 4 && sizeMedios == 5 && sizeDelanteros ==
+				// 1)
+				// || (sizeDefensas == 5 && sizeMedios == 4 && sizeDelanteros ==
+				// 1)
+				// || (sizeDefensas == 3 && sizeMedios == 4 && sizeDelanteros ==
+				// 3) || (sizeDefensas == 3 && sizeMedios == 5 && sizeDelanteros
+				// == 2))) {
 
-					// Guardar en base de datos y WebService
-					StringBuffer tactica = new StringBuffer();
-					tactica.append(String.valueOf(sizeDefensas)).append("_");
-					tactica.append(String.valueOf(sizeMedios)).append("_");
-					tactica.append(String.valueOf(sizeDelanteros));
+				// Guardar en base de datos y WebService
+				StringBuffer tactica = new StringBuffer();
+				tactica.append(String.valueOf(sizeDefensas)).append("_");
+				tactica.append(String.valueOf(sizeMedios)).append("_");
+				tactica.append(String.valueOf(sizeDelanteros));
 
-					json = new JSONObject();
-					ids = new JSONArray();
-					idArray = new ArrayList<Integer>();
+				json = new JSONObject();
+				idArray = new ArrayList<Integer>();
 
-					ArrayList<Jugador> jugadoresAli = new ArrayList<Jugador>();
-					jugadoresAli.addAll(porterosAli);
-					jugadoresAli.addAll(defensasAli);
-					jugadoresAli.addAll(mediosAli);
-					jugadoresAli.addAll(delanterosAli);
+				ArrayList<Jugador> jugadoresAli = new ArrayList<Jugador>();
+				jugadoresAli.addAll(porterosAli);
+				jugadoresAli.addAll(defensasAli);
+				jugadoresAli.addAll(mediosAli);
+				jugadoresAli.addAll(delanterosAli);
 
-					int size = sizePorteros + sizeDefensas + sizeMedios + sizeDelanteros;
-					for (int i = 0; i < size; i++) {
-						ids.put(jugadoresAli.get(i).getId());
-						idArray.add(jugadoresAli.get(i).getId());
+				for (Jugador jugador : jugadoresAli) {
+
+					if (jugador.getId() != -1) {
+						idArray.add(jugador.getId());
 					}
-					// PutDesafioFutbol putTactica = new PutDesafioFutbol(
-					// "selecciones/cambiar_tactica/" + tactica.toString()
-					// + "/"
-					// + DatosUsuario.getIdEquipoSeleccionado(),
-					// FragmentAlineacion.this, json, "gestionaAlineacion");
-					// putTactica.execute();
-
-					String url = "http://www.desafiofutbol.com/selecciones/cambiar_tactica/" + tactica.toString() + "/"
-							+ DatosUsuario.getIdEquipoSeleccionado();
-					// Request a string response
-					StringRequest stringRequest = new StringRequest(Request.Method.PUT, url, new Response.Listener<String>() {
-						@Override
-						public void onResponse(String response) {
-							gestionaAlineacion(response);
-						}
-					}, new Response.ErrorListener() {
-						@Override
-						public void onErrorResponse(VolleyError error) {
-							// Error handling
-							System.out.println("Something went wrong!");
-							error.printStackTrace();
-						}
-					});
-					// Add the request to the queue
-					Volley.newRequestQueue(getActivity()).add(stringRequest);
-
-				} else {
-					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-					builder.setTitle("Alineacion incorrecta")
-							.setMessage("Posibles alineaciones:" + "\n 4-4-2" + "\n 4-3-3" + "\n 4-5-1" + "\n 5-4-1" + "\n 3-4-3" + "\n 3-5-2")
-							.setCancelable(false).setNegativeButton("Close", new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog, int id) {
-									dialog.cancel();
-								}
-							});
-					AlertDialog alert = builder.create();
-					alert.show();
 				}
+				// PutDesafioFutbol putTactica = new PutDesafioFutbol(
+				// "selecciones/cambiar_tactica/" + tactica.toString()
+				// + "/"
+				// + DatosUsuario.getIdEquipoSeleccionado(),
+				// FragmentAlineacion.this, json, "gestionaAlineacion");
+				// putTactica.execute();
+
+				StringBuffer url = new StringBuffer("http://www.desafiofutbol.com/selecciones/cambiar_tactica/").append(tactica.toString())
+						.append("/").append(DatosUsuario.getIdEquipoSeleccionado()).append("?").append("auth_token").append("=")
+						.append(DatosUsuario.getToken());
+				// Request a string response
+				StringRequest request = new StringRequest(Request.Method.PUT, url.toString(), new Response.Listener<String>() {
+					@Override
+					public void onResponse(String response) {
+						gestionaAlineacion(response);
+					}
+				}, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						// Error handling
+						System.out.println("Something went wrong!");
+						error.printStackTrace();
+					}
+				}) {
+					@Override
+					public Map<String, String> getHeaders() throws AuthFailureError {
+						HashMap<String, String> map = new HashMap<String, String>();
+						map.put("Accept", "application/json");
+						map.put("Content-Type", "application/json");
+						map.put("Accept-Charset", "utf-8");
+
+						return map;
+					}
+				};
+				// Add the request to the queue
+				VolleyRequest.getInstance(activity).addToRequestQueue(request);
+
+				// } else {
+				// AlertDialog.Builder builder = new
+				// AlertDialog.Builder(activity);
+				// builder.setTitle("Alineacion incorrecta")
+				// .setMessage("Posibles alineaciones:" + "\n 4-4-2" +
+				// "\n 4-3-3" + "\n 4-5-1" + "\n 5-4-1" + "\n 3-4-3" +
+				// "\n 3-5-2")
+				// .setCancelable(false).setNegativeButton("Close", new
+				// DialogInterface.OnClickListener() {
+				// public void onClick(DialogInterface dialog, int id) {
+				// dialog.cancel();
+				// }
+				// });
+				// AlertDialog alert = builder.create();
+				// alert.show();
+				// }
 			}
 		});
 	}
@@ -382,8 +403,7 @@ public class FragmentAlineacion extends Fragment implements OnDragListener, OnLo
 	public void gestionaAlineacion(String result) {
 
 		try {
-			// json.put("id_titulares",ids);
-			json.put("id_titulares", new JSONArray(idArray));
+			json.put("id_titulares", idArray);
 			json.put("id_seleccion", DatosUsuario.getIdEquipoSeleccionado());
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -395,10 +415,10 @@ public class FragmentAlineacion extends Fragment implements OnDragListener, OnLo
 		// json, "updateBBDD");
 		// post.execute();
 
-		StringBuffer url = new StringBuffer("http://www.desafiofutbol.com/selecciones/save_once_titular/").append("?auth_token=").append(
+		StringBuffer url = new StringBuffer("http://www.desafiofutbol.com/selecciones/submit_once_titular").append("?auth_token=").append(
 				DatosUsuario.getToken());
 		// Request a string response
-		JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.PUT, url.toString(), null, new Response.Listener<JSONObject>() {
+		JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url.toString(), json, new Response.Listener<JSONObject>() {
 			@Override
 			public void onResponse(JSONObject response) {
 				updateBBDD(response);
@@ -422,18 +442,17 @@ public class FragmentAlineacion extends Fragment implements OnDragListener, OnLo
 			}
 		};
 		// Add the request to the queue
-		Volley.newRequestQueue(getActivity()).add(stringRequest);
-
-	}
-
-	public void gestionaWS(JSONObject result) {
-
-		JSONObject res = result;
+		VolleyRequest.getInstance(activity).addToRequestQueue(request);
 	}
 
 	public void updateBBDD(JSONObject result) {
 
 		JSONObject res = result;
+	}
+
+	public void gestionaWS(JSONObject json2) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

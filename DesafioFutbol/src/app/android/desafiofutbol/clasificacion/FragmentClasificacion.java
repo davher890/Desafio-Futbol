@@ -3,12 +3,12 @@ package app.android.desafiofutbol.clasificacion;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -31,17 +31,21 @@ public class FragmentClasificacion extends Fragment {
 	private ListView listViewClasificacion = null;
 	private SQLiteDesafioFutbol admin = null;
 	private ArrayList<UsuarioClasificacion> listaClasificacion = null;
+	private Activity activity = null;
 
 	/**
 	 * Returns a new instance of this fragment for the given section number.
+	 * 
+	 * @param mainActivity
 	 */
 
-	public static FragmentClasificacion newInstance() {
-		FragmentClasificacion fragment = new FragmentClasificacion();
+	public static FragmentClasificacion newInstance(Activity activity) {
+		FragmentClasificacion fragment = new FragmentClasificacion(activity);
 		return fragment;
 	}
 
-	public FragmentClasificacion() {
+	public FragmentClasificacion(Activity activity) {
+		this.activity = activity;
 
 	}
 
@@ -50,7 +54,7 @@ public class FragmentClasificacion extends Fragment {
 		View rootView = inflater.inflate(R.layout.fragment_clasificacion, container, false);
 		listViewClasificacion = (ListView) rootView.findViewById(R.id.listViewEquipos);
 
-		admin = new SQLiteDesafioFutbol(getActivity());
+		admin = new SQLiteDesafioFutbol(activity);
 		// Obtiene los datos de la clasficicacion
 		listaClasificacion = admin.getClasificacion();
 
@@ -84,7 +88,7 @@ public class FragmentClasificacion extends Fragment {
 				}
 			};
 			// Add the request to the queue
-			VolleyRequest.getInstance(getActivity()).addToRequestQueue(request);
+			VolleyRequest.getInstance(activity).addToRequestQueue(request);
 		} else {
 			setData();
 		}
@@ -106,27 +110,6 @@ public class FragmentClasificacion extends Fragment {
 					usuarioClasficicacion.setPuntos(usuarioJson.getInt("puntos"));
 					usuarioClasficicacion.setUsuario(usuarioJson.getString("usuario"));
 					usuarioClasficicacion.setValor(usuarioJson.getDouble("valor"));
-
-					JSONObject jornadasJson = usuarioJson.getJSONObject("jornadas");
-					JSONArray names = jornadasJson.names();
-					int ultimaJornada = -1;
-
-					HashMap<Integer, Integer> mapJornadas = new HashMap<Integer, Integer>();
-					if (names != null) {
-						int lengthJornadas = names.length();
-						for (int k = 0; k < lengthJornadas; k++) {
-
-							String jornada = (String) names.get(k);
-							int numeroJornada = Integer.parseInt(jornada.substring(jornada.indexOf('_') + 1));
-							mapJornadas.put(numeroJornada, jornadasJson.getInt(jornada));
-						}
-					}
-
-					Map<Integer, Integer> map = new TreeMap<Integer, Integer>(mapJornadas);
-
-					ultimaJornada = (int) map.values().toArray()[map.size() - 1];
-
-					usuarioClasficicacion.setUltimaJornada(ultimaJornada);
 					listaClasificacion.add(usuarioClasficicacion);
 				}
 				Thread thread = new Thread() {
@@ -144,7 +127,7 @@ public class FragmentClasificacion extends Fragment {
 	}
 
 	public void setData() {
-		ClasificacionAdapter adapter = new ClasificacionAdapter(getActivity(), listaClasificacion);
+		ClasificacionAdapter adapter = new ClasificacionAdapter(activity, listaClasificacion);
 		listViewClasificacion.setAdapter(adapter);
 	}
 }

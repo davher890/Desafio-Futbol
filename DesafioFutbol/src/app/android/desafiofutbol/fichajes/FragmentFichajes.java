@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -28,10 +29,10 @@ import android.widget.ListView;
 import android.widget.Toast;
 import app.android.desafiofutbol.JugadoresComparator;
 import app.android.desafiofutbol.R;
-import app.android.desafiofutbol.SortTypes;
 import app.android.desafiofutbol.clases.DatosUsuario;
 import app.android.desafiofutbol.clases.Jugador;
 import app.android.desafiofutbol.clases.ManageResources;
+import app.android.desafiofutbol.clases.SortTypes;
 import app.android.desafiofutbol.ddbb.SQLiteDesafioFutbol;
 import app.android.desafiofutbol.webservices.VolleyRequest;
 
@@ -47,17 +48,21 @@ public class FragmentFichajes extends Fragment {
 	private FichajesAdapter adapter = null;
 	private SQLiteDesafioFutbol admin = null;
 	private ArrayList<Jugador> fichajes = null;
+	private Activity activity = null;
 
 	/**
 	 * Returns a new instance of this fragment for the given section number.
+	 * 
+	 * @param mainActivity
 	 */
 
-	public static FragmentFichajes newInstance() {
-		FragmentFichajes fragment = new FragmentFichajes();
+	public static FragmentFichajes newInstance(Activity activity) {
+		FragmentFichajes fragment = new FragmentFichajes(activity);
 		return fragment;
 	}
 
-	public FragmentFichajes() {
+	public FragmentFichajes(Activity activity) {
+		this.activity = activity;
 	}
 
 	@Override
@@ -91,11 +96,11 @@ public class FragmentFichajes extends Fragment {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Jugador jugador = adapter.getItem(position);
 
-				LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				View v = inflater.inflate(R.layout.dialog_fichaje, null);
 
 				FichajeDialogFragment alert = new FichajeDialogFragment();
-				AlertDialog createDialogLugar = alert.createDialogLugar(getActivity(), v, jugador, FragmentFichajes.this);
+				AlertDialog createDialogLugar = alert.createDialogLugar(activity, v, jugador, FragmentFichajes.this);
 				createDialogLugar.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 				createDialogLugar.show();
 				Button button = createDialogLugar.getButton(Dialog.BUTTON_NEUTRAL);
@@ -105,7 +110,7 @@ public class FragmentFichajes extends Fragment {
 			}
 		});
 
-		admin = new SQLiteDesafioFutbol(getActivity());
+		admin = new SQLiteDesafioFutbol(activity);
 		// Obtiene los datos de los jugadores para el id de equipo seleccionado
 		fichajes = admin.getFichajes();
 
@@ -138,7 +143,7 @@ public class FragmentFichajes extends Fragment {
 				}
 			};
 			// Add the request to the queue
-			VolleyRequest.getInstance(getActivity()).addToRequestQueue(request);
+			VolleyRequest.getInstance(activity).addToRequestQueue(request);
 		} else {
 			setData(fichajes, SortTypes.puntos.name());
 		}
@@ -221,7 +226,7 @@ public class FragmentFichajes extends Fragment {
 				fichajes = admin.getFichajes();
 				setData(fichajes, SortTypes.puntos.name());
 			}
-			Toast.makeText(this.getActivity(), mensaje, Toast.LENGTH_LONG).show();
+			Toast.makeText(this.activity, mensaje, Toast.LENGTH_LONG).show();
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -231,7 +236,7 @@ public class FragmentFichajes extends Fragment {
 
 		Collections.sort(listaFichajes, new JugadoresComparator(SortTypes.valueOf(orden)));
 
-		adapter = new FichajesAdapter(getActivity(), listaFichajes);
+		adapter = new FichajesAdapter(activity, listaFichajes);
 		listViewFichajes.setAdapter(adapter);
 	}
 }

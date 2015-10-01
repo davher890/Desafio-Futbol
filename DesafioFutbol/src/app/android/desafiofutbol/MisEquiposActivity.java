@@ -17,13 +17,13 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import app.android.desafiofutbol.clases.DatosUsuario;
 import app.android.desafiofutbol.clases.Equipo;
+import app.android.desafiofutbol.webservices.VolleyRequest;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
 
 public class MisEquiposActivity extends Activity {
 
@@ -79,7 +79,7 @@ public class MisEquiposActivity extends Activity {
 		};
 
 		// Add the request to the queue
-		Volley.newRequestQueue(this).add(request);
+		VolleyRequest.getInstance(this).addToRequestQueue(request);
 	}
 
 	public void printData(ArrayList<Equipo> equipos) {

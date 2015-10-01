@@ -46,13 +46,13 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
 
 		// update the main content by replacing fragments
 		if (position == 0) {
-			fragmentManager.beginTransaction().replace(R.id.container, FragmentAlineacion.newInstance()).commit();
+			fragmentManager.beginTransaction().replace(R.id.container, FragmentAlineacion.newInstance(this)).commit();
 		} else if (position == 1) {
-			fragmentManager.beginTransaction().replace(R.id.container, FragmentFichajes.newInstance()).commit();
+			fragmentManager.beginTransaction().replace(R.id.container, FragmentFichajes.newInstance(this)).commit();
 		} else if (position == 2) {
-			fragmentManager.beginTransaction().replace(R.id.container, FragmentEntrenadores.newInstance()).commit();
+			fragmentManager.beginTransaction().replace(R.id.container, FragmentEntrenadores.newInstance(this)).commit();
 		} else if (position == 3) {
-			fragmentManager.beginTransaction().replace(R.id.container, FragmentClasificacion.newInstance()).commit();
+			fragmentManager.beginTransaction().replace(R.id.container, FragmentClasificacion.newInstance(this)).commit();
 		}
 	}
 

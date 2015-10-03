@@ -100,7 +100,8 @@ public class FragmentAlineacion extends Fragment implements OnDragListener, OnLo
 			JSONObject json = new JSONObject();
 			try {
 				json.put("idEquipo", String.valueOf(DatosUsuario.getIdEquipoSeleccionado()));
-				json.put("change_sele", String.valueOf(DatosUsuario.getIdEquipoSeleccionado()));
+				// json.put("change_sele",
+				// String.valueOf(DatosUsuario.getIdEquipoSeleccionado()));
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -231,13 +232,15 @@ public class FragmentAlineacion extends Fragment implements OnDragListener, OnLo
 		guardar.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+
+				guardar.setEnabled(false);
+
 				ArrayList<Jugador> porterosAli = porterosTitAdapter.getJugadores();
 				ArrayList<Jugador> defensasAli = defensasTitAdapter.getJugadores();
 				ArrayList<Jugador> mediosAli = mediosTitAdapter.getJugadores();
 				ArrayList<Jugador> delanterosAli = delanterosTitAdapter.getJugadores();
 
-				int sizePorteros = porterosAli.size();
+				// int sizePorteros = porterosAli.size();
 				int sizeDefensas = defensasAli.size();
 				int sizeMedios = mediosAli.size();
 				int sizeDelanteros = delanterosAli.size();
@@ -447,6 +450,7 @@ public class FragmentAlineacion extends Fragment implements OnDragListener, OnLo
 
 	public void updateBBDD(JSONObject result) {
 
+		guardar.setEnabled(true);
 		JSONObject res = result;
 	}
 

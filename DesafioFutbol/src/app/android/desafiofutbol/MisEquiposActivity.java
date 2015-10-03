@@ -50,6 +50,7 @@ public class MisEquiposActivity extends Activity {
 			}
 		});
 
+		if (DatosUsuario.getToken() != null){
 		StringBuffer url = new StringBuffer("http://www.desafiofutbol.com/ligas/misligas").append("?").append("auth_token").append("=")
 				.append(DatosUsuario.getToken());
 
@@ -79,7 +80,7 @@ public class MisEquiposActivity extends Activity {
 		};
 
 		// Add the request to the queue
-		VolleyRequest.getInstance(this).addToRequestQueue(request);
+		VolleyRequest.getInstance(this).addToRequestQueue(request);}
 	}
 
 	public void printData(ArrayList<Equipo> equipos) {

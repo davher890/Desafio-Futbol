@@ -51,9 +51,7 @@ public class LogInActivity extends Activity {
 			public void run() {
 
 				final SQLiteDesafioFutbol admin = new SQLiteDesafioFutbol(LogInActivity.this);
-
 				admin.cleanDatabase();
-
 				ManageResources.inicializa();
 			}
 		};
@@ -103,6 +101,7 @@ public class LogInActivity extends Activity {
 						return map;
 					}
 				};
+				bsign.setEnabled(false);
 				// Add the request to the queue
 				VolleyRequest.getInstance(c).addToRequestQueue(request);
 			}
@@ -119,9 +118,11 @@ public class LogInActivity extends Activity {
 			DatosUsuario.setAvatar(respJSON.getString("avatar"));
 			DatosUsuario.setP_rank(Integer.parseInt(respJSON.getString("p_rank")));
 
-			Intent i = new Intent(LogInActivity.this, MisEquiposActivity.class);
-			startActivityForResult(i, 1);
-
+			if (DatosUsuario.checkData()) {
+				Intent i = new Intent(LogInActivity.this, MisEquiposActivity.class);
+				startActivityForResult(i, 1);
+			}
+			bsign.setEnabled(true);
 		} catch (JSONException e) {
 			final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
 			alertDialog.setTitle("Email o contrasena incorrectos");

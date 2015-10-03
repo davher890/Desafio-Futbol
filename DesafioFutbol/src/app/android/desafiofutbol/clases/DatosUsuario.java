@@ -103,4 +103,13 @@ public class DatosUsuario {
 	public static void setNombreEquipo(String nombreEquipo) {
 		DatosUsuario.nombreEquipo = nombreEquipo;
 	}
+
+	public static boolean checkData() {
+
+		if (DatosUsuario.getToken() != null && DatosUsuario.getUserName() != null && DatosUsuario.getAvatar() != null
+				&& DatosUsuario.getP_rank() != -1 && DatosUsuario.getUserId() != -1) {
+			return true;
+		}
+		return false;
+	}
 }

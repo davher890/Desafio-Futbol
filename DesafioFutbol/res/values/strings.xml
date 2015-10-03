@@ -12,6 +12,20 @@
     <string name="label_entrenadores">Entrenadores</string>
     <string name="label_fichajes">Fichajes</string>
     
+    <string-array name="nav_options">
+        <item>Alineacion</item>
+        <item>Clasificacion</item>
+        <item>Entrenadores</item>
+        <item>Fichajes</item>
+    </string-array>
+    
+    <string-array name="nav_icons">
+        <item>@drawable/icono_alineacion</item>
+        <item>@drawable/icono_clasificacion</item>
+        <item>@drawable/icono_entrenador</item>
+        <item>@drawable/icono_fichaje</item>
+    </string-array>
+    
     <string-array name="numbers05_array">
         <item>1</item>
         <item>2</item>

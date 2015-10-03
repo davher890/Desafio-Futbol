@@ -81,7 +81,9 @@ public class FragmentFichajes extends Fragment {
 			return false;
 		}
 
-		setData(adapter.getListaFichajes(), orden.toLowerCase());
+		if (adapter != null) {
+			setData(adapter.getListaFichajes(), orden.toLowerCase());
+		}
 		return super.onOptionsItemSelected(item);
 	}
 

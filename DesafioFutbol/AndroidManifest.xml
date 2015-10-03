@@ -28,14 +28,12 @@
         
         <activity
             android:name="app.android.desafiofutbol.MisEquiposActivity"
-            android:screenOrientation="portrait"
-            android:uiOptions="splitActionBarWhenNarrow" >
+            android:screenOrientation="portrait">
         </activity>
         
         <activity
             android:name="app.android.desafiofutbol.MainActivity"
-            android:screenOrientation="portrait"
-            android:uiOptions="splitActionBarWhenNarrow" >
+            android:screenOrientation="portrait">
         </activity>
     </application>
 </manifest>

@@ -1,25 +1,36 @@
 package app.android.desafiofutbol;
 
+import java.util.ArrayList;
+
+import android.content.res.Configuration;
+import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import app.android.desafiofutbol.alineacion.FragmentAlineacion;
 import app.android.desafiofutbol.clasificacion.FragmentClasificacion;
 import app.android.desafiofutbol.ddbb.SQLiteDesafioFutbol;
 import app.android.desafiofutbol.entrenadores.FragmentEntrenadores;
 import app.android.desafiofutbol.fichajes.FragmentFichajes;
 
-public class MainActivity extends AppCompatActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+public class MainActivity extends AppCompatActivity {
 
-	/**
-	 * Fragment managing the behaviors, interactions and presentation of the
-	 * navigation drawer.
-	 */
-	private NavigationDrawerFragment mNavigationDrawerFragment;
+	private String[] titulos;
+	private ArrayList<ItemObject> navItems;
+	private DrawerLayout mDrawerLayout;
+	private ListView navList;
+	private TypedArray navIcons;
+
+	private ActionBarDrawerToggle mDrawerToggle;
+	private CharSequence mDrawerTitle;
 
 	/**
 	 * Used to store the last screen title. For use in
@@ -32,45 +43,63 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-		mTitle = getTitle();
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		navList = (ListView) findViewById(R.id.left_drawer);
+		titulos = getResources().getStringArray(R.array.nav_options);
 
-		// Set up the drawer.
-		mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
-	}
-
-	@Override
-	public void onNavigationDrawerItemSelected(int position) {
-		// update the main content by replacing fragments
-		FragmentManager fragmentManager = getSupportFragmentManager();
-
-		// update the main content by replacing fragments
-		if (position == 0) {
-			fragmentManager.beginTransaction().replace(R.id.container, FragmentAlineacion.newInstance(this)).commit();
-		} else if (position == 1) {
-			fragmentManager.beginTransaction().replace(R.id.container, FragmentFichajes.newInstance(this)).commit();
-		} else if (position == 2) {
-			fragmentManager.beginTransaction().replace(R.id.container, FragmentEntrenadores.newInstance(this)).commit();
-		} else if (position == 3) {
-			fragmentManager.beginTransaction().replace(R.id.container, FragmentClasificacion.newInstance(this)).commit();
+		View header = getLayoutInflater().inflate(R.layout.header, null);
+		navList.addHeaderView(header);
+		navIcons = getResources().obtainTypedArray(R.array.nav_icons);
+		navItems = new ArrayList<ItemObject>();
+		for (int i = 0; i < titulos.length; i++) {
+			navItems.add(new ItemObject(titulos[i], navIcons.getResourceId(i, -1)));
 		}
-	}
 
-	public void onSectionAttached(int number) {
-		switch (number) {
-		case 1:
-			mTitle = getString(R.string.label_alineacion);
-			break;
-		case 2:
-			mTitle = getString(R.string.label_fichajes);
-			break;
-		case 3:
-			mTitle = getString(R.string.label_entrenadores);
-			break;
-		case 4:
-			mTitle = getString(R.string.label_clasificacion);
-			break;
+		// Set the adapter for the list view
+		navList.setAdapter(new NavigationAdapter(this, navItems));
+
+		// Set the list's click listener
+		navList.setOnItemClickListener(new DrawerItemClickListener());
+
+		mTitle = mDrawerTitle = getTitle();
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+
+			/** Called when a drawer has settled in a completely closed state. */
+			public void onDrawerClosed(View view) {
+				super.onDrawerClosed(view);
+				MainActivity.this.setTitle(mTitle);
+				invalidateOptionsMenu(); // creates call to
+				// onPrepareOptionsMenu()
+			}
+
+			/** Called when a drawer has settled in a completely open state. */
+			public void onDrawerOpened(View drawerView) {
+				super.onDrawerOpened(drawerView);
+				MainActivity.this.setTitle(mDrawerTitle);
+				invalidateOptionsMenu(); // creates call to
+				// onPrepareOptionsMenu()
+			}
+		};
+
+		// Set the drawer toggle as the DrawerListener
+		mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+		selectItem(1);
+
+		if (getSupportActionBar() != null) {
+			getSupportActionBar().setDisplayShowHomeEnabled(true);
+			getSupportActionBar().setHomeButtonEnabled(true);
 		}
+		// getActionBar().setHomeButtonEnabled(true);
+
+		// mNavigationDrawerFragment = (NavigationDrawerFragment)
+		// getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+		// mTitle = getTitle();
+		//
+		// // Set up the drawer.
+		// mNavigationDrawerFragment.setUp(R.id.navigation_drawer,
+		// (DrawerLayout) findViewById(R.id.drawer_layout));
 	}
 
 	public void restoreActionBar() {
@@ -85,23 +114,14 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		if (!mNavigationDrawerFragment.isDrawerOpen()) {
-			// Only show items in the action bar relevant to this screen
-			// if the drawer is not showing. Otherwise, let the drawer
-			// decide what to show in the action bar.
-			// getMenuInflater().inflate(R.menu.main, menu);
-			restoreActionBar();
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Pass the event to ActionBarDrawerToggle, if it returns
+		// true, then it has handled the app icon touch event
+		if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
-		return super.onCreateOptionsMenu(menu);
-	}
+		// Handle your other action bar items...
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -115,5 +135,60 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
 		};
 		thread.start();
 		super.onDestroy();
+	}
+
+	private class DrawerItemClickListener implements ListView.OnItemClickListener {
+		@Override
+		public void onItemClick(AdapterView parent, View view, int position, long id) {
+			selectItem(position);
+		}
+	}
+
+	/** Swaps fragments in the main content view */
+	private void selectItem(int position) {
+		// Create a new fragment and specify the planet to show based on
+		// position
+
+		Fragment fragment = null;
+		if (position == 1) {
+			fragment = FragmentAlineacion.newInstance(this);
+		} else if (position == 2) {
+			fragment = FragmentClasificacion.newInstance(this);
+		} else if (position == 3) {
+			fragment = FragmentEntrenadores.newInstance(this);
+		} else if (position == 4) {
+			fragment = FragmentFichajes.newInstance(this);
+		}
+
+		if (fragment != null) {
+
+			// Insert the fragment by replacing any existing fragment
+			FragmentManager fragmentManager = getSupportFragmentManager();
+			fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+
+			// Highlight the selected item, update the title, and close the
+			// drawer
+			navList.setItemChecked(position - 1, true);
+			setTitle(titulos[position - 1]);
+			mDrawerLayout.closeDrawer(navList);
+		}
+	}
+
+	@Override
+	public void setTitle(CharSequence title) {
+		mTitle = title;
+	}
+
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		// Sync the toggle state after onRestoreInstanceState has occurred.
+		mDrawerToggle.syncState();
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
 }

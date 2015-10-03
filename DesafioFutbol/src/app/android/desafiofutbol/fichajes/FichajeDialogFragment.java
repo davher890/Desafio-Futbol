@@ -29,6 +29,7 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonArrayRequest;
 
 //Define a DialogFragment that displays the error dialog
@@ -65,9 +66,7 @@ public class FichajeDialogFragment extends DialogFragment implements DialogInter
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-
 	}
 
 	public AlertDialog createDialogLugar(final Context contexto, final View v, Jugador jugador, FragmentFichajes fragmentFichajes) {
@@ -98,9 +97,21 @@ public class FichajeDialogFragment extends DialogFragment implements DialogInter
 			cantidad.setText(String.valueOf(jugador.getValor()));
 		}
 
-		// RetreiveFeedTask aus = new RetreiveFeedTask(this,
-		// jugador.getUrlImagen(), "actualizaImagen");
-		// aus.execute();
+		ImageRequest request = new ImageRequest(jugador.getUrlImagen().replace("small", "medium"), new Response.Listener<Bitmap>() {
+			@Override
+			public void onResponse(Bitmap response) {
+				actualizaImagen(response);
+			}
+		}, 0, 0, null, null, new Response.ErrorListener() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				// Error handling
+				System.out.println("Something went wrong!");
+				error.printStackTrace();
+			}
+		});
+		// Add the request to the queue
+		VolleyRequest.getInstance(getActivity()).addToRequestQueue(request);
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(contexto);
 		String buttonOferta = "Enviar Oferta";
@@ -153,10 +164,6 @@ public class FichajeDialogFragment extends DialogFragment implements DialogInter
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		// PostDesafioFutbol post = new
-		// PostDesafioFutbol("mercado/"+FichajeDialogFragment.this.jugador.getIdMercado()+"/clausula_pagar",
-		// fragment, json, "gestionaWS");
-		// post.execute();
 
 		StringBuffer url = new StringBuffer("http://www.desafiofutbol.com/mercado/").append(jugador.getIdMercado()).append("/clausula_pagar")
 				.append("?auth_token=").append(DatosUsuario.getToken());
@@ -194,7 +201,6 @@ public class FichajeDialogFragment extends DialogFragment implements DialogInter
 	private void eliminarOferta(DialogInterface dialog) {
 		JSONObject json = new JSONObject();
 		try {
-			// json.put("oferta_" + jugador.getIdMercado(), jugador.getValor());
 			json.put("delflag" + jugador.getIdMercado(), 1);
 		} catch (JSONException e) {
 			e.printStackTrace();

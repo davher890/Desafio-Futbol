@@ -18,7 +18,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import app.android.desafiofutbol.R;
-import app.android.desafiofutbol.RetreiveFeedTask;
 import app.android.desafiofutbol.clases.DatosUsuario;
 import app.android.desafiofutbol.clases.Jugador;
 import app.android.desafiofutbol.webservices.VolleyRequest;
@@ -27,6 +26,7 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 
 //Define a DialogFragment that displays the error dialog
@@ -84,8 +84,21 @@ public class JugadorDialogFragment extends DialogFragment {
 		DecimalFormat formatterSalario = new DecimalFormat("###,###,###,###,### euros");
 		valor.setText(String.valueOf(formatterSalario.format(jugador.getValor())));
 
-		RetreiveFeedTask aus = new RetreiveFeedTask(this, jugador.getUrlImagen(), "actualizaImagen");
-		aus.execute();
+		ImageRequest request = new ImageRequest(jugador.getUrlImagen().replace("small", "medium"), new Response.Listener<Bitmap>() {
+			@Override
+			public void onResponse(Bitmap response) {
+				actualizaImagen(response);
+			}
+		}, 0, 0, null, null, new Response.ErrorListener() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				// Error handling
+				System.out.println("Something went wrong!");
+				error.printStackTrace();
+			}
+		});
+		// Add the request to the queue
+		VolleyRequest.getInstance(getActivity()).addToRequestQueue(request);
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(contexto);
 		builder.setTitle(jugador.getApodo()).setPositiveButton("Poner a la Venta", new DialogInterface.OnClickListener() {
@@ -104,7 +117,7 @@ public class JugadorDialogFragment extends DialogFragment {
 				JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url.toString(), json, new Response.Listener<JSONObject>() {
 					@Override
 					public void onResponse(JSONObject json) {
-						fragment.gestionaWS(json);
+						gestionaWS(json);
 
 					}
 				}, new Response.ErrorListener() {
@@ -145,7 +158,7 @@ public class JugadorDialogFragment extends DialogFragment {
 				JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url.toString(), json, new Response.Listener<JSONObject>() {
 					@Override
 					public void onResponse(JSONObject json) {
-						fragment.gestionaWS(json);
+						gestionaWS(json);
 
 					}
 				}, new Response.ErrorListener() {
@@ -180,5 +193,41 @@ public class JugadorDialogFragment extends DialogFragment {
 				imageJugador.setImageBitmap(bm);
 			}
 		});
+	}
+
+	public void gestionaWS(JSONObject resultJson) {
+
+		System.out.println();
+
+		// try {
+		// String tipoMensaje = ((JSONArray) resultJson.get(0)).getString(0);
+		// String mensaje = null;
+		// if (tipoMensaje.equals("notice")) {
+		// // Actualizar base de datos y refrescar tabla
+		//
+		// // Clausula Pagada
+		// if (oferta == 0) {
+		// mensaje = ((JSONArray) resultJson.get(0)).getString(1);
+		// admin.deleteFichaje(idFichaje);
+		// }
+		// // Elimina oferta
+		// else if (oferta == -1) {
+		// mensaje = "Oferta eliminada";
+		// admin.updateFichaje(idFichaje, oferta);
+		// }
+		// // Cambia/Crea oferta
+		// else {
+		// mensaje = ((JSONArray) resultJson.get(0)).getString(1);
+		// admin.updateFichaje(idFichaje, oferta);
+		// }
+		//
+		// fichajes = admin.getFichajes();
+		// setData(fichajes, SortTypes.puntos.name());
+		// }
+		// Toast.makeText(this.activity, mensaje, Toast.LENGTH_LONG).show();
+		// } catch (JSONException e) {
+		// e.printStackTrace();
+		// }
+
 	}
 }

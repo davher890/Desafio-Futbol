@@ -454,9 +454,4 @@ public class FragmentAlineacion extends Fragment implements OnDragListener, OnLo
 		JSONObject res = result;
 	}
 
-	public void gestionaWS(JSONObject json2) {
-		// TODO Auto-generated method stub
-
-	}
-
 }

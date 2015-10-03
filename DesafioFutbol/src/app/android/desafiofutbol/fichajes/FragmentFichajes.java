@@ -196,7 +196,6 @@ public class FragmentFichajes extends Fragment {
 				setData(listaFichajes, SortTypes.puntos.name());
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

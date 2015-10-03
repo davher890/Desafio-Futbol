@@ -17,7 +17,7 @@
 	        android:id="@+id/textViewUsuarioCla"
 	        android:layout_width="match_parent"
 	        android:layout_height="match_parent"
-	        android:layout_gravity="left"
+	        android:layout_gravity="start"
 	        android:layout_weight="5"/>
 	
 	    <TextView
@@ -33,13 +33,6 @@
 	        android:layout_height="match_parent"
 	        android:layout_gravity="center"
 	        android:layout_weight="5" />
-	
-	    <TextView
-	        android:id="@+id/textViewUltimaCla"
-	        android:layout_width="match_parent"
-	        android:layout_height="match_parent"
-	        android:layout_gravity="start"
-	        android:layout_weight="6" />
 	
 	    <TextView
 	        android:id="@+id/textViewPuntosCla"

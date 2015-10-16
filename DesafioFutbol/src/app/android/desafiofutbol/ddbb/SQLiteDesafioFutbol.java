@@ -7,7 +7,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import app.android.desafiofutbol.clases.DatosUsuario;
 import app.android.desafiofutbol.clases.Entrenador;
 import app.android.desafiofutbol.clases.Jugador;
 import app.android.desafiofutbol.clases.ManageResources;
@@ -34,7 +33,9 @@ public class SQLiteDesafioFutbol extends SQLiteOpenHelper {
 	private static final String SQL_CREATE_CLASFICIACION = "CREATE TABLE clasificacion " + "(id INTEGER," + "usuario TEXT," + "usuario_id INTEGER,"
 			+ "nombre TEXT," + "puntos INTEGER," + "valor INTEGER, " + "ultima_jornada INTEGER, " + "PRIMARY KEY (id))";
 
-	// M�todos de SQLiteOpenHelper
+	private static final String SQL_SELECT_FICHAJE = "SELECT * FROM fichaje WHERE id = ";
+
+	// Metodos de SQLiteOpenHelper
 	public SQLiteDesafioFutbol(Context context) {
 		super(context, "desafiofutbol", null, 1);
 	}
@@ -60,7 +61,7 @@ public class SQLiteDesafioFutbol extends SQLiteOpenHelper {
 		db.close();
 	}
 
-	// M�todos de AlmacenPuntuaciones
+	// Metodos de AlmacenPuntuaciones
 	public void saveJugadores(ArrayList<Jugador> jugadores) {
 		SQLiteDatabase db = getWritableDatabase();
 
@@ -245,22 +246,64 @@ public class SQLiteDesafioFutbol extends SQLiteOpenHelper {
 	}
 
 	public int updateFichaje(int idFichaje, int oferta) {
-		if (oferta < 1)
-			return 0;
+		// if (oferta < 1)
+		// return 0;
 
 		SQLiteDatabase db = getWritableDatabase();
 		ContentValues args = new ContentValues();
-		args.put("propietario", DatosUsuario.getNombreEquipo());
-		args.put("propietario_id", DatosUsuario.getIdEquipoSeleccionado());
+		// if (oferta == -1) {
+		// args.put("propietario", "null");
+		// args.put("propietario_id", -1);
+		// }
+		// else {
+		// args.put("propietario", DatosUsuario.getNombreEquipo());
+		// args.put("propietario_id", DatosUsuario.getIdEquipoSeleccionado());
+		// }
 		args.put("mi_oferta", oferta);
 		int update = db.update("fichaje", args, "id=" + idFichaje, null);
 		db.close();
 		return update;
 	}
 
+	public int createFichaje(Jugador jugador) {
+
+		SQLiteDatabase db = getWritableDatabase();
+
+		String apodo = jugador.getApodo().replaceAll("'", "''");
+		String equipo = jugador.getEquipo().replaceAll("'", "''");
+		String posicion = jugador.getPosicion().replaceAll("'", "''");
+		String propiertarioNombre = jugador.getPropietarioNombre().replaceAll("'", "''");
+
+		StringBuffer sb = new StringBuffer("INSERT INTO fichaje VALUES (");
+		sb.append(jugador.getId()).append(", ");
+		sb.append("'").append(apodo).append("', ");
+		sb.append(jugador.getValor()).append(",");
+		sb.append(jugador.getPuntos()).append(",");
+		sb.append("'").append(propiertarioNombre).append("'").append(", ");
+		sb.append("'").append(jugador.getPropietarioId()).append("'").append(", ");
+		sb.append("'").append(equipo).append("'").append(", ");
+		sb.append("'").append(posicion).append("'").append(", ");
+		sb.append("'").append(jugador.getUrlImagen()).append("'").append(", ");
+		sb.append(jugador.getMiOferta()).append(",");
+		sb.append("'").append(jugador.getIdMercado()).append("'").append(")");
+		db.execSQL(sb.toString());
+
+		db.execSQL(sb.toString());
+
+		db.close();
+		return 0;
+	}
+
 	public int deleteFichaje(int idFichaje) {
 		SQLiteDatabase db = getWritableDatabase();
 		int delete = db.delete("fichaje", "id=" + idFichaje, null);
+		db.close();
+		return delete;
+	}
+
+	public int deleteJugador(int idJugador) {
+		SQLiteDatabase db = getWritableDatabase();
+		int delete = db.delete("jugador", "id=" + idJugador, null);
 		db.close();
 		return delete;
 	}
@@ -284,6 +327,19 @@ public class SQLiteDesafioFutbol extends SQLiteOpenHelper {
 			db.execSQL(sb.toString());
 		}
 		db.close();
+	}
+
+	public boolean existeFichaje(int idJugador) {
+
+		SQLiteDatabase db = getReadableDatabase();
+
+		String queryString = SQL_SELECT_FICHAJE + idJugador;
+		Cursor cursor = db.rawQuery(queryString, null);
+
+		if (cursor.getCount() > 0) {
+			return true;
+		}
+		return false;
 	}
 
 	public void cleanDatabase() {

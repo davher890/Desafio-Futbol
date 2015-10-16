@@ -28,11 +28,32 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/TextViewEq01"
+            
+           	<TextView
+                android:id="@+id/textViewEq01"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="15dp"
+                android:gravity="center"
+                android:text="Saldo:"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <TextView
+                android:id="@+id/textSaldoEquipo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_toRightOf="@+id/textViewEq01"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <TextView
+                android:id="@+id/textViewEq02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textViewEq01"
                 android:layout_marginBottom="15dp"
                 android:layout_marginTop="15dp"
                 android:gravity="center"
@@ -44,16 +65,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:layout_below="@+id/textSaldoEquipo"
                 android:layout_marginBottom="15dp"
                 android:layout_marginTop="15dp"
-                android:layout_toRightOf="@+id/TextViewEq01"
+                android:layout_toRightOf="@+id/textViewEq02"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <TextView
-                android:id="@+id/textViewEq02"
+                android:id="@+id/textViewEq03"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/TextViewEq01"
+                android:layout_below="@+id/textViewEq02"
                 android:layout_marginBottom="15dp"
                 android:layout_marginTop="15dp"
                 android:gravity="center"
@@ -68,8 +90,9 @@
                 android:layout_below="@+id/textViewValorEq"
                 android:layout_marginBottom="15dp"
                 android:layout_marginTop="15dp"
-                android:layout_toRightOf="@+id/textViewEq02"
+                android:layout_toRightOf="@+id/textViewEq03"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
+
         </RelativeLayout>
     </LinearLayout>
 

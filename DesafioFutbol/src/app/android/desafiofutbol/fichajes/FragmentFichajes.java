@@ -11,7 +11,6 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,9 +23,9 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
+import app.android.desafiofutbol.Constants;
 import app.android.desafiofutbol.JugadoresComparator;
 import app.android.desafiofutbol.R;
 import app.android.desafiofutbol.clases.DatosUsuario;
@@ -105,10 +104,6 @@ public class FragmentFichajes extends Fragment {
 				AlertDialog createDialogLugar = alert.createDialogLugar(activity, v, jugador, FragmentFichajes.this);
 				createDialogLugar.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 				createDialogLugar.show();
-				Button button = createDialogLugar.getButton(Dialog.BUTTON_NEUTRAL);
-				if (jugador.getMiOferta() == -1) {
-					button.setVisibility(View.INVISIBLE);
-				}
 			}
 		});
 
@@ -200,7 +195,7 @@ public class FragmentFichajes extends Fragment {
 		}
 	}
 
-	public void gestionaWS(JSONArray resultJson, int idFichaje, int oferta) {
+	public void gestionaWS(JSONArray resultJson, Jugador jugador, int oferta, String accion) {
 
 		try {
 			String tipoMensaje = ((JSONArray) resultJson.get(0)).getString(0);
@@ -209,23 +204,30 @@ public class FragmentFichajes extends Fragment {
 				// Actualizar base de datos y refrescar tabla
 
 				// Clausula Pagada
-				if (oferta == 0) {
+				if (accion == Constants.PAGAR_CLÁUSULA) {
 					mensaje = ((JSONArray) resultJson.get(0)).getString(1);
-					admin.deleteFichaje(idFichaje);
+					admin.deleteFichaje(jugador.getId());
 				}
 				// Elimina oferta
-				else if (oferta == -1) {
-					mensaje = "Oferta eliminada";
-					admin.updateFichaje(idFichaje, oferta);
+				else if (accion == Constants.ELIMINAR_OFERTA) {
+					mensaje = ((JSONArray) resultJson.get(0)).getString(1);
+					admin.updateFichaje(jugador.getId(), oferta);
 				}
 				// Cambia/Crea oferta
-				else {
+				else if (accion == Constants.ENVIAR_OFERTA || accion == Constants.CAMBIAR_OFERTA) {
 					mensaje = ((JSONArray) resultJson.get(0)).getString(1);
-					admin.updateFichaje(idFichaje, oferta);
+					admin.updateFichaje(jugador.getId(), oferta);
 				}
-
+				// Venta expres
+				else if (accion == Constants.VENTA_EXPRES) {
+					mensaje = ((JSONArray) resultJson.get(0)).getString(1);
+					admin.deleteJugador(jugador.getId());
+					admin.deleteFichaje(jugador.getId());
+				}
 				fichajes = admin.getFichajes();
 				setData(fichajes, SortTypes.puntos.name());
+			} else if (tipoMensaje.equals("error")) {
+				mensaje = ((JSONArray) resultJson.get(0)).getString(1);
 			}
 			Toast.makeText(this.activity, mensaje, Toast.LENGTH_LONG).show();
 		} catch (JSONException e) {
@@ -239,5 +241,10 @@ public class FragmentFichajes extends Fragment {
 
 		adapter = new FichajesAdapter(activity, listaFichajes);
 		listViewFichajes.setAdapter(adapter);
+	}
+
+	public void gestionaWS(JSONObject response, Jugador jugador, int oferta, String accion) {
+		// TODO Auto-generated method stub
+		System.out.println();
 	}
 }

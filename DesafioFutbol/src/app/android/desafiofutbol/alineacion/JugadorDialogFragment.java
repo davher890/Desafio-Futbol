@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,11 +28,13 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 
 //Define a DialogFragment that displays the error dialog
 public class JugadorDialogFragment extends DialogFragment {
-
+	private static final String VENTA_EXPRES = "Venta Expres";
+	private static final String PONER_A_LA_VENTA = "Poner a la Venta";
 	// Global field to contain the error dialog
 	private Dialog mDialog;
 	private Jugador jugador = null;
@@ -101,7 +104,7 @@ public class JugadorDialogFragment extends DialogFragment {
 		VolleyRequest.getInstance(getActivity()).addToRequestQueue(request);
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(contexto);
-		builder.setTitle(jugador.getApodo()).setPositiveButton("Poner a la Venta", new DialogInterface.OnClickListener() {
+		builder.setTitle(jugador.getApodo()).setPositiveButton(PONER_A_LA_VENTA, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				JSONObject json = new JSONObject();
@@ -117,7 +120,7 @@ public class JugadorDialogFragment extends DialogFragment {
 				JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url.toString(), json, new Response.Listener<JSONObject>() {
 					@Override
 					public void onResponse(JSONObject json) {
-						gestionaWS(json);
+						fragment.gestionaWS(json, jugador, PONER_A_LA_VENTA);
 
 					}
 				}, new Response.ErrorListener() {
@@ -141,7 +144,7 @@ public class JugadorDialogFragment extends DialogFragment {
 
 				dialog.cancel();
 			}
-		}).setNegativeButton("Venta Expres", new DialogInterface.OnClickListener() {
+		}).setNegativeButton(VENTA_EXPRES, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				JSONObject json = new JSONObject();
@@ -155,10 +158,10 @@ public class JugadorDialogFragment extends DialogFragment {
 						DatosUsuario.getToken());
 
 				// Request a string response
-				JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url.toString(), json, new Response.Listener<JSONObject>() {
+				JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, url.toString(), json, new Response.Listener<JSONArray>() {
 					@Override
-					public void onResponse(JSONObject json) {
-						gestionaWS(json);
+					public void onResponse(JSONArray json) {
+						fragment.gestionaWS(json, jugador, VENTA_EXPRES);
 
 					}
 				}, new Response.ErrorListener() {
@@ -195,39 +198,4 @@ public class JugadorDialogFragment extends DialogFragment {
 		});
 	}
 
-	public void gestionaWS(JSONObject resultJson) {
-
-		System.out.println();
-
-		// try {
-		// String tipoMensaje = ((JSONArray) resultJson.get(0)).getString(0);
-		// String mensaje = null;
-		// if (tipoMensaje.equals("notice")) {
-		// // Actualizar base de datos y refrescar tabla
-		//
-		// // Clausula Pagada
-		// if (oferta == 0) {
-		// mensaje = ((JSONArray) resultJson.get(0)).getString(1);
-		// admin.deleteFichaje(idFichaje);
-		// }
-		// // Elimina oferta
-		// else if (oferta == -1) {
-		// mensaje = "Oferta eliminada";
-		// admin.updateFichaje(idFichaje, oferta);
-		// }
-		// // Cambia/Crea oferta
-		// else {
-		// mensaje = ((JSONArray) resultJson.get(0)).getString(1);
-		// admin.updateFichaje(idFichaje, oferta);
-		// }
-		//
-		// fichajes = admin.getFichajes();
-		// setData(fichajes, SortTypes.puntos.name());
-		// }
-		// Toast.makeText(this.activity, mensaje, Toast.LENGTH_LONG).show();
-		// } catch (JSONException e) {
-		// e.printStackTrace();
-		// }
-
-	}
 }

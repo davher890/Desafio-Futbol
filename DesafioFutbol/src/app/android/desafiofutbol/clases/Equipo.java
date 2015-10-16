@@ -5,13 +5,13 @@ public class Equipo {
 	private int id = -1;
 	private boolean activa = false;
 	private String nombre = null;
-	private int saldo = 0;
-	private int valor = 0;
+	private double saldo = 0;
+	private double valor = 0;
 
 	private int ligaId = -1;
 	private String ligaNombre = null;
 
-	public Equipo(int id, String nombre, int ligaId, String ligaNombre, int saldo, int valor) {
+	public Equipo(int id, String nombre, int ligaId, String ligaNombre, double saldo, double valor) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
@@ -96,7 +96,7 @@ public class Equipo {
 	/**
 	 * @return the saldo
 	 */
-	public int getSaldo() {
+	public double getSaldo() {
 		return saldo;
 	}
 
@@ -104,14 +104,14 @@ public class Equipo {
 	 * @param saldo
 	 *            the saldo to set
 	 */
-	public void setSaldo(int saldo) {
+	public void setSaldo(double saldo) {
 		this.saldo = saldo;
 	}
 
 	/**
 	 * @return the valor
 	 */
-	public int getValor() {
+	public double getValor() {
 		return valor;
 	}
 

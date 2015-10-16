@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import app.android.desafiofutbol.Constants;
 import app.android.desafiofutbol.R;
 import app.android.desafiofutbol.clases.DatosUsuario;
 import app.android.desafiofutbol.clases.Jugador;
@@ -31,6 +32,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 
 //Define a DialogFragment that displays the error dialog
 public class FichajeDialogFragment extends DialogFragment implements DialogInterface.OnClickListener {
@@ -114,15 +116,17 @@ public class FichajeDialogFragment extends DialogFragment implements DialogInter
 		VolleyRequest.getInstance(getActivity()).addToRequestQueue(request);
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(contexto);
-		String buttonOferta = "Enviar Oferta";
 
 		if (jugador.getMiOferta() != -1) {
-			buttonOferta = "Cambiar Oferta";
+			builder.setTitle(jugador.getApodo()).setPositiveButton(Constants.CAMBIAR_OFERTA, this).setNegativeButton(Constants.ELIMINAR_OFERTA, this)
+					.setNeutralButton(Constants.PAGAR_CLÁUSULA + "(" + formatterValor.format(2 * jugador.getValor()) + ")", this).setView(v);
+		} else if (jugador.getPropietarioId() == DatosUsuario.getIdEquipoSeleccionado()) {
+			builder.setTitle(jugador.getApodo()).setPositiveButton(Constants.VENTA_EXPRES, this).setView(v)
+					.setNegativeButton(Constants.QUITAR_DEL_MERCADO, this);
+		} else {
+			builder.setTitle(jugador.getApodo()).setPositiveButton(Constants.ENVIAR_OFERTA, this)
+					.setNeutralButton(Constants.PAGAR_CLÁUSULA + "(" + formatterValor.format(2 * jugador.getValor()) + ")", this).setView(v);
 		}
-
-		builder.setTitle(jugador.getApodo()).setPositiveButton(buttonOferta, this)
-				.setNegativeButton("Pagar Cláusula (" + formatterValor.format(2 * jugador.getValor()) + ")", this)
-				.setNeutralButton("Eliminar Oferta", this).setView(v);
 		return builder.create();
 	}
 
@@ -140,15 +144,24 @@ public class FichajeDialogFragment extends DialogFragment implements DialogInter
 
 		switch (which) {
 		case DialogInterface.BUTTON_POSITIVE:
-			hacerOferta(dialog);
+			if (jugador.getPropietarioId() == DatosUsuario.getIdEquipoSeleccionado()) {
+				ventaExpres(dialog, Constants.VENTA_EXPRES);
+			} else {
+				// Cambiar oferta y Hacer oferta
+				hacerOferta(dialog, Constants.ENVIAR_OFERTA);
+			}
 			break;
 
 		case DialogInterface.BUTTON_NEGATIVE:
-			pagarClausula(dialog);
+			if (jugador.getPropietarioId() == DatosUsuario.getIdEquipoSeleccionado()) {
+				quitarDelMercado(dialog, Constants.QUITAR_DEL_MERCADO);
+			} else {
+				eliminarOferta(dialog, Constants.ELIMINAR_OFERTA);
+			}
 			break;
 
 		case DialogInterface.BUTTON_NEUTRAL:
-			eliminarOferta(dialog);
+			pagarClausula(dialog, Constants.PAGAR_CLÁUSULA);
 			break;
 
 		default:
@@ -156,7 +169,42 @@ public class FichajeDialogFragment extends DialogFragment implements DialogInter
 		}
 	}
 
-	private void pagarClausula(DialogInterface dialog) {
+	private void quitarDelMercado(DialogInterface dialog, final String accion) {
+
+		StringBuffer url = new StringBuffer("http://www.desafiofutbol.com/mercado/").append(jugador.getId()).append("?auth_token=")
+				.append(DatosUsuario.getToken());
+		// Request a string response
+		JsonObjectRequest request = new JsonObjectRequest(Request.Method.DELETE, url.toString(), null, new Response.Listener<JSONObject>() {
+			@Override
+			public void onResponse(JSONObject response) {
+				fragment.gestionaWS(response, jugador, 0, accion);
+			}
+		}, new Response.ErrorListener() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				// Error handling
+				System.out.println("Something went wrong!");
+				error.printStackTrace();
+			}
+		}) {
+
+			@Override
+			public Map<String, String> getHeaders() throws AuthFailureError {
+				HashMap<String, String> map = new HashMap<String, String>();
+				map.put("Accept", "application/json");
+				map.put("Content-Type", "application/json");
+				map.put("Accept-Charset", "utf-8");
+
+				return map;
+			}
+		};
+		// Add the request to the queue
+		VolleyRequest.getInstance(getActivity()).addToRequestQueue(request);
+
+		dialog.cancel();
+	}
+
+	private void pagarClausula(DialogInterface dialog, final String accion) {
 		JSONObject json = new JSONObject();
 		try {
 			json.put("id", jugador.getId());
@@ -171,7 +219,7 @@ public class FichajeDialogFragment extends DialogFragment implements DialogInter
 		JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, url.toString(), json, new Response.Listener<JSONArray>() {
 			@Override
 			public void onResponse(JSONArray response) {
-				fragment.gestionaWS(response, jugador.getId(), 0);
+				fragment.gestionaWS(response, jugador, 0, accion);
 			}
 		}, new Response.ErrorListener() {
 			@Override
@@ -198,10 +246,12 @@ public class FichajeDialogFragment extends DialogFragment implements DialogInter
 		dialog.cancel();
 	}
 
-	private void eliminarOferta(DialogInterface dialog) {
+	private void eliminarOferta(DialogInterface dialog, final String accion) {
 		JSONObject json = new JSONObject();
 		try {
-			json.put("delflag" + jugador.getIdMercado(), 1);
+			json.put("oferta_" + jugador.getIdMercado(), "" + jugador.getMiOferta());
+			json.put("delflag" + jugador.getIdMercado(), "1");
+
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -212,7 +262,7 @@ public class FichajeDialogFragment extends DialogFragment implements DialogInter
 		JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, url.toString(), json, new Response.Listener<JSONArray>() {
 			@Override
 			public void onResponse(JSONArray response) {
-				fragment.gestionaWS(response, jugador.getId(), -1);
+				fragment.gestionaWS(response, jugador, -1, accion);
 			}
 		}, new Response.ErrorListener() {
 			@Override
@@ -238,7 +288,7 @@ public class FichajeDialogFragment extends DialogFragment implements DialogInter
 		dialog.cancel();
 	}
 
-	private void hacerOferta(DialogInterface dialog) {
+	private void hacerOferta(DialogInterface dialog, final String accion) {
 		if (!cantidad.getText().toString().equals("")) {
 			final int cantidadOferta = Integer.parseInt(cantidad.getText().toString());
 			if (cantidadOferta < jugador.getValor()) {
@@ -258,7 +308,7 @@ public class FichajeDialogFragment extends DialogFragment implements DialogInter
 				JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, url.toString(), json, new Response.Listener<JSONArray>() {
 					@Override
 					public void onResponse(JSONArray response) {
-						fragment.gestionaWS(response, jugador.getId(), cantidadOferta);
+						fragment.gestionaWS(response, jugador, cantidadOferta, accion);
 					}
 				}, new Response.ErrorListener() {
 					@Override
@@ -285,5 +335,45 @@ public class FichajeDialogFragment extends DialogFragment implements DialogInter
 				dialog.cancel();
 			}
 		}
+	}
+
+	private void ventaExpres(DialogInterface dialog, final String accion) {
+		JSONObject json = new JSONObject();
+		try {
+			json.put("jugador", FichajeDialogFragment.this.jugador.getId());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		StringBuffer url = new StringBuffer("http://www.desafiofutbol.com/mercado/0/clausula_pagar").append("?jugador=" + jugador.getId())
+				.append("auth_token=").append(DatosUsuario.getToken());
+
+		// Request a string response
+		JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, url.toString(), new JSONObject(), new Response.Listener<JSONArray>() {
+			@Override
+			public void onResponse(JSONArray json) {
+				fragment.gestionaWS(json, jugador, 2 * jugador.getValor(), accion);
+
+			}
+		}, new Response.ErrorListener() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				error.printStackTrace();
+			}
+		}) {
+			@Override
+			public Map<String, String> getHeaders() throws AuthFailureError {
+				HashMap<String, String> map = new HashMap<String, String>();
+				map.put("Accept", "application/json");
+				map.put("Content-Type", "application/json");
+				map.put("Accept-Charset", "utf-8");
+
+				return map;
+			}
+		};
+		// Add the request to the queue
+		VolleyRequest.getInstance(getActivity()).addToRequestQueue(request);
+
+		dialog.cancel();
 	}
 }

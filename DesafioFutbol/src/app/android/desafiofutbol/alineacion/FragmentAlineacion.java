@@ -21,6 +21,8 @@ import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
+import app.android.desafiofutbol.Constants;
 import app.android.desafiofutbol.R;
 import app.android.desafiofutbol.clases.DatosUsuario;
 import app.android.desafiofutbol.clases.Jugador;
@@ -31,6 +33,7 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 
@@ -63,6 +66,7 @@ public class FragmentAlineacion extends Fragment implements OnDragListener, OnLo
 	JSONObject json = null;
 	ArrayList<Integer> idArray = null;
 	private Activity activity = null;
+	private int capitan;
 
 	public static FragmentAlineacion newInstance(Activity activity) {
 
@@ -194,6 +198,10 @@ public class FragmentAlineacion extends Fragment implements OnDragListener, OnLo
 			jugador.setPosicion(jugadorJson.getString("posicion"));
 			jugador.setUrlImagen(jugadorJson.getString("foto"));
 			Boolean titular = jugadorJson.getBoolean("titular");
+
+			if (jugadorJson.getBoolean("capitan")) {
+				this.capitan = jugador.getId();
+			}
 			if (titular)
 				jugador.setTitular(1);
 			else
@@ -406,8 +414,9 @@ public class FragmentAlineacion extends Fragment implements OnDragListener, OnLo
 	public void gestionaAlineacion(String result) {
 
 		try {
-			json.put("id_titulares", idArray);
+			json.put("id_titulares", idArray.toString());
 			json.put("id_seleccion", DatosUsuario.getIdEquipoSeleccionado());
+			json.put("id_capitan", capitan);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -418,12 +427,12 @@ public class FragmentAlineacion extends Fragment implements OnDragListener, OnLo
 		// json, "updateBBDD");
 		// post.execute();
 
-		StringBuffer url = new StringBuffer("http://www.desafiofutbol.com/selecciones/submit_once_titular").append("?auth_token=").append(
+		StringBuffer url = new StringBuffer("http://www.desafiofutbol.com/selecciones/save_once_titular").append("?auth_token=").append(
 				DatosUsuario.getToken());
 		// Request a string response
-		JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url.toString(), json, new Response.Listener<JSONObject>() {
+		JsonArrayRequest request = new JsonArrayRequest(Request.Method.PUT, url.toString(), json, new Response.Listener<JSONArray>() {
 			@Override
-			public void onResponse(JSONObject response) {
+			public void onResponse(JSONArray response) {
 				updateBBDD(response);
 			}
 		}, new Response.ErrorListener() {
@@ -448,10 +457,50 @@ public class FragmentAlineacion extends Fragment implements OnDragListener, OnLo
 		VolleyRequest.getInstance(activity).addToRequestQueue(request);
 	}
 
-	public void updateBBDD(JSONObject result) {
+	public void gestionaWS(JSONArray resultJson, Jugador jugador, String accion) {
+
+		try {
+			String tipoMensaje = ((JSONArray) resultJson.get(0)).getString(0);
+			String mensaje = null;
+			if (tipoMensaje.equals("notice")) {
+				// Actualizar base de datos y refrescar tabla
+
+				// Venta express
+				if (accion.equals(Constants.VENTA_EXPRES)) {
+					mensaje = ((JSONArray) resultJson.get(0)).getString(1);
+					admin.deleteJugador(jugador.getId());
+				}
+				// Elimina del mercado
+				else if (accion.equals(Constants.QUITAR_DEL_MERCADO)) {
+					mensaje = "Oferta eliminada";
+					admin.deleteFichaje(jugador.getId());
+				}
+				// Cambia/Crea oferta
+				else if (accion.equals(Constants.PONER_A_LA_VENTA)) {
+					mensaje = ((JSONArray) resultJson.get(0)).getString(1);
+					admin.createFichaje(jugador);
+				}
+
+				equipo = new EquipoAlineacion(admin.getJugadores());
+				setData();
+			}
+			Toast.makeText(this.activity, mensaje, Toast.LENGTH_LONG).show();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void updateBBDD(JSONArray response) {
 
 		guardar.setEnabled(true);
-		JSONObject res = result;
+
+		// Update ddbb
+		JSONArray res = response;
+	}
+
+	public void gestionaWS(JSONObject json2, Jugador jugador, String ponerALaVenta) {
+		// TODO Auto-generated method stub
+		System.out.println();
 	}
 
 }

@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 import app.android.desafiofutbol.clases.DatosUsuario;
 import app.android.desafiofutbol.clases.ManageResources;
 import app.android.desafiofutbol.ddbb.SQLiteDesafioFutbol;
@@ -34,7 +35,6 @@ public class LogInActivity extends Activity {
 	private Button bsign;
 	private EditText email;
 	private EditText pwd;
-	private LogInActivity c = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +42,6 @@ public class LogInActivity extends Activity {
 		setContentView(R.layout.login);
 
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		c = this;
 		bsign = (Button) findViewById(R.id.buttonLogIn);
 		email = (EditText) findViewById(R.id.editTextUsuario);
 		pwd = (EditText) findViewById(R.id.editTextPwd);
@@ -88,6 +87,8 @@ public class LogInActivity extends Activity {
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
+						bsign.setEnabled(true);
+						Toast.makeText(LogInActivity.this, "No se puede conectar con el servidor", Toast.LENGTH_LONG).show();
 						error.printStackTrace();
 					}
 				}) {
@@ -103,7 +104,7 @@ public class LogInActivity extends Activity {
 				};
 				bsign.setEnabled(false);
 				// Add the request to the queue
-				VolleyRequest.getInstance(c).addToRequestQueue(request);
+				VolleyRequest.getInstance(LogInActivity.this).addToRequestQueue(request);
 			}
 		});
 	}

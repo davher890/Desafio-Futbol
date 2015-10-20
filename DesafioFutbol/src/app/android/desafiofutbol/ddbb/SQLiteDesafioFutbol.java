@@ -163,7 +163,13 @@ public class SQLiteDesafioFutbol extends SQLiteOpenHelper {
 			sb.append("'").append(jugador.getUrlImagen()).append("'").append(", ");
 			sb.append(jugador.getMiOferta()).append(",");
 			sb.append("'").append(jugador.getIdMercado()).append("'").append(")");
-			db.execSQL(sb.toString());
+
+			try {
+				db.execSQL(sb.toString());
+			} catch (SQLException e) {
+				db.delete("fichaje", null, null);
+			}
+
 		}
 		db.close();
 	}

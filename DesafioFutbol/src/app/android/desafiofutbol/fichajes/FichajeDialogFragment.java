@@ -88,7 +88,7 @@ public class FichajeDialogFragment extends DialogFragment implements DialogInter
 		posicion.setText(jugador.getPosicion());
 		puntos.setText(String.valueOf(jugador.getPuntos()));
 
-		DecimalFormat formatterValor = new DecimalFormat("###,###,###,###,### euros");
+		DecimalFormat formatterValor = new DecimalFormat("###,###,###,###,### €");
 
 		valor.setText(String.valueOf(formatterValor.format(jugador.getValor())));
 		propietario.setText(jugador.getPropietarioNombre().equals("null") ? "" : jugador.getPropietarioNombre());

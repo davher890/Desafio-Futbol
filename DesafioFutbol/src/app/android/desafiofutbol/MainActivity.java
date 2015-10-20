@@ -17,7 +17,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import app.android.desafiofutbol.alineacion.FragmentAlineacion;
 import app.android.desafiofutbol.clasificacion.FragmentClasificacion;
-import app.android.desafiofutbol.ddbb.SQLiteDesafioFutbol;
 import app.android.desafiofutbol.entrenadores.FragmentEntrenadores;
 import app.android.desafiofutbol.fichajes.FragmentFichajes;
 
@@ -123,18 +122,6 @@ public class MainActivity extends AppCompatActivity {
 		// Handle your other action bar items...
 
 		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	protected void onDestroy() {
-		final SQLiteDesafioFutbol admin = new SQLiteDesafioFutbol(this);
-		Thread thread = new Thread() {
-			public void run() {
-				admin.cleanDatabase();
-			}
-		};
-		thread.start();
-		super.onDestroy();
 	}
 
 	private class DrawerItemClickListener implements ListView.OnItemClickListener {

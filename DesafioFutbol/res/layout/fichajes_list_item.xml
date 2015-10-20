@@ -8,9 +8,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="25dp"
-        android:background="@drawable/itemfichajedesafio"
-        android:layout_marginTop="25dp" >
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:background="#55ff6c2c" >
+
+        <!-- android:background="@drawable/itemfichajedesafio"-->
 
         <TextView
             android:id="@+id/textViewNombreJug"
@@ -18,15 +20,13 @@
             android:layout_height="match_parent"
             android:layout_weight="49"
             android:gravity="left"
-            android:textColor="#FFFFFF"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/textViewPosicionJug"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="50"
-            android:textColor="#FFFFFF"
+            android:layout_weight="58"
             android:textStyle="bold" />
 
         <TextView
@@ -34,7 +34,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="50"
-            android:textColor="#FFFFFF"
             android:textStyle="bold" />
 
         <TextView
@@ -42,7 +41,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="49"
-            android:textColor="#FFFFFF"
             android:textStyle="bold" />
 
         <TextView
@@ -50,7 +48,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="58"
-            android:textColor="#FFFFFF"
             android:gravity="right"
             android:textStyle="bold" />
 

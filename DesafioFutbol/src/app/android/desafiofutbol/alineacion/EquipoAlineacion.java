@@ -15,6 +15,8 @@ public class EquipoAlineacion {
 	private ArrayList<Jugador> mediosSuplentes = null;
 	private ArrayList<Jugador> delanterosSuplentes = null;
 
+	private String tactica = null;
+
 	public EquipoAlineacion(final ArrayList<Jugador> jugadores) {
 
 		/*
@@ -88,6 +90,8 @@ public class EquipoAlineacion {
 		if (delanterosSuplentes.size() == 0) {
 			delanterosSuplentes.add(new Jugador());
 		}
+
+		setTactica(new StringBuffer().append(defensasTitulares.size()).append(mediosTitulares.size()).append(delanterosTitulares.size()).toString());
 	}
 
 	/**
@@ -144,5 +148,19 @@ public class EquipoAlineacion {
 	 */
 	public ArrayList<Jugador> getDelanterosSuplentes() {
 		return delanterosSuplentes;
+	}
+
+	/**
+	 * @return the tactica
+	 */
+	public String getTactica() {
+		return tactica;
+	}
+
+	/**
+	 * @param tactica the tactica to set
+	 */
+	public void setTactica(String tactica) {
+		this.tactica = tactica;
 	}
 }

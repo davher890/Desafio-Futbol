@@ -74,7 +74,7 @@ public class EntrenadorDialogFragment extends DialogFragment implements DialogIn
 
 		puntos.setText(String.valueOf(entrenador.getPuntos()));
 
-		DecimalFormat formatterSalario = new DecimalFormat("###,###,###,###,### euros");
+		DecimalFormat formatterSalario = new DecimalFormat("###,###,###,###,### €");
 		salario.setText(String.valueOf(formatterSalario.format(entrenador.getSalario())) + "/partido");
 
 		if (entrenador.getPropietario().equals(DatosUsuario.getNombreEquipo())) {

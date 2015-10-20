@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import app.android.desafiofutbol.clases.Entrenador;
@@ -83,7 +84,11 @@ public class SQLiteDesafioFutbol extends SQLiteOpenHelper {
 			sb.append("'").append(jugador.getNacionLogo()).append("', ");
 			sb.append(jugador.getEdad()).append(", ");
 			sb.append(jugador.getTitular()).append(")");
-			db.execSQL(sb.toString());
+			try {
+				db.execSQL(sb.toString());
+			} catch (SQLException e) {
+				db.delete("jugador", null, null);
+			}
 		}
 		db.close();
 	}
@@ -229,7 +234,11 @@ public class SQLiteDesafioFutbol extends SQLiteOpenHelper {
 			sb.append(entrenador.getPuntos()).append(", ");
 			sb.append("'").append(entrenador.getPropietario()).append("') ");
 
-			db.execSQL(sb.toString());
+			try {
+				db.execSQL(sb.toString());
+			} catch (SQLException e) {
+				db.delete("entrenador", null, null);
+			}
 		}
 		db.close();
 	}
@@ -288,7 +297,11 @@ public class SQLiteDesafioFutbol extends SQLiteOpenHelper {
 		sb.append("'").append(jugador.getIdMercado()).append("'").append(")");
 		db.execSQL(sb.toString());
 
-		db.execSQL(sb.toString());
+		try {
+			db.execSQL(sb.toString());
+		} catch (SQLException e) {
+			db.delete("fichaje", null, null);
+		}
 
 		db.close();
 		return 0;
@@ -324,7 +337,11 @@ public class SQLiteDesafioFutbol extends SQLiteOpenHelper {
 			sb.append(usuario.getValor()).append(",");
 			sb.append(usuario.getUltimaJornada()).append(")");
 
-			db.execSQL(sb.toString());
+			try {
+				db.execSQL(sb.toString());
+			} catch (SQLException e) {
+				db.delete("clasificacion", null, null);
+			}
 		}
 		db.close();
 	}
@@ -343,11 +360,15 @@ public class SQLiteDesafioFutbol extends SQLiteOpenHelper {
 	}
 
 	public void cleanDatabase() {
-		SQLiteDatabase db = getWritableDatabase();
-		db.delete("entrenador", null, null);
-		db.delete("jugador", null, null);
-		db.delete("fichaje", null, null);
-		db.delete("clasificacion", null, null);
-		db.close();
+		try {
+			SQLiteDatabase db = getWritableDatabase();
+			db.delete("entrenador", null, null);
+			db.delete("jugador", null, null);
+			db.delete("fichaje", null, null);
+			db.delete("clasificacion", null, null);
+			db.close();
+		} catch (Exception e) {
+
+		}
 	}
 }

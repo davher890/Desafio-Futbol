@@ -32,7 +32,7 @@ public class EquiposAdapter extends ArrayAdapter<Equipo> {
 		String number = String.valueOf(equipo.getValor());
 		double valor = Double.parseDouble(number);
 		double saldo = equipo.getSaldo();
-		DecimalFormat formatter = new DecimalFormat("###,###,###,###,### euros");
+		DecimalFormat formatter = new DecimalFormat("###,###,###,###,### €");
 
 		((TextView) convertView.findViewById(R.id.textViewNombreEq)).setText(equipo.getNombre());
 		((TextView) convertView.findViewById(R.id.textSaldoEquipo)).setText(formatter.format(saldo));

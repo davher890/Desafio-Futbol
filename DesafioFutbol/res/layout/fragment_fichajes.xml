@@ -1,9 +1,68 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="app.android.desafiofutbol.MainActivity$PlaceholderFragment" >
 
+    <LinearLayout
+        android:id="@+id/cabeceraFichajes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" >
+
+        <TextView
+            android:id="@+id/textViewFichajesHeaderNombre"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="49"
+            android:text="Nombe"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewFichajesHeaderPos"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="58"
+            android:text="Pos"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewFichajesHeaderEquipo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="50"
+            android:gravity="left"
+            android:text="Equipo"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewFichajesHeaderValor"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="49"
+            android:gravity="left"
+            android:text="Valor"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="bold" />
+        
+        <TextView
+            android:id="@+id/textViewFichajesHeaderPuntos"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="58"
+            android:gravity="left"
+            android:text="Pts"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+    
     <ListView
         android:id="@+id/listViewFichajes"
         android:layout_width="match_parent"
@@ -12,4 +71,4 @@
 
     </ListView>
 
-</RelativeLayout>
+</LinearLayout>

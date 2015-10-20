@@ -35,7 +35,7 @@ public class ClasificacionAdapter extends ArrayAdapter<UsuarioClasificacion> {
 
 		String number = String.valueOf(user.getValor());
 		double valor = Double.parseDouble(number);
-		DecimalFormat formatter = new DecimalFormat("###,###,###,###,### euros");
+		DecimalFormat formatter = new DecimalFormat("###,###,###,###,### €");
 
 		((TextView) convertView.findViewById(R.id.textViewValorCla)).setText(formatter.format(valor));
 		((TextView) convertView.findViewById(R.id.textViewPuntosCla)).setText(String.valueOf(user.getPuntos()));

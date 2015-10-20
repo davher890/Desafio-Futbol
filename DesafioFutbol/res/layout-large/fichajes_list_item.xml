@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/linearLayoutBGEq"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal" >
@@ -8,9 +7,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="25dp"
-        android:background="@drawable/itemfichajedesafio"        
-        android:layout_marginTop="25dp" >
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:background="#55ff6c2c" >
+
+        <!-- android:background="@drawable/itemfichajedesafio"-->
 
         <TextView
             android:id="@+id/textViewNombreJug"
@@ -19,7 +20,6 @@
             android:layout_weight="49"
             android:gravity="start"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="#FFFFFF"
             android:textStyle="bold" />
 
         <TextView
@@ -27,8 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_weight="50"
-            android:textColor="#FFFFFF"
+            android:layout_weight="58"
             android:textStyle="bold" />
 
         <TextView
@@ -37,7 +36,6 @@
             android:layout_height="match_parent"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_weight="50"
-            android:textColor="#FFFFFF"
             android:textStyle="bold" />
 
         <TextView
@@ -46,7 +44,6 @@
             android:layout_height="match_parent"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_weight="49"
-            android:textColor="#FFFFFF"
             android:textStyle="bold" />
 
         <TextView
@@ -55,7 +52,6 @@
             android:layout_height="match_parent"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_weight="58"
-            android:textColor="#FFFFFF"
             android:gravity="end"
             android:textStyle="bold" />
 

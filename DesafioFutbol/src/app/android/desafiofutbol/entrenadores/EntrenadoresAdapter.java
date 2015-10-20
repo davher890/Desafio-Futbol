@@ -50,7 +50,7 @@ public class EntrenadoresAdapter extends ArrayAdapter<Entrenador> {
 		nombre.setText(entrenador.getNombre());
 		TextView salario = (TextView) convertView.findViewById(R.id.textViewSalarioEnt);
 
-		DecimalFormat formatterSalario = new DecimalFormat("###,###,###,###,### euros/partido");
+		DecimalFormat formatterSalario = new DecimalFormat("###,###,###,###,### €/partido");
 
 		salario.setText(String.valueOf(formatterSalario.format(entrenador.getSalario())));
 		TextView puntos = (TextView) convertView.findViewById(R.id.textViewPuntosEnt);

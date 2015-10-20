@@ -17,8 +17,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import app.android.desafiofutbol.clases.DatosUsuario;
-import app.android.desafiofutbol.clases.ManageResources;
-import app.android.desafiofutbol.ddbb.SQLiteDesafioFutbol;
 import app.android.desafiofutbol.webservices.VolleyRequest;
 
 import com.android.volley.AuthFailureError;
@@ -46,16 +44,6 @@ public class LogInActivity extends Activity {
 		email = (EditText) findViewById(R.id.editTextUsuario);
 		pwd = (EditText) findViewById(R.id.editTextPwd);
 
-		Thread thread = new Thread() {
-			public void run() {
-
-				final SQLiteDesafioFutbol admin = new SQLiteDesafioFutbol(LogInActivity.this);
-				admin.cleanDatabase();
-				ManageResources.inicializa();
-			}
-		};
-		thread.start();
-
 		bsign.setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(View v) {
@@ -65,10 +53,8 @@ public class LogInActivity extends Activity {
 
 				JSONObject json = new JSONObject();
 				try {
-					json.put("login", "davher890");
-					json.put("password", "hypsyfzj0468");
-					// json.put("login",em);
-					// json.put("password", pw);
+					json.put("login", em);
+					json.put("password", pw);
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -87,9 +73,7 @@ public class LogInActivity extends Activity {
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
-						bsign.setEnabled(true);
-						Toast.makeText(LogInActivity.this, "No se puede conectar con el servidor", Toast.LENGTH_LONG).show();
-						error.printStackTrace();
+						gestionaError(error);
 					}
 				}) {
 					@Override
@@ -136,5 +120,11 @@ public class LogInActivity extends Activity {
 			});
 			alertDialog.show();
 		}
+	}
+
+	private void gestionaError(VolleyError error) {
+		bsign.setEnabled(true);
+		Toast.makeText(LogInActivity.this, error.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+
 	}
 }

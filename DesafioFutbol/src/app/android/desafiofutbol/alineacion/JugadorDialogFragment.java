@@ -84,7 +84,7 @@ public class JugadorDialogFragment extends DialogFragment {
 		posicion.setText(jugador.getPosicion());
 		puntos.setText(String.valueOf(jugador.getPuntos()));
 
-		DecimalFormat formatterSalario = new DecimalFormat("###,###,###,###,### euros");
+		DecimalFormat formatterSalario = new DecimalFormat("###,###,###,###,### €");
 		valor.setText(String.valueOf(formatterSalario.format(jugador.getValor())));
 
 		ImageRequest request = new ImageRequest(jugador.getUrlImagen().replace("small", "medium"), new Response.Listener<Bitmap>() {
